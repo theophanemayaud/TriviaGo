@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Trivia Go</string>
+    <string name="title_activity_travel_to_next_waypoint">Map</string>
 </resources>
