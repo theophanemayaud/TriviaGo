@@ -15,7 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TriviaGo">
-        <activity android:name=".ChooseNextWaypoint"></activity>
+        <activity android:name=".TriviaQuestion"></activity>
+        <activity android:name=".ChooseNextWaypoint" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -31,7 +32,6 @@
         <activity
             android:name=".TravelToNextWaypoint"
             android:label="@string/title_activity_travel_to_next_waypoint" />
-
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,6 +39,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
+
 </manifest>
