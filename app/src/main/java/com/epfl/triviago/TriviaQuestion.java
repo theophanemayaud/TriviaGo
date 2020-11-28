@@ -12,7 +12,7 @@ public class TriviaQuestion extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trivia_question);
+        //setContentView(R.layout.activity_trivia_question);
     }
 
     public void answerRadioButtonClicked(View view) {
