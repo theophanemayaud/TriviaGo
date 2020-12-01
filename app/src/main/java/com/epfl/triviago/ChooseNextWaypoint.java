@@ -48,11 +48,13 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     Spinner spinner;
 
     private GoogleMap mMap;
-    private Marker mapMarker;
 
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
     LatLng currentLocation;
+    private Marker mapMarker;
+    List<LatLng> waypointsToDo = new ArrayList<LatLng>();
+    List<Marker> waypointsMarkers = new ArrayList<Marker>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,12 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         spinner = (Spinner) findViewById(R.id.chooseNextWaypointSpinner);
         spinnerValuesList.add("item1");
         spinnerValuesList.add("item2");
+
+        // Initialise some placeholder waypoints values, should be taken from activity inputs
+        waypointsToDo.add(new LatLng(50.9265, 5.2205));
+        waypointsToDo.add(new LatLng(50.9265, 4.13));
+        waypointsToDo.add(new LatLng(48.13, 5.2205));
+        waypointsToDo.add(new LatLng(48.13, 4.13));
 
         // Link the spinner and it's adapter with listener for modifications
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
@@ -78,6 +86,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                         .findFragmentById(R.id.GoogleMap);
         mapFragment.getMapAsync(this);
 
+        // Get location updates and all
         // check location permissions
         try {
             if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -109,21 +118,36 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                 if (locationResult == null) {
                     return;
                 }
-//                for (Location location : locationResult.getLocations()) {
-//                    currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-//
-//                    // Add a marker in the current location and move the camera
-//                    if (mMap != null) {
-//                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 5));
-//
-//                        if (mapMarker != null) {
-//                            mapMarker.remove();
-//                        }
-//                        mapMarker = mMap.addMarker(
-//                                new MarkerOptions().position(currentLocation).title("Wow, you're here !!!"));
-//                        mapMarker.showInfoWindow();
-//                    }
-//                }
+                for (Location location : locationResult.getLocations()) {
+                    currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
+                    // Add a marker in the current location and move the camera if it was not set
+                    if (mMap != null) {
+                        if (mapMarker != null) {
+                            mapMarker.remove();
+                        }
+                        else{ // when null, camera view has never been set, and we want to show the marker title !
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 5));
+                            mapMarker = mMap.addMarker(
+                                    new MarkerOptions().position(currentLocation).title("Wow, you're here !!!"));
+                            mapMarker.showInfoWindow();
+                        }
+                        mapMarker = mMap.addMarker(
+                                new MarkerOptions().position(currentLocation).title("Wow, you're here !!!"));
+
+                        // Now add all markers of elements to go to
+                        // if no waypoint markers, then we'll set the all
+                        if(waypointsMarkers.isEmpty()){
+                            for(int i = 0; i < waypointsToDo.size(); i++) {
+                                LatLng waypointLatLong = waypointsToDo.get(i);
+                                Marker waypointMarker = mMap.addMarker(
+                                        new MarkerOptions().position(waypointLatLong).title("One waypoint"));
+                                waypointsMarkers.add(waypointMarker);
+                            }
+                        }
+
+                    }
+                }
             }
         };
     }
@@ -169,17 +193,5 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     public void onMapReady(GoogleMap googleMap) {
         // We have a map !
         mMap = googleMap;
-
-        // Add a marker in the default location and move the camera
-        LatLng currentLocation = new LatLng( 1.2341, 31.34);
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 5));
-
-        if(mapMarker!=null){
-            mapMarker.remove();
-        }
-        mapMarker = mMap.addMarker(
-                new MarkerOptions().position(currentLocation).title("Placeholder location (you're not here !"));
-        mapMarker.showInfoWindow();
     }
 }
