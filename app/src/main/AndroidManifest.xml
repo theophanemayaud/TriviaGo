@@ -11,14 +11,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
-    <!--
-         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
-         Google Maps Android API v2, but you must specify either coarse or fine
-         location permissions for the "MyLocation" functionality.
-    -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -30,12 +22,7 @@
         <activity android:name=".TriviaQuestionActivity"></activity>
         <activity android:name=".WelcomeActivity"></activity>
         <activity android:name=".ChooseNextWaypoint" />
-        <service
-            android:name=".OTDBService"
-            android:exported="false"></service>
 
-        <activity android:name=".TriviaQuestionActivity" />
-        <activity android:name=".ChooseNextWaypoint" />
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -52,8 +39,6 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"></activity>
-        <activity android:name=".TriviaQuestionActivity" />
-        <activity android:name=".ChooseNextWaypoint" />
         <activity
             android:name=".TravelToNextWaypoint"
             android:label="@string/title_activity_travel_to_next_waypoint" />
@@ -64,6 +49,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service
+            android:name=".OTDBService"
+            android:exported="false"></service>
     </application>
 
 </manifest>
