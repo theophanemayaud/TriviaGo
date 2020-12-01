@@ -2,4 +2,5 @@
     <string name="app_name">Trivia Go</string>
     <string name="title_activity_travel_to_next_waypoint">Map</string>
     <string name="ok">OK</string>
+    <string name="title_activity_maps">Map</string>
 </resources>
