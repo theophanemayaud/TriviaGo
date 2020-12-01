@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void clickedWelcomeActivityButtonXmlCallback(View view) {
-        Intent intentWelcomeActivity = new Intent(MainActivity.this, ChooseNextWaypoint.class);
+        Intent intentWelcomeActivity = new Intent(MainActivity.this, WelcomeActivity.class);
         startActivity(intentWelcomeActivity);
     }
 }
