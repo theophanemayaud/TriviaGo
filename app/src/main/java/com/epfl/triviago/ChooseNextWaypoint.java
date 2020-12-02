@@ -1,5 +1,6 @@
 package com.epfl.triviago;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -12,6 +13,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Camera;
 import android.graphics.Color;
+import android.graphics.drawable.Icon;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -33,9 +35,12 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.ui.BubbleIconFactory;
+import com.google.maps.android.ui.IconGenerator;
 
 import org.w3c.dom.Text;
 
@@ -56,21 +61,24 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     List<LatLng> waypointsToDo = new ArrayList<LatLng>();
     List<Marker> waypointsMarkers = new ArrayList<Marker>();
 
+    IconGenerator iconGenerator;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_next_waypoint);
 
-        // Initialising the spinner values, should be taken from activity input values
+        // Initialising the spinner values, should be taken from activity input values or DB
+        // and some placeholder waypoints values, should be taken from activity inputs or DB
         spinner = (Spinner) findViewById(R.id.chooseNextWaypointSpinner);
-        spinnerValuesList.add("item1");
-        spinnerValuesList.add("item2");
-
-        // Initialise some placeholder waypoints values, should be taken from activity inputs
         waypointsToDo.add(new LatLng(50.9265, 5.2205));
+        spinnerValuesList.add("Waypoint 0");
         waypointsToDo.add(new LatLng(50.9265, 4.13));
+        spinnerValuesList.add("Waypoint 1");
         waypointsToDo.add(new LatLng(48.13, 5.2205));
+        spinnerValuesList.add("Waypoint 2");
         waypointsToDo.add(new LatLng(48.13, 4.13));
+        spinnerValuesList.add("Waypoint 3");
 
         // Link the spinner and it's adapter with listener for modifications
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
@@ -97,6 +105,8 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         }
         fusedLocationClient = new FusedLocationProviderClient(this);
         locationCallback = getLocationCallback();
+
+         iconGenerator = new IconGenerator(this);
     }
 
     @Override
@@ -119,29 +129,39 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                     return;
                 }
                 for (Location location : locationResult.getLocations()) {
-                    currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                    LatLng updatedLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
-                    // Add a marker in the current location and move the camera if it was not set
                     if (mMap != null) {
-                        if (mapMarker != null) {
-                            mapMarker.remove();
-                        }
-                        else{ // when null, camera view has never been set, and we want to show the marker title !
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 5));
+
+                        if(currentLocation != updatedLocation){
+                            if (mapMarker != null) {
+                                mapMarker.remove();
+                            }
+                            // when null, camera view has never been set, and we want to show the marker title !
                             mapMarker = mMap.addMarker(
-                                    new MarkerOptions().position(currentLocation).title("Wow, you're here !!!"));
-                            mapMarker.showInfoWindow();
+                                    new MarkerOptions().position(updatedLocation).title("Wow, you're here !!!")
+                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_person_pin_24)));
+
+                            // Show marker title on the current location and move the camera if it was not set
+                            if(currentLocation == null && mapMarker != null ){
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(updatedLocation, 5));
+                                mapMarker.showInfoWindow();
+                            }
                         }
-                        mapMarker = mMap.addMarker(
-                                new MarkerOptions().position(currentLocation).title("Wow, you're here !!!"));
+                        currentLocation = updatedLocation;
+
 
                         // Now add all markers of elements to go to
                         // if no waypoint markers, then we'll set the all
-                        if(waypointsMarkers.isEmpty()){
-                            for(int i = 0; i < waypointsToDo.size(); i++) {
+                        if (waypointsMarkers.isEmpty()) {
+                            iconGenerator.setStyle(IconGenerator.STYLE_BLUE);
+                            for (int i = 0; i < waypointsToDo.size(); i++) {
                                 LatLng waypointLatLong = waypointsToDo.get(i);
                                 Marker waypointMarker = mMap.addMarker(
-                                        new MarkerOptions().position(waypointLatLong).title("One waypoint"));
+                                        new MarkerOptions().position(waypointLatLong).title("Waypoint " + i));
+
+                                waypointMarker.setIcon(BitmapDescriptorFactory.fromBitmap(
+                                        iconGenerator.makeIcon(String.valueOf(i))));
                                 waypointsMarkers.add(waypointMarker);
                             }
                         }
@@ -156,11 +176,31 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         LocationRequest locationRequest = new LocationRequest()
                 .setInterval(5)
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101);
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         fusedLocationClient.requestLocationUpdates(locationRequest,
                 locationCallback,
                 Looper.getMainLooper());
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // If the user really doesn't want to, we won't force them !!!
+            stopLocationUpdates();
+        }
+    }
 
     private void stopLocationUpdates() {
         fusedLocationClient.removeLocationUpdates(locationCallback);
