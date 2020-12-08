@@ -49,5 +49,25 @@
         app:layout_constraintTop_toBottomOf="@+id/selectedItemText"
         tools:context=".MapsActivity" />
 
+    <Button
+        android:id="@+id/GoToWaypointButton"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/buttonshape"
+        android:onClick="goToNextWaypointPressedCallback"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:shadowColor="#A8A8A8"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
+        android:stateListAnimator="@drawable/selector"
+        android:text="Go 🚀"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

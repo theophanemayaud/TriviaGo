@@ -215,8 +215,15 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
 
                 // Now do something with it
                 TextView selectedItemView = findViewById(R.id.selectedItemText);
-                selectedItemView.setText(selected_item);
+                selectedItemView.setText("Waypoint " + pos + " is currently selected");
                 selectedItemView.setTextColor(Color.RED);
+
+                // Show waypoint title on map and center map on it
+                if (waypointsMarkers.isEmpty() == false) {
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(waypointsToDo.get(pos)));
+                    waypointsMarkers.get(pos).showInfoWindow();
+                }
+
             }
 
             @Override
@@ -226,6 +233,10 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         };
     }
 
+    public void goToNextWaypointPressedCallback(View view) {
+        Intent TravelToNextWaypoint = new Intent(ChooseNextWaypoint.this, TravelToNextWaypoint.class);
+        startActivity(TravelToNextWaypoint);
+    }
 
 
 
