@@ -1,25 +1,17 @@
 package com.epfl.triviago;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Camera;
 import android.graphics.Color;
-import android.graphics.drawable.Icon;
 import android.location.Location;
-import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -30,7 +22,6 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -39,10 +30,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.ui.BubbleIconFactory;
 import com.google.maps.android.ui.IconGenerator;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,27 +46,36 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     private LocationCallback locationCallback;
     LatLng currentLocation;
     private Marker mapMarker;
-    List<LatLng> waypointsToDo = new ArrayList<LatLng>();
+    List<LatLng> waypointsLatLgn = new ArrayList<LatLng>();
     List<Marker> waypointsMarkers = new ArrayList<Marker>();
 
+    LatLng selectedDestinationLatLgn;
+
     IconGenerator iconGenerator;
+
+    public static final String DEST_LAT_LNG = "DestinationLatLgn";
+    public static final String LATEST_USER_LOC = "LatestUserLocation";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_next_waypoint);
 
+        // TODO do these initializations from firebase ?
         // Initialising the spinner values, should be taken from activity input values or DB
         // and some placeholder waypoints values, should be taken from activity inputs or DB
         spinner = (Spinner) findViewById(R.id.chooseNextWaypointSpinner);
-        waypointsToDo.add(new LatLng(50.9265, 5.2205));
+        waypointsLatLgn.add(new LatLng(50.9265, 5.2205));
         spinnerValuesList.add("Waypoint 0");
-        waypointsToDo.add(new LatLng(50.9265, 4.13));
+        waypointsLatLgn.add(new LatLng(50.9265, 4.13));
         spinnerValuesList.add("Waypoint 1");
-        waypointsToDo.add(new LatLng(48.13, 5.2205));
+        waypointsLatLgn.add(new LatLng(48.13, 5.2205));
         spinnerValuesList.add("Waypoint 2");
-        waypointsToDo.add(new LatLng(48.13, 4.13));
+        waypointsLatLgn.add(new LatLng(48.13, 4.13));
         spinnerValuesList.add("Waypoint 3");
+        // By default first is selected
+        selectedDestinationLatLgn = waypointsLatLgn.get(0);
 
         // Link the spinner and it's adapter with listener for modifications
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
@@ -134,29 +131,27 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                     if (mMap != null) {
 
                         if(currentLocation != updatedLocation){
-                            if (mapMarker != null) {
-                                mapMarker.remove();
-                            }
-                            // when null, camera view has never been set, and we want to show the marker title !
-                            mapMarker = mMap.addMarker(
-                                    new MarkerOptions().position(updatedLocation).title("Wow, you're here !!!")
-                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_person_pin_24)));
+                            if (mapMarker == null) {
+                                // when null, camera view has never been set, and we want to show the marker title !
+                                mapMarker = mMap.addMarker(
+                                        new MarkerOptions().position(updatedLocation).title("Wow, you're here !!!")
+                                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_my_location_black_36dp)));
 
-                            // Show marker title on the current location and move the camera if it was not set
-                            if(currentLocation == null && mapMarker != null ){
+                                // Move the camera if it was not set
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(updatedLocation, 5));
                                 mapMarker.showInfoWindow();
                             }
+                            mapMarker.setPosition(updatedLocation);
+
                         }
                         currentLocation = updatedLocation;
 
-
                         // Now add all markers of elements to go to
-                        // if no waypoint markers, then we'll set the all
+                        // if no waypoint markers, then we'll set all of them
                         if (waypointsMarkers.isEmpty()) {
                             iconGenerator.setStyle(IconGenerator.STYLE_BLUE);
-                            for (int i = 0; i < waypointsToDo.size(); i++) {
-                                LatLng waypointLatLong = waypointsToDo.get(i);
+                            for (int i = 0; i < waypointsLatLgn.size(); i++) {
+                                LatLng waypointLatLong = waypointsLatLgn.get(i);
                                 Marker waypointMarker = mMap.addMarker(
                                         new MarkerOptions().position(waypointLatLong).title("Waypoint " + i));
 
@@ -213,17 +208,18 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                 // Get the currently selected State object from the spinner
                 String selected_item = adapterView.getItemAtPosition(pos).toString();
 
-                // Now do something with it
+                // Just show the selection in textfield
                 TextView selectedItemView = findViewById(R.id.selectedItemText);
                 selectedItemView.setText("Waypoint " + pos + " is currently selected");
                 selectedItemView.setTextColor(Color.RED);
 
                 // Show waypoint title on map and center map on it
                 if (waypointsMarkers.isEmpty() == false) {
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(waypointsToDo.get(pos)));
+                    LatLng selectedWaypointLatLng = waypointsLatLgn.get(pos);
+                    selectedDestinationLatLgn = selectedWaypointLatLng;
+                    mMap.animateCamera(CameraUpdateFactory.newLatLng(selectedWaypointLatLng));
                     waypointsMarkers.get(pos).showInfoWindow();
                 }
-
             }
 
             @Override
@@ -234,11 +230,13 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     }
 
     public void goToNextWaypointPressedCallback(View view) {
-        Intent TravelToNextWaypoint = new Intent(ChooseNextWaypoint.this, TravelToNextWaypoint.class);
-        startActivity(TravelToNextWaypoint);
+        Intent TravelToNextWaypointIntent = new Intent(ChooseNextWaypoint.this, TravelToNextWaypoint.class);
+        TravelToNextWaypointIntent.putExtra( DEST_LAT_LNG, selectedDestinationLatLgn);
+        if(currentLocation!=null) {
+            TravelToNextWaypointIntent.putExtra(LATEST_USER_LOC, currentLocation);
+        }
+        startActivity(TravelToNextWaypointIntent);
     }
-
-
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
