@@ -176,6 +176,8 @@ public class TravelToNextWaypoint extends FragmentActivity implements OnMapReady
                     Location.distanceBetween(currentLocationLatLgn.latitude,
                             currentLocationLatLgn.longitude, destinationWaypointLatLgn.latitude,
                             destinationWaypointLatLgn.longitude, distance);
+
+                    // TODO set distance to textView !
                     if(distance[0]<TARGET_REACHED_DIST_METERS){
                         destinationReached();
                     }
