@@ -4,13 +4,14 @@
     <string name="ok">OK</string>
     <string name="title_activity_maps">Map</string>
     <string name="back">Back</string>
-    <string name="select_answer">Select an Answer</string>
-    <string name="loading_prop">Loading proposition ...</string>
-    <string name="loading_question">Loading Question ...</string>
+    <string name="select_answer">Select an answer</string>
+    <string name="loading_prop">Loading proposition …</string>
+    <string name="loading_question">Loading Question …</string>
     <string name="no_internet">No Internet</string>
-    <string name="loading_cat">Loading category ...</string>
-    <string name="loading_dif">Loading difficulty ...</string>
+    <string name="loading_cat">Loading category …</string>
+    <string name="loading_dif">Loading difficulty …</string>
     <string name="no_internet_error">Fatal Error, you don\'t seem to be connected to the Internet.\n Please check your connection</string>
     <string name="correct">Correct</string>
-    <string name="wrong">\"Wrong\n\nCorrect answer was : \"</string>
+    <string name="wrong">Wrong\n\nCorrect answer was :</string>
+    <string name="validate_answer">Validate your answer</string>
 </resources>

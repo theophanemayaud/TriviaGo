@@ -198,6 +198,7 @@ public class TriviaQuestionActivity extends AppCompatActivity {
                 }
                 break;
         }
+        checkAnswer.setText(R.string.validate_answer);
     }
 
     public void answerValidateOnClick(View view) {
@@ -233,7 +234,7 @@ public class TriviaQuestionActivity extends AppCompatActivity {
         }
         else {
             checkAnswer.setBackground(getResources().getDrawable(R.drawable.incorrect_answer_shape));
-            checkAnswer.setText(getString(R.string.wrong) + Html.fromHtml(mTrivia.mResponses.get(mTrivia.mcorrectIndex)));
+            checkAnswer.setText(getString(R.string.wrong) + " " + Html.fromHtml(mTrivia.mResponses.get(mTrivia.mcorrectIndex)));
             mResult = false;
         }
         checkAnswer.setTextColor(getResources().getColor(R.color.white));
