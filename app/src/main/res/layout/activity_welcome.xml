@@ -20,7 +20,7 @@
         android:id="@+id/welcome_message"
         android:layout_width="150dp"
         android:layout_height="20dp"
-        android:text="WELCOOOOOOOOME"
+        android:text="WELCOME TO:"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/top_space"/>
@@ -39,26 +39,34 @@
         android:contentDescription="@null"
         app:srcCompat="@mipmap/app_logo_noback" />
 
-    <Button
-        android:id="@+id/button_create_game"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000"
-        android:background="@drawable/buttonshape_welcome"
-        android:stateListAnimator="@drawable/selector"
-        android:text="Create Game" />
+        <Button
+            android:id="@+id/button_create_game"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/buttonshape_welcome"
+            android:fontFamily="casual"
+            android:stateListAnimator="@drawable/selector"
+            android:text="Create Game"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/button_join_game"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000"
-        android:background="@drawable/buttonshape_welcome"
-        android:stateListAnimator="@drawable/selector"
-        android:fontFamily="cursive"
-        android:text="Join Game" />
+        <Button
+            android:id="@+id/button_join_game"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:background="@drawable/buttonshape_welcome"
+            android:fontFamily="casual"
+            android:stateListAnimator="@drawable/selector"
+            android:text="Join Game"
+            android:textAllCaps="true"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:typeface="normal" />
 
 
     </LinearLayout>
