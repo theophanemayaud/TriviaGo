@@ -14,4 +14,27 @@
     <string name="correct">Correct</string>
     <string name="wrong">Wrong\n\nCorrect answer was :</string>
     <string name="validate_answer">Validate your answer</string>
+
+    <!--String arrays for spinners used in game setup-->
+    <string-array name="spinner_players">
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+     </string-array>
+
+    <string-array name="spinner_questions">
+        <item>2 questions</item>
+        <item>3 questions</item>
+        <item>4 questions</item>
+        <item>5 questions</item>
+    </string-array>
+
+    <string-array name="spinner_category">
+        <item>History</item>
+        <item>Media</item>
+        <item>Geography</item>
+        <item>Math</item>
+    </string-array>
+
 </resources>

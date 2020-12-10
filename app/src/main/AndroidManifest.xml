@@ -23,6 +23,7 @@
         android:theme="@style/Theme.TriviaGo">
         <activity android:name=".TriviaQuestionActivity"></activity>
         <activity android:name=".WelcomeActivity"></activity>
+        <activity android:name=".SetUpActivity"></activity>
         <activity android:name=".ChooseNextWaypoint" />
 
 

@@ -39,10 +39,10 @@ public class WelcomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_welcome);
     }
 
-    // Write a message to the database
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef = database.getReference("message");
+    public void clickedCreateGameButtonXmlCallback(View view) {
+        Intent intentChooseNextWaypoint = new Intent(WelcomeActivity.this, SetUpActivity.class);
+        startActivity(intentChooseNextWaypoint);
+    }
 
-    //myRef.setValue("Hello, World!");
 
 }
