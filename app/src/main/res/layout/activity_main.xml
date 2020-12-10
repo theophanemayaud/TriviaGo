@@ -43,7 +43,7 @@
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:textColor="#FFFFFF"
-            android:background="@drawable/buttonshape"
+            android:background="@drawable/main_buttonshape"
             android:stateListAnimator="@drawable/selector"
             android:text="Start Theophane" />
 
@@ -56,7 +56,7 @@
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:textColor="#FFFFFF"
-            android:background="@drawable/buttonshape"
+            android:background="@drawable/main_buttonshape"
             android:stateListAnimator="@drawable/selector"
             android:text="Start Trivia Question" />
 
@@ -67,7 +67,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
-            android:background="@drawable/buttonshape"
+            android:background="@drawable/main_buttonshape"
             android:onClick="clickedWelcomeActivityButtonXmlCallback"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
