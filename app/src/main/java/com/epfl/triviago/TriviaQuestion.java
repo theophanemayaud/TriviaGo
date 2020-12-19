@@ -94,7 +94,7 @@ public class TriviaQuestion implements Serializable {
         this.mResponses.add(mcorrectIndex, correctResponse);
     }
 
-    public String getCategoryTextFromInt(int category) {
+    public static String getCategoryTextFromInt(int category) {
         return Categories.get(category);
     }
 }

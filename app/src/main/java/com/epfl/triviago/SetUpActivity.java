@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -48,11 +49,23 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
         adapter_question.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_question.setAdapter(adapter_question);
 
+        // here theophane
         Spinner spinner_category = (Spinner) findViewById(R.id.spinner_trivia_category);
-        ArrayAdapter<CharSequence> adapter_category = ArrayAdapter.createFromResource(this,
-                R.array.spinner_category, android.R.layout.simple_spinner_item);
-        adapter_category.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter_category = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_dropdown_item, TriviaQuestion.Categories);
         spinner_category.setAdapter(adapter_category);
+        spinner_category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.v("NICE", "position : " + position );
+                Log.v("NICE", "Category is : " + TriviaQuestion.getCategoryTextFromInt(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Log.v("NICE", "Nothing selected" );
+            }
+        });
 
     }
 
