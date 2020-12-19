@@ -14,6 +14,7 @@
     <string name="correct">Correct</string>
     <string name="wrong">Wrong\n\nCorrect answer was :</string>
     <string name="validate_answer">Validate your answer</string>
+    <string name="no_waypoint_selected_textview">No waypoint selected</string>
 
     <!--String arrays for spinners used in game setup-->
     <string-array name="spinner_players">

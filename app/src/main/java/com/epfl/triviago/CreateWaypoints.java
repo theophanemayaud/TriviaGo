@@ -12,9 +12,10 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -38,7 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CreateWaypoints<onMapLongClick> extends AppCompatActivity implements OnMapReadyCallback {
-    private static final int NO_CATEGORY=-1;
+    private static final int NO_CATEG_SELECTION = 0;
+    private static final int NO_WAYPOINT_SELECTION = -1;
     private static final int LIST_POS_TO_LETTER_OFFSET=65;
 
     private GoogleMap mMap;
@@ -52,7 +54,9 @@ public class CreateWaypoints<onMapLongClick> extends AppCompatActivity implement
     private List<Marker> waypointsMarkersList = new ArrayList<Marker>();
     private List<Integer> waypointsSelectedCategoryList = new ArrayList<Integer>();
 
-    private int selectedWaypointListPosition = -1; // default -1 to check if none yet selected
+    private int selectedWaypointListPosition = NO_WAYPOINT_SELECTION;
+
+    private Spinner spinner_category;
 
     // ---------------- start lifecycle methods ------------------
     @Override
@@ -80,6 +84,16 @@ public class CreateWaypoints<onMapLongClick> extends AppCompatActivity implement
         locationCallback = getLocationCallback();
 
         iconGenerator = new IconGenerator(this);
+
+        //Create spinner with everything
+        spinner_category = (Spinner) findViewById(R.id.categorySelectionSpinner);
+        List<String> categories_name_list = TriviaQuestion.Categories;
+        categories_name_list.add(0, " ");
+        ArrayAdapter<String> adapter_category = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_dropdown_item, categories_name_list);
+        spinner_category.setAdapter(adapter_category);
+        spinner_category.setOnItemSelectedListener(getSpinnerAdapterCallback());
+        spinner_category.setEnabled(false);
     }
 
     @Override
@@ -93,37 +107,6 @@ public class CreateWaypoints<onMapLongClick> extends AppCompatActivity implement
         stopLocationUpdates();
     }
     // ---------------- end lifecycle methods ------------------
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_create_waypoints, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.saveAllWaypointsMenuItem:
-                if(waypointsSelectedCategoryList.size()==0){
-                    Toast.makeText(this, "Create at least 1 waypoint !", Toast.LENGTH_SHORT).show();
-                    break;
-                }
-                for(int i=0; i<waypointsSelectedCategoryList.size(); i++){
-                    if(waypointsSelectedCategoryList.get(i)==NO_CATEGORY){
-                        Toast.makeText(this, "Not all waypoints have a category selected (check red waypoints) !", Toast.LENGTH_SHORT).show();
-                        return super.onOptionsItemSelected(item);
-                    }
-                }
-                // TODO : really save all
-                Intent intent = new Intent(CreateWaypoints.this, ChooseNextWaypoint.class);
-                startActivity(intent);
-                break;
-//            case R.id.action_validate:
-//                editUser();
-//                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     // -------------------------------- Begin of location things ---------
     private void startLocationUpdates() {
@@ -212,10 +195,7 @@ public class CreateWaypoints<onMapLongClick> extends AppCompatActivity implement
             @Override
             public boolean onMarkerClick(Marker marker) {
                 int listPosition = (int)(marker.getTag());
-                if (listPosition >= 0) { // check if it's a waypoint marker
-                    //Using position get Value from arraylist
-                    updateSelectedWaypoint(listPosition);
-                }
+                updateSelectedWaypoint(listPosition);
                 return false; //true to disable standard show title and center behavior
             }
         };
@@ -240,7 +220,9 @@ public class CreateWaypoints<onMapLongClick> extends AppCompatActivity implement
                     iconGenerator.makeIcon(waypointLetter)));
             waypointsMarkersList.add(waypointMarker);
             waypointsLatLgnList.add(latLng);
-            waypointsSelectedCategoryList.add(NO_CATEGORY);
+            waypointsSelectedCategoryList.add(NO_CATEG_SELECTION);
+            waypointMarker.showInfoWindow();
+            mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
             updateSelectedWaypoint(numberOfWaypoints); // list starts at 0 but size at 1
         }
     }
@@ -249,28 +231,112 @@ public class CreateWaypoints<onMapLongClick> extends AppCompatActivity implement
 
     // -------------------------------- Begin of small other things ----------------
     private void updateSelectedWaypoint(int waypointListPosition){
-        selectedWaypointListPosition = waypointListPosition;
-        String waypointLetter = String.valueOf((char)(waypointListPosition + LIST_POS_TO_LETTER_OFFSET));
-        TextView selectedItemView = findViewById(R.id.selectedWaypointText);
-        selectedItemView.setText("Waypoint " + waypointLetter + " is currently selected");
-        selectedItemView.setTextColor(Color.RED);
-        if(waypointsSelectedCategoryList.get(waypointListPosition)!=NO_CATEGORY){
-            // TODO update category in dropdown
+        if(waypointListPosition!=NO_WAYPOINT_SELECTION) {
+            selectedWaypointListPosition = waypointListPosition;
+            String waypointLetter = String.valueOf((char) (waypointListPosition + LIST_POS_TO_LETTER_OFFSET));
+            TextView selectedItemView = findViewById(R.id.selectedWaypointText);
+            selectedItemView.setText("Waypoint " + waypointLetter + " is currently selected");
+            selectedItemView.setTextColor(Color.RED);
+
+            spinner_category.setEnabled(true);
+            spinner_category.setSelection(waypointsSelectedCategoryList.get(waypointListPosition));
+        }
+        else{
+            selectedWaypointListPosition = NO_WAYPOINT_SELECTION;
+            spinner_category.setEnabled(false);
+            spinner_category.setSelection(NO_CATEG_SELECTION);
+            TextView selectedItemView = findViewById(R.id.selectedWaypointText);
+            selectedItemView.setText(R.string.no_waypoint_selected_textview);
+            selectedItemView.setTextColor(Color.BLACK);
         }
     }
 
-    private void onCategorySelected(int categoryNumber){ // TODO call this function when spinner/dropdown changes
-        waypointsSelectedCategoryList.set(selectedWaypointListPosition, categoryNumber);
-        Marker waypointMarker = waypointsMarkersList.get(selectedWaypointListPosition);
-        iconGenerator.setStyle(IconGenerator.STYLE_GREEN);
-        String waypointLetter = String.valueOf((char)(selectedWaypointListPosition + LIST_POS_TO_LETTER_OFFSET));
-        waypointMarker.setIcon(BitmapDescriptorFactory.fromBitmap(
-                iconGenerator.makeIcon(waypointLetter)));
+    private void onCategorySelected(int categoryNumber){
+        if(selectedWaypointListPosition != NO_WAYPOINT_SELECTION && categoryNumber!= NO_CATEG_SELECTION) {
+            waypointsSelectedCategoryList.set(selectedWaypointListPosition, categoryNumber);
+            Marker waypointMarker = waypointsMarkersList.get(selectedWaypointListPosition);
+            iconGenerator.setStyle(IconGenerator.STYLE_GREEN);
+            String waypointLetter = String.valueOf((char) (selectedWaypointListPosition + LIST_POS_TO_LETTER_OFFSET));
+            waypointMarker.setIcon(BitmapDescriptorFactory.fromBitmap(
+                    iconGenerator.makeIcon(waypointLetter)));
+        }
     }
 
-    private void onDeleteButtonXmlButtonPressed(){ //TODO implement delete !
+    public void onDeleteButtonXmlButtonPressed(View view){
+        if(selectedWaypointListPosition != NO_WAYPOINT_SELECTION){
+            waypointsMarkersList.get(selectedWaypointListPosition).remove();
+            waypointsMarkersList.remove(selectedWaypointListPosition);
+            waypointsLatLgnList.remove(selectedWaypointListPosition);
+            waypointsSelectedCategoryList.remove(selectedWaypointListPosition);
+            updateSelectedWaypoint(NO_WAYPOINT_SELECTION);
 
+            for(int i = 0; i<waypointsSelectedCategoryList.size(); i++){
+                if(waypointsSelectedCategoryList.get(i)==NO_CATEG_SELECTION){
+                    iconGenerator.setStyle(IconGenerator.STYLE_RED);
+                }
+                else {
+                    iconGenerator.setStyle(IconGenerator.STYLE_GREEN);
+                }
+                Marker markerToUpdate = waypointsMarkersList.get(i);
+                String waypointLetter = String.valueOf((char) (i + LIST_POS_TO_LETTER_OFFSET));
+                markerToUpdate.setTitle("Waypoint "+ waypointLetter);
+                markerToUpdate.setIcon(BitmapDescriptorFactory.fromBitmap(
+                        iconGenerator.makeIcon(waypointLetter)));
+                markerToUpdate.setTag(i);
+            }
+        }
+        else{
+            Toast.makeText(this, "No waypoints selected for delete...", Toast.LENGTH_SHORT).show();
+        }
     }
+
+    // spinner selection callback
+    private AdapterView.OnItemSelectedListener getSpinnerAdapterCallback() {
+        return new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                Log.v("NICE", "position : " + position );
+//                Log.v("NICE", "Category is : " + TriviaQuestion.getCategoryTextFromInt(position));
+                onCategorySelected(position);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+//                Log.v("NICE", "Nothing selected" );
+            }
+        };
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_create_waypoints, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.saveAllWaypointsMenuItem:
+                if(waypointsSelectedCategoryList.size()==0){
+                    Toast.makeText(this, "Create at least 1 waypoint !", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                for(int i=0; i<waypointsSelectedCategoryList.size(); i++){
+                    if(waypointsSelectedCategoryList.get(i)== NO_CATEG_SELECTION){
+                        Toast.makeText(this, "Not all waypoints have a category selected (check red waypoints) !", Toast.LENGTH_SHORT).show();
+                        return super.onOptionsItemSelected(item);
+                    }
+                }
+                // TODO : really save all
+                Intent intent = new Intent(CreateWaypoints.this, ChooseNextWaypoint.class);
+                startActivity(intent);
+                break;
+//            case R.id.action_validate:
+//                editUser();
+//                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     // -------------------------------- End of small other things ----------------
 
 }
