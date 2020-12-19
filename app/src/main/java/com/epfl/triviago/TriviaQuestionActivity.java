@@ -2,10 +2,9 @@ package com.epfl.triviago;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.BroadcastReceiver;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +14,10 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.epfl.triviago.trivia.TriviaModel;
+import com.epfl.triviago.trivia.TriviaResult;
+import com.epfl.triviago.trivia.TriviaService;
 
 import java.util.List;
 
@@ -29,16 +32,25 @@ public class TriviaQuestionActivity extends AppCompatActivity {
     // Tag for Logcat
     private final String TAG = this.getClass().getSimpleName();
 
+    // intent strings
+    public static final String INTENT_RESULT = "RESULT";
+    public static final String INTENT_QCM_TYPE = "TYPE";
+    public static final String INTENT_CATEGORY = "CATEGORY";
+    public static final String INTENT_DIFFICULTY = "DIFFICULTY";
+
     // String Keys
     private static final String TRIVIA_STATE = "TRIVIA_QUESTION";
     private static final String RESPONSE_INDEX = "RESPONSE_INDEX";
     private static final String FINISHED_BOOL = "FINISHED_BOOL";
     private static final String ERROR_BOOL = "ERROR_BOOL";
-    private static final String INTENT_RESULT = "RESULT";
+
 
     private Integer mResponse_index = -1;
     private TriviaQuestion mTrivia = null;
     private boolean mfinished = false;
+    private boolean mIsQCM_type = true;
+    private Integer intent_cat = 9;
+    private String intent_diff = "easy";
 
     // UI elements
     private View layout_parent;
@@ -61,11 +73,28 @@ public class TriviaQuestionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trivia_question);
+
+        // get intent with difficulty, category and type
+        Bundle b1 = getIntent().getExtras();
+        mIsQCM_type = b1.getBoolean(INTENT_QCM_TYPE);
+        intent_cat = b1.getInt(INTENT_CATEGORY);
+        intent_diff = b1.getString(INTENT_DIFFICULTY);
+
+        if (mIsQCM_type) {
+            setContentView(R.layout.activity_trivia_question);
+        } else {
+            setContentView(R.layout.activity_trivia_question_vf);
+        }
 
         if (savedInstanceState != null) {
 //            Log.e(TAG, "Restart");
             merror = savedInstanceState.getBoolean(ERROR_BOOL);
+            mIsQCM_type = savedInstanceState.getBoolean(INTENT_QCM_TYPE);
+            if (mIsQCM_type) {
+                setContentView(R.layout.activity_trivia_question);
+            } else {
+                setContentView(R.layout.activity_trivia_question_vf);
+            }
             get_views();
             if (merror) {
 //                Log.e(TAG, "Hiding all");
@@ -97,8 +126,10 @@ public class TriviaQuestionActivity extends AppCompatActivity {
         question = findViewById(R.id.textQuestion);
         answer_1 = findViewById(R.id.answer_1);
         answer_2 = findViewById(R.id.answer_2);
-        answer_3 = findViewById(R.id.answer_3);
-        answer_4 = findViewById(R.id.answer_4);
+        if (mIsQCM_type) {
+            answer_3 = findViewById(R.id.answer_3);
+            answer_4 = findViewById(R.id.answer_4);
+        }
         category = findViewById(R.id.textCategory);
         difficulty = findViewById(R.id.textDifficulty);
         loader = findViewById(R.id.loading_progressBar);
@@ -116,8 +147,10 @@ public class TriviaQuestionActivity extends AppCompatActivity {
         question.setText(R.string.loading_question);
         answer_1.setText(R.string.loading_prop);
         answer_2.setText(R.string.loading_prop);
-        answer_3.setText(R.string.loading_prop);
-        answer_4.setText(R.string.loading_prop);
+        if (mIsQCM_type) {
+            answer_3.setText(R.string.loading_prop);
+            answer_4.setText(R.string.loading_prop);
+        }
         category.setText(R.string.loading_cat);
         difficulty.setText(R.string.loading_dif);
     }
@@ -129,8 +162,12 @@ public class TriviaQuestionActivity extends AppCompatActivity {
                 .build();
         // let retrofit create the implementation
         TriviaService triviaService = retrofit.create(TriviaService.class);
-
-        Call<TriviaModel> call = triviaService.getQCMQuestion("9", "easy");
+        Call<TriviaModel> call;
+        if (mIsQCM_type) {
+            call = triviaService.getQCMQuestion(intent_cat.toString(), intent_diff);
+        } else {
+            call = triviaService.getTFQuestion(intent_cat.toString(), intent_diff);
+        }
 
         call.enqueue(new Callback<TriviaModel>() {
             @Override
@@ -145,7 +182,8 @@ public class TriviaQuestionActivity extends AppCompatActivity {
                 String category = result.getCategory();
                 List<String> incorrectResponses = result.getIncorrectAnswers();
                 String correctResponse = result.getCorrectAnswer();
-                mTrivia = new TriviaQuestion(question, difficulty, category, incorrectResponses, correctResponse);
+                String type = result.getType();
+                mTrivia = new TriviaQuestion(question, difficulty, category, incorrectResponses, correctResponse, type);
                 fillView();
             }
 
@@ -163,8 +201,10 @@ public class TriviaQuestionActivity extends AppCompatActivity {
         question.setText(Html.fromHtml(mTrivia.mQuestion));
         answer_1.setText(Html.fromHtml(mTrivia.mResponses.get(0)));
         answer_2.setText(Html.fromHtml(mTrivia.mResponses.get(1)));
-        answer_3.setText(Html.fromHtml(mTrivia.mResponses.get(2)));
-        answer_4.setText(Html.fromHtml(mTrivia.mResponses.get(3)));
+        if (mIsQCM_type) {
+            answer_3.setText(Html.fromHtml(mTrivia.mResponses.get(2)));
+            answer_4.setText(Html.fromHtml(mTrivia.mResponses.get(3)));
+        }
         category.setText(Html.fromHtml(mTrivia.mCategory));
         difficulty.setText(Html.fromHtml(mTrivia.mDifficulty));
         loader.setVisibility(View.INVISIBLE);
@@ -216,8 +256,10 @@ public class TriviaQuestionActivity extends AppCompatActivity {
         question.setTextColor(getResources().getColor(R.color.red));
         answer_1.setVisibility(View.INVISIBLE);
         answer_2.setVisibility(View.INVISIBLE);
-        answer_3.setVisibility(View.INVISIBLE);
-        answer_4.setVisibility(View.INVISIBLE);
+        if (mIsQCM_type) {
+            answer_3.setVisibility(View.INVISIBLE);
+            answer_4.setVisibility(View.INVISIBLE);
+        }
         category.setVisibility(View.INVISIBLE);
         difficulty.setVisibility(View.INVISIBLE);
         okButton.setVisibility(View.INVISIBLE);
@@ -243,8 +285,10 @@ public class TriviaQuestionActivity extends AppCompatActivity {
         backButton.setVisibility(View.VISIBLE);
         answer_1.setEnabled(false);
         answer_2.setEnabled(false);
-        answer_3.setEnabled(false);
-        answer_4.setEnabled(false);
+        if (mIsQCM_type) {
+            answer_3.setEnabled(false);
+            answer_4.setEnabled(false);
+        }
     }
 
     public void backButtonOnClick(View view) {
@@ -252,7 +296,7 @@ public class TriviaQuestionActivity extends AppCompatActivity {
             // send score back as an Intent
             Intent intent = new Intent(TriviaQuestionActivity.this, MainActivity.class);
             intent.putExtra(INTENT_RESULT, mResult);
-
+            setResult(Activity.RESULT_OK, intent);
             finish();
         } else {
             Toast.makeText(this, "You did not validate your answer", Toast.LENGTH_SHORT).show();
@@ -272,5 +316,6 @@ public class TriviaQuestionActivity extends AppCompatActivity {
         }
 //        Log.e(TAG, "Save errors");
         outState.putBoolean(ERROR_BOOL, merror);
+        outState.putBoolean(INTENT_QCM_TYPE, mIsQCM_type);
     }
 }

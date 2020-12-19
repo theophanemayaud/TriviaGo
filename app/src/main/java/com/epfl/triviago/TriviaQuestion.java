@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 public class TriviaQuestion implements Serializable {
-//
+
 //    static final HashMap<String, Integer> CATEGORIES = new HashMap();
 //    static {
 //        CATEGORIES.put("General Knowledge", 9);
@@ -35,7 +35,35 @@ public class TriviaQuestion implements Serializable {
 //        CATEGORIES.put("Entertainment: Japanese Anime & Manga", 31);
 //        CATEGORIES.put("Entertainment: Cartoon & Animations", 32);
 //    }
-//
+
+    static final ArrayList<String> Categories = new ArrayList<>();
+    static {
+        Categories.add("General Knowledge");
+        Categories.add("Entertainment: Books");
+        Categories.add("Entertainment: Film");
+        Categories.add("Entertainment: Music");
+        Categories.add("Entertainment: Musicals & Theatres");
+        Categories.add("Entertainment: Television");
+        Categories.add("Entertainment: Video Games");
+        Categories.add("Entertainment: Board Games");
+        Categories.add("Science & Nature");
+        Categories.add("Science: Computers");
+        Categories.add("Science: Mathematics");
+        Categories.add("Mythology");
+        Categories.add("Sports");
+        Categories.add("Geography");
+        Categories.add("History");
+        Categories.add("Politics");
+        Categories.add("Art");
+        Categories.add("Celebrities");
+        Categories.add("Animals");
+        Categories.add("Vehicles");
+        Categories.add("Entertainment: Comics");
+        Categories.add("Science: Gadgets");
+        Categories.add("Entertainment: Japanese Anime & Manga");
+        Categories.add("Entertainment: Cartoon & Animations");
+    }
+
 //    static final ArrayList<String> DIFFICULTY = new ArrayList<>();
 //    static {
 //        DIFFICULTY.add("easy");
@@ -43,20 +71,30 @@ public class TriviaQuestion implements Serializable {
 //        DIFFICULTY.add("hard");
 //    }
 
-    private final Integer MAX_INDEX = 4;
+    private final Integer MAX_INDEX_QCM = 4;
+    private final Integer MAX_INDEX_BOOL = 2;
 
     public String mQuestion;
     public String mDifficulty;
     public String mCategory;
-    public ArrayList<String> mResponses = new ArrayList<String>();
+    public ArrayList<String> mResponses = new ArrayList();
     public Integer mcorrectIndex;
 
-    public TriviaQuestion(String question, String difficulty, String category, List<String> incorrectResponses, String correctResponse) {
+    public TriviaQuestion(String question, String difficulty, String category, List<String> incorrectResponses, String correctResponse, String type) {
         this.mQuestion = question;
         this.mDifficulty = difficulty;
         this.mCategory = category;
-        this.mcorrectIndex = new Random().nextInt(MAX_INDEX);
+        if (!type.equals("boolean")) {
+            this.mcorrectIndex = new Random().nextInt(MAX_INDEX_QCM);
+
+        } else {
+            this.mcorrectIndex = new Random().nextInt(MAX_INDEX_BOOL);
+        }
         this.mResponses.addAll(incorrectResponses);
         this.mResponses.add(mcorrectIndex, correctResponse);
+    }
+
+    public static String getCategoryTextFromInt(int category) {
+        return Categories.get(category);
     }
 }

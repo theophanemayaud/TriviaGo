@@ -1,6 +1,7 @@
-package com.epfl.triviago;
+package com.epfl.triviago.trivia;
 
 import java.util.List;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
