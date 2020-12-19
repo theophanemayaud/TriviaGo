@@ -21,7 +21,7 @@
         <item>3</item>
         <item>4</item>
         <item>5</item>
-     </string-array>
+    </string-array>
 
     <string-array name="spinner_questions">
         <item>2 questions</item>

@@ -35,4 +35,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intentWelcomeActivity = new Intent(MainActivity.this, WelcomeActivity.class);
         startActivity(intentWelcomeActivity);
     }
+
+    public void clickedGoToCreateWaypointsButtonXmlCallback(View view) {
+        Intent createWaypointsIntent = new Intent(MainActivity.this, CreateWaypoints.class);
+        startActivity(createWaypointsIntent);
+    }
 }

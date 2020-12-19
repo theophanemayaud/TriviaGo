@@ -79,6 +79,13 @@
             android:text="Start Laurence"
             android:textColor="#FFFFFF" />
 
+        <Button
+            android:id="@+id/goToCreateWaypointsButton"
+            android:layout_width="169dp"
+            android:layout_height="wrap_content"
+            android:onClick="clickedGoToCreateWaypointsButtonXmlCallback"
+            android:text="Go to CreateWaypoints" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

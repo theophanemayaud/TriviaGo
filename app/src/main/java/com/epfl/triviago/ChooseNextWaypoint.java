@@ -242,5 +242,8 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     public void onMapReady(GoogleMap googleMap) {
         // We have a map !
         mMap = googleMap;
+
+        //Disable Map Toolbar:
+        mMap.getUiSettings().setMapToolbarEnabled(false);
     }
 }
