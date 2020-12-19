@@ -5,11 +5,7 @@
     android:id="@+id/triviaParentLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TriviaQuestionActivity"
-    android:background="@drawable/tile_test"
-    android:backgroundTint="#C6B3B3"
-    android:backgroundTintMode="add"
-    >
+    tools:context=".TriviaQuestionActivity">
 
     <TextView
         android:id="@+id/textCategory"
@@ -50,42 +46,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        android:padding="15dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textQuestion"
-        android:background="@drawable/white_bg_box">
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/textQuestion">
 
         <RadioButton
             android:id="@+id/answer_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Answer_1"
-            android:buttonTint="#F44336"
+            android:buttonTint="#FF9800"
             android:onClick="answerRadioButtonClicked"/>
+
+        <Space
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
         <RadioButton
             android:id="@+id/answer_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Answer_2"
-            android:buttonTint="#8BC34A"
-            android:onClick="answerRadioButtonClicked"/>
-
-        <RadioButton
-            android:id="@+id/answer_3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Answer_3"
             android:buttonTint="#2196F3"
-            android:onClick="answerRadioButtonClicked"/>
-
-        <RadioButton
-            android:id="@+id/answer_4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Réponse D"
-            android:buttonTint="#9C27B0"
             android:onClick="answerRadioButtonClicked"/>
     </RadioGroup>
 

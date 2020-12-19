@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
+    android:src="@drawable/t1063"
+    android:Tint="#C6B3B3"
+    android:backgroundTintMode="add"
+    android:tileMode="repeat"/>
