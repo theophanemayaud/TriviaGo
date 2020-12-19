@@ -1,4 +1,4 @@
-package com.epfl.triviago;
+package com.epfl.triviago.trivia;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
