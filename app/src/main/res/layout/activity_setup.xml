@@ -55,8 +55,10 @@
                 android:id="@+id/textView3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView" />
+                android:text="Name of the Game"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:layout_weight="1" />
 
             <EditText
                 android:id="@+id/editTextTextPersonName"
@@ -64,22 +66,26 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:inputType="textPersonName"
-                android:text="Name" />
+                android:hint="Name/Code to join the game"
+                android:inputType="textPersonName" />
 
             <TextView
                 android:id="@+id/textView4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView" />
+                android:text="Type of questions"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:layout_weight="1" />
 
             <ToggleButton
                 android:id="@+id/toggleButton2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="ToggleButton" />
+                android:text="ToggleButton"
+                android:textOff="MULTIPLE CHOICE"
+                android:textOn="TRUE / FALSE" />
 
             <TextView
                 android:id="@+id/textDifficulty"
