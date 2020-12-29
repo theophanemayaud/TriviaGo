@@ -70,11 +70,80 @@
                 android:inputType="textPersonName" />
 
             <TextView
+                android:id="@+id/textNumPlayer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Number of Players"
+                android:layout_marginTop="10dp"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button_1p"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/buttonshape_difficulty_unselected"
+                    android:onClick="clickedEasyButtonXmlCallback"
+                    android:text="1" />
+
+                <Button
+                    android:id="@+id/button_2p"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/buttonshape_difficulty_unselected"
+                    android:onClick="clickedMediumButtonXmlCallback"
+                    android:text="2" />
+
+                <Button
+                    android:id="@+id/button_3p"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/buttonshape_difficulty_unselected"
+                    android:onClick="clickedHardButtonXmlCallback"
+                    android:text="3" />
+                <Button
+                    android:id="@+id/button_4p"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/buttonshape_difficulty_unselected"
+                    android:onClick="clickedHardButtonXmlCallback"
+                    android:text="4" />
+                <Button
+                    android:id="@+id/button_5p"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/buttonshape_difficulty_unselected"
+                    android:onClick="clickedHardButtonXmlCallback"
+                    android:text="5" />
+                <Button
+                    android:id="@+id/button_6p"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/buttonshape_difficulty_unselected"
+                    android:onClick="clickedHardButtonXmlCallback"
+                    android:text="6" />
+            </LinearLayout>
+
+            <TextView
                 android:id="@+id/textView4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Type of questions"
                 android:textSize="20sp"
+                android:layout_marginTop="10dp"
                 android:textColor="@color/black"
                 android:layout_weight="1" />
 
@@ -91,6 +160,7 @@
                 android:id="@+id/textDifficulty"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="Difficulty"
                 android:textSize="20sp"
                 android:textColor="@color/black"
@@ -130,73 +200,50 @@
                     android:text="Hard" />
             </LinearLayout>
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/textMaxAttemps"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="Number of players"
-                    android:textAlignment="center"
-                    android:background="@color/bg_blue"/>
-
-                <Spinner
-                    android:id="@+id/spinner_players_num"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-            </LinearLayout>
-
+                android:layout_marginTop="10dp"
+                android:text="Max attempts per question"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:layout_weight="1" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                <Button
+                    android:id="@+id/button_1atp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_weight="1"
-                    android:text="Number of questions"
-                    android:textAlignment="center"
-                    android:background="@color/bg_blue"/>
+                    android:background="@drawable/buttonshape_difficulty_unselected"
+                    android:onClick="clickedEasyButtonXmlCallback"
+                    android:text="1" />
 
-                <Spinner
-                    android:id="@+id/spinner_questions_num"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                <Button
+                    android:id="@+id/button_3atp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/buttonshape_difficulty_unselected"
+                    android:onClick="clickedMediumButtonXmlCallback"
+                    android:text="3" />
+
+                <Button
+                    android:id="@+id/button_5atp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/buttonshape_difficulty_unselected"
+                    android:onClick="clickedHardButtonXmlCallback"
+                    android:text="5" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="Category of questions"
-                    android:textAlignment="center"
-                    android:background="@color/bg_blue"/>
-
-                <Spinner
-                    android:id="@+id/spinner_trivia_category"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-            </LinearLayout>
         </LinearLayout>
-
-
-
     </LinearLayout>
 
 
