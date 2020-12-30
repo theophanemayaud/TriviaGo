@@ -2,7 +2,6 @@ package com.epfl.triviago;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -78,20 +77,20 @@ public class TriviaQuestion implements Serializable {
     public String mDifficulty;
     public String mCategory;
     public ArrayList<String> mResponses = new ArrayList();
-    public Integer mcorrectIndex;
+    public Integer mCorrectIndex;
 
     public TriviaQuestion(String question, String difficulty, String category, List<String> incorrectResponses, String correctResponse, String type) {
         this.mQuestion = question;
         this.mDifficulty = difficulty;
         this.mCategory = category;
         if (!type.equals("boolean")) {
-            this.mcorrectIndex = new Random().nextInt(MAX_INDEX_QCM);
+            this.mCorrectIndex = new Random().nextInt(MAX_INDEX_QCM);
 
         } else {
-            this.mcorrectIndex = new Random().nextInt(MAX_INDEX_BOOL);
+            this.mCorrectIndex = new Random().nextInt(MAX_INDEX_BOOL);
         }
         this.mResponses.addAll(incorrectResponses);
-        this.mResponses.add(mcorrectIndex, correctResponse);
+        this.mResponses.add(mCorrectIndex, correctResponse);
     }
 
     public static String getCategoryTextFromInt(int category) {

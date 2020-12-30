@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -269,14 +268,14 @@ public class TriviaQuestionActivity extends AppCompatActivity {
     }
 
     private void validate_answer() {
-        if (mResponse_index == mTrivia.mcorrectIndex) {
+        if (mResponse_index == mTrivia.mCorrectIndex) {
             checkAnswer.setBackground(getResources().getDrawable(R.drawable.correct_answer_shape));
             checkAnswer.setText(R.string.correct);
             mResult = true;
         }
         else {
             checkAnswer.setBackground(getResources().getDrawable(R.drawable.incorrect_answer_shape));
-            checkAnswer.setText(getString(R.string.wrong) + " " + Html.fromHtml(mTrivia.mResponses.get(mTrivia.mcorrectIndex)));
+            checkAnswer.setText(getString(R.string.wrong) + " " + Html.fromHtml(mTrivia.mResponses.get(mTrivia.mCorrectIndex)));
             mResult = false;
         }
         checkAnswer.setTextColor(getResources().getColor(R.color.white));

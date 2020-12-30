@@ -7,8 +7,8 @@
     android:layout_height="match_parent"
     tools:context=".TriviaQuestionActivity"
     android:background="@drawable/tile_test"
-    android:backgroundTint="#C6B3B3"
-    android:backgroundTintMode="add"
+    android:backgroundTint="#D7F1ED"
+    android:backgroundTintMode="multiply"
     >
 
     <TextView
@@ -35,6 +35,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Trivia Question"
+        android:background="@drawable/shadow_white_box"
+        android:padding="10dp"
         android:textColor="#000000"
         android:textSize="24sp"
         app:layout_constraintWidth_max="400dp"
