@@ -61,13 +61,13 @@
                 android:layout_weight="1" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName"
+                android:id="@+id/nameGame"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
                 android:hint="Name/Code to join the game"
-                android:inputType="textPersonName" />
+                android:inputType="textCapCharacters" />
 
             <TextView
                 android:id="@+id/textNumPlayer"
@@ -91,7 +91,7 @@
                     android:layout_height="40dp"
                     android:layout_weight="1"
                     android:background="@drawable/buttonshape_difficulty_unselected"
-                    android:onClick="clickedEasyButtonXmlCallback"
+                    android:onClick="clicked1pButtonXmlCallback"
                     android:text="1" />
 
                 <Button
@@ -99,8 +99,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_weight="1"
-                    android:background="@drawable/buttonshape_difficulty_unselected"
-                    android:onClick="clickedMediumButtonXmlCallback"
+                    android:background="@drawable/buttonshape_difficulty_selected"
+                    android:onClick="clicked2pButtonXmlCallback"
                     android:text="2" />
 
                 <Button
@@ -109,32 +109,27 @@
                     android:layout_height="40dp"
                     android:layout_weight="1"
                     android:background="@drawable/buttonshape_difficulty_unselected"
-                    android:onClick="clickedHardButtonXmlCallback"
+                    android:onClick="clicked3pButtonXmlCallback"
                     android:text="3" />
+
                 <Button
                     android:id="@+id/button_4p"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_weight="1"
                     android:background="@drawable/buttonshape_difficulty_unselected"
-                    android:onClick="clickedHardButtonXmlCallback"
+                    android:onClick="clicked4pButtonXmlCallback"
                     android:text="4" />
+
                 <Button
                     android:id="@+id/button_5p"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_weight="1"
                     android:background="@drawable/buttonshape_difficulty_unselected"
-                    android:onClick="clickedHardButtonXmlCallback"
+                    android:onClick="clicked5pButtonXmlCallback"
                     android:text="5" />
-                <Button
-                    android:id="@+id/button_6p"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/buttonshape_difficulty_unselected"
-                    android:onClick="clickedHardButtonXmlCallback"
-                    android:text="6" />
+
             </LinearLayout>
 
             <TextView
@@ -152,6 +147,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:onClick="clickedQuestionTypeButtonXmlCallback"
                 android:text="ToggleButton"
                 android:textOff="MULTIPLE CHOICE"
                 android:textOn="TRUE / FALSE" />
@@ -177,7 +173,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_weight="1"
-                    android:background="@drawable/buttonshape_difficulty_unselected"
+                    android:background="@drawable/buttonshape_difficulty_selected"
                     android:onClick="clickedEasyButtonXmlCallback"
                     android:text="Easy" />
 
@@ -221,7 +217,7 @@
                     android:layout_height="40dp"
                     android:layout_weight="1"
                     android:background="@drawable/buttonshape_difficulty_unselected"
-                    android:onClick="clickedEasyButtonXmlCallback"
+                    android:onClick="clicked1AtpButtonXmlCallback"
                     android:text="1" />
 
                 <Button
@@ -229,8 +225,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_weight="1"
-                    android:background="@drawable/buttonshape_difficulty_unselected"
-                    android:onClick="clickedMediumButtonXmlCallback"
+                    android:background="@drawable/buttonshape_difficulty_selected"
+                    android:onClick="clicked3AtpButtonXmlCallback"
                     android:text="3" />
 
                 <Button
@@ -239,14 +235,23 @@
                     android:layout_height="40dp"
                     android:layout_weight="1"
                     android:background="@drawable/buttonshape_difficulty_unselected"
-                    android:onClick="clickedHardButtonXmlCallback"
+                    android:onClick="clicked5AtpButtonXmlCallback"
                     android:text="5" />
             </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>
 
-
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Done"
+        android:onClick="clickedDoneButtonXmlCallback"
+        android:background="@drawable/shadow_white_box"
+        tools:layout_editor_absoluteX="261dp"
+        tools:layout_editor_absoluteY="638dp"
+        tools:ignore="MissingConstraints" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
