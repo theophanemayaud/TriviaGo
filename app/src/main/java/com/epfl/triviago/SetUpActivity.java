@@ -4,18 +4,25 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.service.autofill.CharSequenceTransformation;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class SetUpActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -23,7 +30,10 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
     private DatabaseReference mDatabase;
 
     //Useful Variables
+    String numPlayer = "2";
     boolean questionType = false; //FALSE = Multiple choice & TRUE = true/false
+    String difficulty = "easy";
+    String maxAttemps = "3";
 
 
     @Override
@@ -32,7 +42,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
         setContentView(R.layout.activity_setup);
 
         // [START initialize_database_ref]
-        defaultGameSetUp();
+        //defaultGameSetUp();
 
 
         //DatabaseReference myRef = database.getReference("message");
@@ -65,46 +75,65 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
         //    }
         //});
 
+
     }
 
     public void clickedDoneButtonXmlCallback(View view){
-        finish();
-    }
-
-    public void defaultGameSetUp(){
         TextView nameGame = findViewById(R.id.nameGame);
-        String name = nameGame.getText().toString();
+        String gameName = nameGame.getText().toString();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("Games").child("Name").setValue(name);
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("Games").child("Name").child("NumPlayers").setValue("2");
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("Games").child("Name").child("QuestionType").setValue("QCM");
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("Games").child("Name").child("Difficulty").setValue("easy");
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("Games").child("Name").child("MaxAttempts").setValue("3");
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.child("Games").hasChild(gameName)) {
+                    Toast.makeText(SetUpActivity.this, "Game name already exists, " +
+                            "please choose another one", Toast.LENGTH_SHORT).show();
+                } else {
+                    //Default values
+                    mDatabase.child("Games").child(gameName).child("NumPlayers").setValue("2");
+                    mDatabase.child("Games").child(gameName).child("QuestionType").setValue("QCM");
+                    mDatabase.child("Games").child(gameName).child("Difficulty").setValue("easy");
+                    mDatabase.child("Games").child(gameName).child("MaxAttempts").setValue("3");
+
+                    //Adjusted values
+                    ToggleButton toggle = findViewById(R.id.button_questionType);
+                    mDatabase.child("Games").child(gameName).child("NumPlayers").setValue(numPlayer);
+                    if (toggle.isChecked()) {
+                        questionType = true;
+                        mDatabase.child("Games").child(gameName).child("QuestionType").setValue("true/false");
+                    }
+                    else{
+                        mDatabase.child("Games").child(gameName).child("QuestionType").setValue("QCM");
+                    }
+                    Toast.makeText(SetUpActivity.this, ""+questionType, Toast.LENGTH_SHORT).show();
+
+                    mDatabase.child("Games").child(gameName).child("Difficulty").setValue(difficulty);
+                    mDatabase.child("Games").child(gameName).child("MaxAttempts").setValue(maxAttemps);
+
+                    Toast.makeText(SetUpActivity.this, "NEW", Toast.LENGTH_SHORT).show();
+                    //finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
     }
 
     public void clickedQuestionTypeButtonXmlCallback(View view){
-        if(questionType = false){
-            mDatabase = FirebaseDatabase.getInstance().getReference();
-            mDatabase.child("Games").child("Name").child("QuestionType").setValue("true/false");
-            questionType = true;
+        ToggleButton toggle = findViewById(R.id.button_questionType);
 
-        }
-        else {
-            mDatabase = FirebaseDatabase.getInstance().getReference();
-            mDatabase.child("Games").child("Name").child("QuestionType").setValue("QCM");
-            questionType = false;
-        }
+
+        //if (toggle.isChecked()) {
+        //    questionType = true;
+        //}
     }
 
     public void clicked1pButtonXmlCallback (View view){
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("Games").child("Name").child("NumPlayers").setValue("1");
-
+        numPlayer = "1";
         findViewById(R.id.button_1p).setBackgroundResource(R.drawable.buttonshape_difficulty_selected);
         findViewById(R.id.button_2p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         findViewById(R.id.button_3p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
@@ -113,9 +142,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     public void clicked2pButtonXmlCallback (View view){
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("Games").child("Name").child("NumPlayers").setValue("2");
-
+        numPlayer = "2";
         findViewById(R.id.button_1p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         findViewById(R.id.button_2p).setBackgroundResource(R.drawable.buttonshape_difficulty_selected);
         findViewById(R.id.button_3p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
@@ -124,9 +151,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     public void clicked3pButtonXmlCallback (View view){
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("Games").child("Name").child("NumPlayers").setValue("3");
-
+        numPlayer = "3";
         findViewById(R.id.button_1p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         findViewById(R.id.button_2p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         findViewById(R.id.button_3p).setBackgroundResource(R.drawable.buttonshape_difficulty_selected);
@@ -135,9 +160,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     public void clicked4pButtonXmlCallback (View view){
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("Games").child("Name").child("NumPlayers").setValue("4");
-
+        numPlayer = "4";
         findViewById(R.id.button_1p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         findViewById(R.id.button_2p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         findViewById(R.id.button_3p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
@@ -146,9 +169,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     public void clicked5pButtonXmlCallback (View view){
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("Games").child("Name").child("NumPlayers").setValue("5");
-
+        numPlayer = "5";
         findViewById(R.id.button_1p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         findViewById(R.id.button_2p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         findViewById(R.id.button_3p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
@@ -157,75 +178,45 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     public void clickedEasyButtonXmlCallback(View view) {
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("Games").child("Name").child("Difficulty").setValue("easy");
-
-        View button1View = findViewById(R.id.button_easy);
-        button1View.setBackgroundResource(R.drawable.buttonshape_difficulty_selected);
-        View button2View = findViewById(R.id.button_medium);
-        button2View.setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
-        View button3View = findViewById(R.id.button_hard);
-        button3View.setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
+        difficulty = "easy";
+        findViewById(R.id.button_easy).setBackgroundResource(R.drawable.buttonshape_difficulty_selected);
+        findViewById(R.id.button_medium).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
+        findViewById(R.id.button_hard).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
     }
 
     public void clickedMediumButtonXmlCallback(View view) {
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("Games").child("Name").child("Difficulty").setValue("medium");
-
-        View button1View = findViewById(R.id.button_easy);
-        button1View.setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
-        View button2View = findViewById(R.id.button_medium);
-        button2View.setBackgroundResource(R.drawable.buttonshape_difficulty_selected);
-        View button3View = findViewById(R.id.button_hard);
-        button3View.setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
+        difficulty = "medium";
+        findViewById(R.id.button_easy).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
+        findViewById(R.id.button_medium).setBackgroundResource(R.drawable.buttonshape_difficulty_selected);
+        findViewById(R.id.button_hard).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
     }
 
     public void clickedHardButtonXmlCallback(View view) {
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("Games").child("Name").child("Difficulty").setValue("hard");
-
-        View button1View = findViewById(R.id.button_easy);
-        button1View.setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
-        View button2View = findViewById(R.id.button_medium);
-        button2View.setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
-        View button3View = findViewById(R.id.button_hard);
-        button3View.setBackgroundResource(R.drawable.buttonshape_difficulty_selected);
+        difficulty = "hard";
+        findViewById(R.id.button_easy).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
+        findViewById(R.id.button_medium).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
+        findViewById(R.id.button_hard).setBackgroundResource(R.drawable.buttonshape_difficulty_selected);
     }
 
     public void clicked1AtpButtonXmlCallback(View view) {
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("Games").child("Name").child("MaxAttempts").setValue("1");
-
-        View button1View = findViewById(R.id.button_1atp);
-        button1View.setBackgroundResource(R.drawable.buttonshape_difficulty_selected);
-        View button2View = findViewById(R.id.button_3atp);
-        button2View.setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
-        View button3View = findViewById(R.id.button_5atp);
-        button3View.setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
+        maxAttemps = "1";
+        findViewById(R.id.button_1atp).setBackgroundResource(R.drawable.buttonshape_difficulty_selected);
+        findViewById(R.id.button_3atp).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
+        findViewById(R.id.button_5atp).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
     }
 
     public void clicked3AtpButtonXmlCallback(View view) {
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("Games").child("Name").child("MaxAttempts").setValue("3");
-
-        View button1View = findViewById(R.id.button_1atp);
-        button1View.setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
-        View button2View = findViewById(R.id.button_3atp);
-        button2View.setBackgroundResource(R.drawable.buttonshape_difficulty_selected);
-        View button3View = findViewById(R.id.button_5atp);
-        button3View.setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
+        maxAttemps = "3";
+        findViewById(R.id.button_1atp).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
+        findViewById(R.id.button_3atp).setBackgroundResource(R.drawable.buttonshape_difficulty_selected);
+        findViewById(R.id.button_5atp).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
     }
 
     public void clicked5AtpButtonXmlCallback(View view) {
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("Games").child("Name").child("MaxAttempts").setValue("5");
-
-        View button1View = findViewById(R.id.button_1atp);
-        button1View.setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
-        View button2View = findViewById(R.id.button_3atp);
-        button2View.setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
-        View button3View = findViewById(R.id.button_5atp);
-        button3View.setBackgroundResource(R.drawable.buttonshape_difficulty_selected);
+        maxAttemps = "5";
+        findViewById(R.id.button_1atp).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
+        findViewById(R.id.button_3atp).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
+        findViewById(R.id.button_5atp).setBackgroundResource(R.drawable.buttonshape_difficulty_selected);
     }
 
     @Override

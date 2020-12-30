@@ -66,7 +66,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:hint="Name/Code to join the game"
+                android:text="AAAAA"
                 android:inputType="textCapCharacters" />
 
             <TextView
@@ -143,11 +143,11 @@
                 android:layout_weight="1" />
 
             <ToggleButton
-                android:id="@+id/toggleButton2"
+                android:id="@+id/button_questionType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="clickedQuestionTypeButtonXmlCallback"
+                android:checked="false"
                 android:text="ToggleButton"
                 android:textOff="MULTIPLE CHOICE"
                 android:textOn="TRUE / FALSE" />
@@ -249,9 +249,9 @@
         android:text="Done"
         android:onClick="clickedDoneButtonXmlCallback"
         android:background="@drawable/shadow_white_box"
-        tools:layout_editor_absoluteX="261dp"
-        tools:layout_editor_absoluteY="638dp"
-        tools:ignore="MissingConstraints" />
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/setup_parameters"
+        app:layout_constraintRight_toRightOf="@id/setup_parameters"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
