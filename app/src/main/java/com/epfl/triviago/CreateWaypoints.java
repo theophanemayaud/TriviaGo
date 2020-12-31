@@ -35,10 +35,13 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CreateWaypoints<onMapLongClick> extends AppCompatActivity implements OnMapReadyCallback {
+    static final int RESULT_WAYPOINTS_LIST_CODE = 2131;
+    static final String RESULT_WAYPOINTS_LIST_NAME = "waypoints_list_result";
     private static final int NO_CATEG_SELECTION = 0;
     private static final int NO_WAYPOINT_SELECTION = -1;
     private static final int LIST_POS_TO_LETTER_OFFSET=65;
@@ -172,9 +175,9 @@ public class CreateWaypoints<onMapLongClick> extends AppCompatActivity implement
         fusedLocationClient.removeLocationUpdates(locationCallback);
     }
 
-    // -------------------------------- End of location things ---------
+    // -------------------------------- End of location things --------------------------------
 
-    // -------------------------------- Begin of map things (excluding geolocation)-----------------
+    // -------------------------------- Begin of map things (excluding geolocation) -----------------
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -327,8 +330,10 @@ public class CreateWaypoints<onMapLongClick> extends AppCompatActivity implement
                     }
                 }
                 // TODO : really save all
-                Intent intent = new Intent(CreateWaypoints.this, ChooseNextWaypoint.class);
-                startActivity(intent);
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra(RESULT_WAYPOINTS_LIST_NAME, (Serializable) waypointsLatLgnList);
+                setResult(RESULT_OK, returnIntent);
+                finish();
                 break;
 //            case R.id.action_validate:
 //                editUser();

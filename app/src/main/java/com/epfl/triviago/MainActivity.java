@@ -8,6 +8,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
+
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,21 +43,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case ASK_QUESTION:
-                if (resultCode == RESULT_OK) {
-                    boolean correct_answer = data.getExtras().getBoolean(TriviaQuestionActivity.INTENT_RESULT);
-                    if (correct_answer) {
-                        mScore += 1;
-                    }
-                    Log.e(TAG, "The score is : " + mScore);
-                }
-        }
-    }
-
     public void clickedChooseNextWaypointButtonXmlCallback(View view) {
         Intent intentChooseNextWaypoint = new Intent(MainActivity.this, ChooseNextWaypoint.class);
         startActivity(intentChooseNextWaypoint);
@@ -65,6 +55,18 @@ public class MainActivity extends AppCompatActivity {
 
     public void clickedGoToCreateWaypointsButtonXmlCallback(View view) {
         Intent createWaypointsIntent = new Intent(MainActivity.this, CreateWaypoints.class);
-        startActivity(createWaypointsIntent);
+        startActivityForResult(createWaypointsIntent, CreateWaypoints.RESULT_WAYPOINTS_LIST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Check which request we're responding to
+        if (requestCode == CreateWaypoints.RESULT_WAYPOINTS_LIST_CODE) {
+            if (resultCode == RESULT_OK) {
+                ArrayList<LatLng> waypointsLatLgnList = (ArrayList<LatLng>) data.getSerializableExtra(CreateWaypoints.RESULT_WAYPOINTS_LIST_NAME);
+            }
+        }
     }
 }
