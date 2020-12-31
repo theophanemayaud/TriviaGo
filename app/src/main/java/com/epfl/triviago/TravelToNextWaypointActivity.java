@@ -59,7 +59,6 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
 
     IconGenerator iconGenerator;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -183,7 +182,7 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
                     // TODO set distance to textView !
                     TextView distanceDisplayTextview = findViewById(R.id.distanceToDestination);
                     String displayText = getString(R.string.distToDestText) + String.valueOf(Math.round(distance[0])) + " meters";
-                    if(distance[0]>10000){
+                    if(distance[0]>10000){ //display in KM if above 10km, such that it is more readable
                         displayText = getString(R.string.distToDestText) + String.valueOf(Math.round(distance[0]/1000)) + " km";
                     }
                     distanceDisplayTextview.setText(displayText);
@@ -261,7 +260,5 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
     private void stopLocationUpdates() {
         fusedLocationClient.removeLocationUpdates(locationCallback);
     }
-
-
 
 }
