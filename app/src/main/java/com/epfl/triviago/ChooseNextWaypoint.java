@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.Intent;
@@ -19,7 +18,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -41,7 +39,7 @@ import java.util.Random;
 
 public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyCallback {
 
-    // Request codes for TravelToNextWaypoint
+    // Request codes for TravelToNextWaypointActivity
     private static final int REACH_DEST = 2;
     private static final int ASK_QUESTION = 3;
 
@@ -224,7 +222,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     }
 
     public void goToNextWaypointPressedCallback(View view) {
-        Intent TravelToNextWaypointIntent = new Intent(ChooseNextWaypoint.this, TravelToNextWaypoint.class);
+        Intent TravelToNextWaypointIntent = new Intent(ChooseNextWaypoint.this, TravelToNextWaypointActivity.class);
         TravelToNextWaypointIntent.putExtra( DEST_LAT_LNG, selectedDestinationLatLgn);
         if(currentLocation!=null) {
             TravelToNextWaypointIntent.putExtra(LATEST_USER_LOC, currentLocation);
@@ -238,7 +236,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         switch (requestCode) {
             case REACH_DEST:
                 if (resultCode == RESULT_OK) {
-                    boolean reached_waypoint = data.getExtras().getBoolean(TravelToNextWaypoint.INTENT_RESULT);
+                    boolean reached_waypoint = data.getExtras().getBoolean(TravelToNextWaypointActivity.INTENT_RESULT);
                     if (reached_waypoint) {
                         Log.e(TAG, "User reached waypoint");
                         // launch triviaquestion

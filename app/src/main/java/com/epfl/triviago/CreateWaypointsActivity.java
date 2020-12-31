@@ -185,9 +185,9 @@ public class CreateWaypointsActivity<onMapLongClick> extends AppCompatActivity i
         fusedLocationClient.removeLocationUpdates(locationCallback);
     }
 
-    // -------------------------------- End of location things --------------------------------
+    // -------------------------------- End of location things -------------------------------
 
-    // -------------------------------- Begin of map things (excluding geolocation) -----------------
+    // -------------------------------- Begin of map things (excluding geolocation) -------
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -249,7 +249,12 @@ public class CreateWaypointsActivity<onMapLongClick> extends AppCompatActivity i
             String waypointLetter = String.valueOf((char) (waypointListPosition + LIST_POS_TO_LETTER_OFFSET));
             TextView selectedItemView = findViewById(R.id.selectedWaypointText);
             selectedItemView.setText("Waypoint " + waypointLetter + " category ➡");
-            selectedItemView.setTextColor(Color.RED);
+            if(waypointsSelectedCategoryList.get(waypointListPosition)==NO_CATEG_SELECTION){
+                selectedItemView.setTextColor(Color.RED);
+            }
+            else{
+                selectedItemView.setTextColor(Color.GREEN);
+            }
 
             spinner_category.setEnabled(true);
             spinner_category.setSelection(waypointsSelectedCategoryList.get(waypointListPosition));
@@ -272,34 +277,8 @@ public class CreateWaypointsActivity<onMapLongClick> extends AppCompatActivity i
             String waypointLetter = String.valueOf((char) (selectedWaypointListPosition + LIST_POS_TO_LETTER_OFFSET));
             waypointMarker.setIcon(BitmapDescriptorFactory.fromBitmap(
                     iconGenerator.makeIcon(waypointLetter)));
-        }
-    }
-
-    public void onDeleteButtonXmlButtonPressed(View view){
-        if(selectedWaypointListPosition != NO_WAYPOINT_SELECTION){
-            waypointsMarkersList.get(selectedWaypointListPosition).remove();
-            waypointsMarkersList.remove(selectedWaypointListPosition);
-            waypointsLatLgnList.remove(selectedWaypointListPosition);
-            waypointsSelectedCategoryList.remove(selectedWaypointListPosition);
-            updateSelectedWaypoint(NO_WAYPOINT_SELECTION);
-
-            for(int i = 0; i<waypointsSelectedCategoryList.size(); i++){
-                if(waypointsSelectedCategoryList.get(i)==NO_CATEG_SELECTION){
-                    iconGenerator.setStyle(IconGenerator.STYLE_RED);
-                }
-                else {
-                    iconGenerator.setStyle(IconGenerator.STYLE_GREEN);
-                }
-                Marker markerToUpdate = waypointsMarkersList.get(i);
-                String waypointLetter = String.valueOf((char) (i + LIST_POS_TO_LETTER_OFFSET));
-                markerToUpdate.setTitle("Waypoint "+ waypointLetter);
-                markerToUpdate.setIcon(BitmapDescriptorFactory.fromBitmap(
-                        iconGenerator.makeIcon(waypointLetter)));
-                markerToUpdate.setTag(i);
-            }
-        }
-        else{
-            Toast.makeText(this, "No waypoints selected for delete...", Toast.LENGTH_SHORT).show();
+            TextView selectedItemView = findViewById(R.id.selectedWaypointText);
+            selectedItemView.setTextColor(Color.GREEN);
         }
     }
 
@@ -347,11 +326,32 @@ public class CreateWaypointsActivity<onMapLongClick> extends AppCompatActivity i
                 finish();
                 break;
             case R.id.delWaypntMenuButton:
-                // TODO : change from other delete button !
+                if(selectedWaypointListPosition != NO_WAYPOINT_SELECTION){
+                    waypointsMarkersList.get(selectedWaypointListPosition).remove();
+                    waypointsMarkersList.remove(selectedWaypointListPosition);
+                    waypointsLatLgnList.remove(selectedWaypointListPosition);
+                    waypointsSelectedCategoryList.remove(selectedWaypointListPosition);
+                    updateSelectedWaypoint(NO_WAYPOINT_SELECTION);
+
+                    for(int i = 0; i<waypointsSelectedCategoryList.size(); i++){
+                        if(waypointsSelectedCategoryList.get(i)==NO_CATEG_SELECTION){
+                            iconGenerator.setStyle(IconGenerator.STYLE_RED);
+                        }
+                        else {
+                            iconGenerator.setStyle(IconGenerator.STYLE_GREEN);
+                        }
+                        Marker markerToUpdate = waypointsMarkersList.get(i);
+                        String waypointLetter = String.valueOf((char) (i + LIST_POS_TO_LETTER_OFFSET));
+                        markerToUpdate.setTitle("Waypoint "+ waypointLetter);
+                        markerToUpdate.setIcon(BitmapDescriptorFactory.fromBitmap(
+                                iconGenerator.makeIcon(waypointLetter)));
+                        markerToUpdate.setTag(i);
+                    }
+                }
+                else{
+                    Toast.makeText(this, "No waypoints selected for delete...", Toast.LENGTH_SHORT).show();
+                }
                 break;
-//            case R.id.action_validate:
-//                editUser();
-//                break;
         }
         return super.onOptionsItemSelected(item);
     }

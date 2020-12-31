@@ -9,15 +9,16 @@
 
     <LinearLayout
         android:id="@+id/setup_message"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="@drawable/shadow_white_box"
         android:orientation="vertical"
         android:paddingBottom="5dp"
-        android:layout_marginTop="100dp"
+        app:layout_constraintBottom_toTopOf="@+id/setup_parameters"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.85">
 
         <TextView
             android:layout_width="match_parent"
@@ -28,37 +29,37 @@
             android:text="Game Settings"
             android:textColor="@color/black"
             android:textSize="25sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/setup_parameters"
-        android:layout_height="wrap_content"
         android:layout_width="300dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/shadow_white_box"
         android:orientation="vertical"
         android:paddingBottom="5dp"
-        android:layout_marginTop="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/setup_message"
-        >
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.55">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/white_bg_box"
-            android:padding="10dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="10dp">
 
             <TextView
                 android:id="@+id/textView3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Name of the Game"
-                android:textSize="20sp"
                 android:textColor="@color/black"
-                android:layout_weight="1" />
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/nameGame"
@@ -66,18 +67,18 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:text="AAAAA"
-                android:inputType="textCapCharacters" />
+                android:inputType="textCapCharacters"
+                android:text="AAAAA" />
 
             <TextView
                 android:id="@+id/textNumPlayer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Number of Players"
                 android:layout_marginTop="10dp"
-                android:textSize="20sp"
+                android:layout_weight="1"
+                android:text="Number of Players"
                 android:textColor="@color/black"
-                android:layout_weight="1" />
+                android:textSize="20sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -136,11 +137,11 @@
                 android:id="@+id/textView4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Type of questions"
-                android:textSize="20sp"
                 android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:text="Type of questions"
                 android:textColor="@color/black"
-                android:layout_weight="1" />
+                android:textSize="20sp" />
 
             <ToggleButton
                 android:id="@+id/button_questionType"
@@ -157,10 +158,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:layout_weight="1"
                 android:text="Difficulty"
-                android:textSize="20sp"
                 android:textColor="@color/black"
-                android:layout_weight="1" />
+                android:textSize="20sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -201,10 +202,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:layout_weight="1"
                 android:text="Max attempts per question"
-                android:textSize="20sp"
                 android:textColor="@color/black"
-                android:layout_weight="1" />
+                android:textSize="20sp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

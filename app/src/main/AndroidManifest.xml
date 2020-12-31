@@ -44,7 +44,7 @@
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"></activity>
         <activity
-            android:name=".TravelToNextWaypoint"
+            android:name=".TravelToNextWaypointActivity"
             android:label="@string/title_activity_travel_to_next_waypoint" />
         <activity android:name=".MainActivity">
             <intent-filter>

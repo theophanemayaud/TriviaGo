@@ -16,6 +16,7 @@
     <string name="validate_answer">Validate your answer</string>
     <string name="no_waypoint_selected_textview">No waypoint selected</string>
     <string name="no_question_found">No question was found for the desired combo, please reload a random question</string>
+    <string name="distToDestText">Distance to destination is : "</string>
 
     <!--String arrays for spinners used in game setup-->
     <string-array name="spinner_players">

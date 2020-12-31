@@ -13,13 +13,13 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -31,11 +31,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TravelToNextWaypoint extends FragmentActivity implements OnMapReadyCallback {
+public class TravelToNextWaypointActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private static final float TARGET_REACHED_DIST_METERS = 10.f;
     private GoogleMap mMap;
@@ -182,6 +181,12 @@ public class TravelToNextWaypoint extends FragmentActivity implements OnMapReady
                             destinationWaypointLatLgn.longitude, distance);
 
                     // TODO set distance to textView !
+                    TextView distanceDisplayTextview = findViewById(R.id.distanceToDestination);
+                    String displayText = getString(R.string.distToDestText) + String.valueOf(Math.round(distance[0])) + " meters";
+                    if(distance[0]>10000){
+                        displayText = getString(R.string.distToDestText) + String.valueOf(Math.round(distance[0]/1000)) + " km";
+                    }
+                    distanceDisplayTextview.setText(displayText);
                     if(distance[0]<TARGET_REACHED_DIST_METERS){
                         destinationReached();
                     }
@@ -213,7 +218,7 @@ public class TravelToNextWaypoint extends FragmentActivity implements OnMapReady
 
     private void destinationReached(){
         Toast.makeText(this, "Destination reached !!! 🎇", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(TravelToNextWaypoint.this, ChooseNextWaypoint.class);
+        Intent intent = new Intent(TravelToNextWaypointActivity.this, ChooseNextWaypoint.class);
         intent.putExtra(INTENT_RESULT, true);
         setResult(Activity.RESULT_OK, intent);
         finish();
