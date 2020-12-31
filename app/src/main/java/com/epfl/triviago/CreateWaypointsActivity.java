@@ -346,6 +346,9 @@ public class CreateWaypointsActivity<onMapLongClick> extends AppCompatActivity i
                 setResult(RESULT_OK, returnIntent);
                 finish();
                 break;
+            case R.id.delWaypntMenuButton:
+                // TODO : change from other delete button !
+                break;
 //            case R.id.action_validate:
 //                editUser();
 //                break;
