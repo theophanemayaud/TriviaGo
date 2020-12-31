@@ -243,7 +243,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/button_done"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Done"
@@ -252,6 +252,17 @@
         android:layout_marginTop="20dp"
         app:layout_constraintTop_toBottomOf="@id/setup_parameters"
         app:layout_constraintRight_toRightOf="@id/setup_parameters"/>
+
+    <Button
+        android:id="@+id/button_chooseWaypoints"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="Choose Waypoints"
+        android:onClick="clickedWaypointButtonXmlCallback"
+        android:background="@drawable/shadow_white_box"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/setup_parameters"
+        app:layout_constraintLeft_toLeftOf="@id/setup_parameters"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

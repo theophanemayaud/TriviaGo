@@ -18,11 +18,14 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class SetUpActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -34,6 +37,10 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
     boolean questionType = false; //FALSE = Multiple choice & TRUE = true/false
     String difficulty = "easy";
     String maxAttemps = "3";
+    ArrayList<LatLng> waypointsLatLgnList;
+
+    //UI Elements
+    private View button_done;
 
 
     @Override
@@ -41,44 +48,30 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup);
 
-        // [START initialize_database_ref]
-        //defaultGameSetUp();
-
+        //Views
+        button_done = findViewById(R.id.button_done);
+        button_done.setVisibility(View.GONE);
 
         //DatabaseReference myRef = database.getReference("message");
         //myRef.setValue("Hello, World!");
 
-
-       // Spinner spinner_player = (Spinner) findViewById(R.id.spinner_players_num);
-       // ArrayAdapter<CharSequence> adapter_player = ArrayAdapter.createFromResource(this,
-       //         R.array.spinner_players, android.R.layout.simple_spinner_item);
-       // adapter_player.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-       // spinner_player.setAdapter(adapter_player);
-
-
-
-        // here theophane
-        //Spinner spinner_category = (Spinner) findViewById(R.id.spinner_trivia_category);
-        //ArrayAdapter<String> adapter_category = new ArrayAdapter<String>(this,
-        //        android.R.layout.simple_spinner_dropdown_item, TriviaQuestion.Categories);
-        //spinner_category.setAdapter(adapter_category);
-        //spinner_category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-        //    @Override
-        //    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        //        Log.v("NICE", "position : " + position );
-        //        Log.v("NICE", "Category is : " + TriviaQuestion.getCategoryTextFromInt(position));
-        //    }
-
-        //    @Override
-        //    public void onNothingSelected(AdapterView<?> parent) {
-        //        Log.v("NICE", "Nothing selected" );
-        //    }
-        //});
-
+        // Spinner spinner_player = (Spinner) findViewById(R.id.spinner_players_num);
+        // ArrayAdapter<CharSequence> adapter_player = ArrayAdapter.createFromResource(this,
+        //         R.array.spinner_players, android.R.layout.simple_spinner_item);
+        // adapter_player.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // spinner_player.setAdapter(adapter_player);
 
     }
 
-    public void clickedDoneButtonXmlCallback(View view){
+    public void clickedWaypointButtonXmlCallback(View view) {
+        Intent createWaypointsIntent = new Intent(SetUpActivity.this, CreateWaypointsActivity.class);
+        startActivityForResult(createWaypointsIntent, CreateWaypointsActivity.RESULT_WAYPOINTS_LIST_CODE);
+
+        button_done.setVisibility(View.VISIBLE);
+    }
+
+
+    public void clickedDoneButtonXmlCallback(View view) {
         TextView nameGame = findViewById(R.id.nameGame);
         String gameName = nameGame.getText().toString();
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -103,16 +96,28 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
                     if (toggle.isChecked()) {
                         questionType = true;
                         mDatabase.child("Games").child(gameName).child("QuestionType").setValue("true/false");
-                    }
-                    else{
+                    } else {
                         mDatabase.child("Games").child(gameName).child("QuestionType").setValue("QCM");
                     }
-                    Toast.makeText(SetUpActivity.this, ""+questionType, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SetUpActivity.this, "" + questionType, Toast.LENGTH_SHORT).show();
 
                     mDatabase.child("Games").child(gameName).child("Difficulty").setValue(difficulty);
                     mDatabase.child("Games").child(gameName).child("MaxAttempts").setValue(maxAttemps);
 
                     Toast.makeText(SetUpActivity.this, "NEW", Toast.LENGTH_SHORT).show();
+
+                    int size = waypointsLatLgnList.size();
+                    for (int i=0; i<size; i++) {
+                        LatLng waypoint = waypointsLatLgnList.get(i);
+                        double waypointLat = waypoint.latitude;
+                        double waypointLgn = waypoint.longitude;
+
+                        String wayptIdx = String.valueOf(i);
+
+                        mDatabase.child("Games").child(gameName).child("Waypoints").child(wayptIdx).setValue(waypointLat);
+                        mDatabase.child("Games").child(gameName).child("Waypoints").child(wayptIdx).setValue(waypointLgn);
+                    }
+
                     //finish();
                 }
             }
@@ -123,16 +128,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
         });
     }
 
-    public void clickedQuestionTypeButtonXmlCallback(View view){
-        ToggleButton toggle = findViewById(R.id.button_questionType);
-
-
-        //if (toggle.isChecked()) {
-        //    questionType = true;
-        //}
-    }
-
-    public void clicked1pButtonXmlCallback (View view){
+    public void clicked1pButtonXmlCallback(View view) {
         numPlayer = "1";
         findViewById(R.id.button_1p).setBackgroundResource(R.drawable.buttonshape_difficulty_selected);
         findViewById(R.id.button_2p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
@@ -141,7 +137,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
         findViewById(R.id.button_5p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
     }
 
-    public void clicked2pButtonXmlCallback (View view){
+    public void clicked2pButtonXmlCallback(View view) {
         numPlayer = "2";
         findViewById(R.id.button_1p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         findViewById(R.id.button_2p).setBackgroundResource(R.drawable.buttonshape_difficulty_selected);
@@ -150,7 +146,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
         findViewById(R.id.button_5p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
     }
 
-    public void clicked3pButtonXmlCallback (View view){
+    public void clicked3pButtonXmlCallback(View view) {
         numPlayer = "3";
         findViewById(R.id.button_1p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         findViewById(R.id.button_2p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
@@ -159,7 +155,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
         findViewById(R.id.button_5p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
     }
 
-    public void clicked4pButtonXmlCallback (View view){
+    public void clicked4pButtonXmlCallback(View view) {
         numPlayer = "4";
         findViewById(R.id.button_1p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         findViewById(R.id.button_2p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
@@ -168,7 +164,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
         findViewById(R.id.button_5p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
     }
 
-    public void clicked5pButtonXmlCallback (View view){
+    public void clicked5pButtonXmlCallback(View view) {
         numPlayer = "5";
         findViewById(R.id.button_1p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         findViewById(R.id.button_2p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
@@ -229,5 +225,18 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Check which request we're responding to
+        if (requestCode == CreateWaypointsActivity.RESULT_WAYPOINTS_LIST_CODE) {
+            if (resultCode == RESULT_OK) {
+                waypointsLatLgnList = (ArrayList<LatLng>) data.getSerializableExtra(CreateWaypointsActivity.RESULT_WAYPOINTS_LIST_NAME);
+
+            }
+        }
     }
 }
