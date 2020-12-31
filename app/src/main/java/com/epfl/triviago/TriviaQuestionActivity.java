@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -19,6 +20,7 @@ import com.epfl.triviago.trivia.TriviaResult;
 import com.epfl.triviago.trivia.TriviaService;
 
 import java.util.List;
+import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -67,6 +69,7 @@ public class TriviaQuestionActivity extends AppCompatActivity {
     private RadioGroup radioGroup;
     private boolean mResult = false;
     private boolean merror = false;
+    private Button reloadQ;
 
 
     @Override
@@ -115,7 +118,7 @@ public class TriviaQuestionActivity extends AppCompatActivity {
 
             get_views();
             prepare_view();
-            build_view();
+            build_view(false);
         }
     }
 
@@ -135,12 +138,14 @@ public class TriviaQuestionActivity extends AppCompatActivity {
         backButton = findViewById(R.id.quitButton);
         okButton = findViewById(R.id.validate_answer);
         radioGroup = findViewById(R.id.answer_group);
+        reloadQ = findViewById(R.id.reload_random);
     }
 
     private void prepare_view() {
         loader.setVisibility(View.VISIBLE);
+        reloadQ.setVisibility(View.GONE);
         backButton.setVisibility(View.GONE);
-        checkAnswer.setBackground(layout_parent.getBackground());
+//        checkAnswer.setBackground(layout_parent.getBackground());
         checkAnswer.setText("");
 
         question.setText(R.string.loading_question);
@@ -154,7 +159,7 @@ public class TriviaQuestionActivity extends AppCompatActivity {
         difficulty.setText(R.string.loading_dif);
     }
 
-    private void build_view() {
+    private void build_view(boolean randQ) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://opentdb.com/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -162,10 +167,18 @@ public class TriviaQuestionActivity extends AppCompatActivity {
         // let retrofit create the implementation
         TriviaService triviaService = retrofit.create(TriviaService.class);
         Call<TriviaModel> call;
+        String cat = intent_cat.toString();
+        String diff = intent_diff;
+        Random rand = new Random();
+        if (randQ){
+            Integer cat_int = rand.nextInt(TriviaQuestion.MAX_CATEGORIES)+9;
+            cat = cat_int.toString();
+            diff = TriviaQuestion.DIFFICULTY.get(rand.nextInt(3));
+        }
         if (mIsQCM_type) {
-            call = triviaService.getQCMQuestion(intent_cat.toString(), intent_diff);
+            call = triviaService.getQCMQuestion(cat, diff);
         } else {
-            call = triviaService.getTFQuestion(intent_cat.toString(), intent_diff);
+            call = triviaService.getTFQuestion(cat, diff);
         }
 
         call.enqueue(new Callback<TriviaModel>() {
@@ -175,6 +188,12 @@ public class TriviaQuestionActivity extends AppCompatActivity {
                     Toast.makeText(TriviaQuestionActivity.this, "Error code : " + response.code(), Toast.LENGTH_SHORT).show();
                 }
                 TriviaModel body = response.body();
+                Integer response_api = body.getResponseCode();
+                if (response_api == 1){
+                    Log.e(TAG, "No question found relaunching a request");
+                    reloadQ.setVisibility(View.VISIBLE);
+                    return;
+                }
                 TriviaResult result = body.getResults().get(0);
                 String question = result.getQuestion();
                 String difficulty = result.getDifficulty();
@@ -207,7 +226,7 @@ public class TriviaQuestionActivity extends AppCompatActivity {
         category.setText(Html.fromHtml(mTrivia.mCategory));
         difficulty.setText(Html.fromHtml(mTrivia.mDifficulty));
         loader.setVisibility(View.INVISIBLE);
-        checkAnswer.setBackground(layout_parent.getBackground());
+//        checkAnswer.setBackground(layout_parent.getBackground());
         checkAnswer.setText(R.string.select_answer);
     }
 
@@ -316,5 +335,10 @@ public class TriviaQuestionActivity extends AppCompatActivity {
 //        Log.e(TAG, "Save errors");
         outState.putBoolean(ERROR_BOOL, merror);
         outState.putBoolean(INTENT_QCM_TYPE, mIsQCM_type);
+    }
+
+    public void reloadRandomQuestion(View view) {
+        build_view(true);
+        reloadQ.setVisibility(View.GONE);
     }
 }

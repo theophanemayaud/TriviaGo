@@ -37,11 +37,13 @@ import com.google.maps.android.ui.IconGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyCallback {
 
     // Request codes for TravelToNextWaypoint
     private static final int REACH_DEST = 2;
+    private static final int ASK_QUESTION = 3;
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -226,8 +228,6 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         TravelToNextWaypointIntent.putExtra( DEST_LAT_LNG, selectedDestinationLatLgn);
         if(currentLocation!=null) {
             TravelToNextWaypointIntent.putExtra(LATEST_USER_LOC, currentLocation);
-            // Trivia activity
-
         }
         startActivityForResult(TravelToNextWaypointIntent, REACH_DEST);
     }
@@ -241,9 +241,33 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                     boolean reached_waypoint = data.getExtras().getBoolean(TravelToNextWaypoint.INTENT_RESULT);
                     if (reached_waypoint) {
                         Log.e(TAG, "User reached waypoint");
+                        // launch triviaquestion
+                        Intent intent = new Intent(ChooseNextWaypoint.this, TriviaQuestionActivity.class);
+                        // choose QCM or V/F
+                        // TODO: change this to be the value from Database
+                        boolean type = (Math.random() < 0.5);
+                        Random rand = new Random();
+                        int cat = rand.nextInt(TriviaQuestion.MAX_CATEGORIES)+9;
+                        String diff = TriviaQuestion.DIFFICULTY.get(rand.nextInt(3));
+                        Log.e(TAG, "Params are : type  = " + type + ", cat value = " + cat + ", diff value = " + diff);
+                        intent.putExtra(TriviaQuestionActivity.INTENT_QCM_TYPE, type);
+                        intent.putExtra(TriviaQuestionActivity.INTENT_CATEGORY, cat);
+                        intent.putExtra(TriviaQuestionActivity.INTENT_DIFFICULTY, diff);
+                        startActivityForResult(intent, ASK_QUESTION);
                     }
                 } else {
                     Log.e(TAG, "User pressed back button without reaching to the waypoint");
+                }
+
+            case ASK_QUESTION:
+                if (resultCode == RESULT_OK) {
+                    boolean correct_answer = data.getExtras().getBoolean(TriviaQuestionActivity.INTENT_RESULT);
+                    if (correct_answer) {
+                        Log.e(TAG, "User responded correcly");
+                    } else {
+                        Log.e(TAG, "User responded incorrecly");
+                    }
+                    Log.e(TAG, "Trivia activity has given the result above");
                 }
         }
     }
