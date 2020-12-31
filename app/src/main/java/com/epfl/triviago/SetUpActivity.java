@@ -38,7 +38,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
     String difficulty = "easy";
     String maxAttemps = "3";
     ArrayList<LatLng> waypointsLatLgnList;
-    ArrayList<String> waypointsCategList;
+    ArrayList<Integer> waypointsCategList;
 
     //UI Elements
     private View button_done;
@@ -100,23 +100,23 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
                     } else {
                         mDatabase.child("Games").child(gameName).child("QuestionType").setValue("QCM");
                     }
-                    Toast.makeText(SetUpActivity.this, "" + questionType, Toast.LENGTH_SHORT).show();
-
                     mDatabase.child("Games").child(gameName).child("Difficulty").setValue(difficulty);
                     mDatabase.child("Games").child(gameName).child("MaxAttempts").setValue(maxAttemps);
 
-                    Toast.makeText(SetUpActivity.this, "NEW", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(SetUpActivity.this, "NEW", Toast.LENGTH_SHORT).show();
 
                     int size = waypointsLatLgnList.size();
                     for (int i=0; i<size; i++) {
                         LatLng waypoint = waypointsLatLgnList.get(i);
                         double waypointLat = waypoint.latitude;
                         double waypointLgn = waypoint.longitude;
+                        int category = waypointsCategList.get(i);
 
                         String wayptIdx = String.valueOf(i);
 
-                        mDatabase.child("Games").child(gameName).child("Waypoints").child(wayptIdx+"-Lat:").setValue(waypointLat);
-                        mDatabase.child("Games").child(gameName).child("Waypoints").child(wayptIdx+"-Lgn:").setValue(waypointLgn);
+                        mDatabase.child("Games").child(gameName).child("Waypoints").child(wayptIdx+"-Lat").setValue(waypointLat);
+                        mDatabase.child("Games").child(gameName).child("Waypoints").child(wayptIdx+"-Lgn").setValue(waypointLgn);
+                        mDatabase.child("Games").child(gameName).child("Waypoints").child(wayptIdx+"-Cat").setValue(category);
                     }
 
                     //finish();
@@ -236,7 +236,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
         if (requestCode == CreateWaypointsActivity.RESULT_WAYPOINTS_CODE) {
             if (resultCode == RESULT_OK) {
                 waypointsLatLgnList = (ArrayList<LatLng>) data.getSerializableExtra(CreateWaypointsActivity.RESULT_WAYPOINTS_LIST_NAME);
-                waypointsCategList = (ArrayList<String>) data.getSerializableExtra(CreateWaypointsActivity.RESULT_CATEG_LIST_NAME);
+                waypointsCategList = (ArrayList<Integer>) data.getSerializableExtra(CreateWaypointsActivity.RESULT_CATEG_LIST_NAME);
             }
         }
     }
