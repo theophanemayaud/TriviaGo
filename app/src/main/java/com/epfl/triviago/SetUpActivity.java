@@ -38,6 +38,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
     String difficulty = "easy";
     String maxAttemps = "3";
     ArrayList<LatLng> waypointsLatLgnList;
+    ArrayList<String> waypointsCategList;
 
     //UI Elements
     private View button_done;
@@ -65,7 +66,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
 
     public void clickedWaypointButtonXmlCallback(View view) {
         Intent createWaypointsIntent = new Intent(SetUpActivity.this, CreateWaypointsActivity.class);
-        startActivityForResult(createWaypointsIntent, CreateWaypointsActivity.RESULT_WAYPOINTS_LIST_CODE);
+        startActivityForResult(createWaypointsIntent, CreateWaypointsActivity.RESULT_WAYPOINTS_CODE);
 
         button_done.setVisibility(View.VISIBLE);
     }
@@ -232,10 +233,10 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
         super.onActivityResult(requestCode, resultCode, data);
 
         // Check which request we're responding to
-        if (requestCode == CreateWaypointsActivity.RESULT_WAYPOINTS_LIST_CODE) {
+        if (requestCode == CreateWaypointsActivity.RESULT_WAYPOINTS_CODE) {
             if (resultCode == RESULT_OK) {
                 waypointsLatLgnList = (ArrayList<LatLng>) data.getSerializableExtra(CreateWaypointsActivity.RESULT_WAYPOINTS_LIST_NAME);
-
+                waypointsCategList = (ArrayList<String>) data.getSerializableExtra(CreateWaypointsActivity.RESULT_CATEG_LIST_NAME);
             }
         }
     }

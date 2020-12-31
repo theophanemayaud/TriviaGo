@@ -42,8 +42,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CreateWaypointsActivity<onMapLongClick> extends AppCompatActivity implements OnMapReadyCallback {
-    static final int RESULT_WAYPOINTS_LIST_CODE = 2131;
+    static final int RESULT_WAYPOINTS_CODE = 2131;
     static final String RESULT_WAYPOINTS_LIST_NAME = "waypoints_list_result";
+    static final String RESULT_CATEG_LIST_NAME = "waypoints_category_list";
     private static final int NO_CATEG_SELECTION = 0;
     private static final int NO_WAYPOINT_SELECTION = -1;
     private static final int LIST_POS_TO_LETTER_OFFSET=65;
@@ -108,16 +109,10 @@ public class CreateWaypointsActivity<onMapLongClick> extends AppCompatActivity i
         new AlertDialog.Builder(CreateWaypointsActivity.this)
                 .setTitle("Instructions")
                 .setMessage("Long press anywhere on the map to add waypoints, then select a category for each.")
-                // Specifying a listener allows you to take an action before dismissing the dialog.
                 // The dialog is automatically dismissed when a dialog button is clicked.
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Continue with delete operation
-                    }
-                })
+                .setPositiveButton(android.R.string.yes, null)
                 .setIcon(android.R.drawable.ic_dialog_map)
                 .show();
-
     }
     @Override
     protected void onPause() {
@@ -330,6 +325,7 @@ public class CreateWaypointsActivity<onMapLongClick> extends AppCompatActivity i
         return super.onCreateOptionsMenu(menu);
     }
 
+    // App Bar button actions
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -344,10 +340,9 @@ public class CreateWaypointsActivity<onMapLongClick> extends AppCompatActivity i
                         return super.onOptionsItemSelected(item);
                     }
                 }
-                // TODO : really save all
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra(RESULT_WAYPOINTS_LIST_NAME, (Serializable) waypointsLatLgnList);
-
+                returnIntent.putExtra(RESULT_CATEG_LIST_NAME, (Serializable) waypointsSelectedCategoryList);
                 setResult(RESULT_OK, returnIntent);
                 finish();
                 break;
