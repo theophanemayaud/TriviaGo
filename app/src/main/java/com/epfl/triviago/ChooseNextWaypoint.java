@@ -1,6 +1,7 @@
 package com.epfl.triviago;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -38,6 +39,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyCallback {
+
+    // Request codes for TravelToNextWaypoint
+    private static final int REACH_DEST = 2;
+
+    private final String TAG = this.getClass().getSimpleName();
 
     List<String> spinnerValuesList = new ArrayList<String>();
     Spinner spinner;
@@ -220,8 +226,26 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         TravelToNextWaypointIntent.putExtra( DEST_LAT_LNG, selectedDestinationLatLgn);
         if(currentLocation!=null) {
             TravelToNextWaypointIntent.putExtra(LATEST_USER_LOC, currentLocation);
+            // Trivia activity
+
         }
-        startActivity(TravelToNextWaypointIntent);
+        startActivityForResult(TravelToNextWaypointIntent, REACH_DEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REACH_DEST:
+                if (resultCode == RESULT_OK) {
+                    boolean reached_waypoint = data.getExtras().getBoolean(TravelToNextWaypoint.INTENT_RESULT);
+                    if (reached_waypoint) {
+                        Log.e(TAG, "User reached waypoint");
+                    }
+                } else {
+                    Log.e(TAG, "User pressed back button without reaching to the waypoint");
+                }
+        }
     }
 
     @Override

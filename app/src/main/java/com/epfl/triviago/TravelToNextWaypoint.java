@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -44,6 +45,9 @@ public class TravelToNextWaypoint extends FragmentActivity implements OnMapReady
 
     private static final int INITIAL_MAP_ZOOM = 7;
     private static final int MAP_MARKER_PADDING = 100; // offset from edges of the map in pixels
+
+    // intent result
+    public static final String INTENT_RESULT = "RESULT";
 
 
     LatLng currentLocationLatLgn;
@@ -209,6 +213,10 @@ public class TravelToNextWaypoint extends FragmentActivity implements OnMapReady
 
     private void destinationReached(){
         Toast.makeText(this, "Destination reached !!! 🎇", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(TravelToNextWaypoint.this, ChooseNextWaypoint.class);
+        intent.putExtra(INTENT_RESULT, true);
+        setResult(Activity.RESULT_OK, intent);
+        finish();
     }
 
     public void moveToCurrentLocationButtonCallback(View view){
