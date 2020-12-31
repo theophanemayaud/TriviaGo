@@ -114,8 +114,8 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
 
                         String wayptIdx = String.valueOf(i);
 
-                        mDatabase.child("Games").child(gameName).child("Waypoints").child(wayptIdx).setValue(waypointLat);
-                        mDatabase.child("Games").child(gameName).child("Waypoints").child(wayptIdx).setValue(waypointLgn);
+                        mDatabase.child("Games").child(gameName).child("Waypoints").child(wayptIdx+"-Lat:").setValue(waypointLat);
+                        mDatabase.child("Games").child(gameName).child("Waypoints").child(wayptIdx+"-Lgn:").setValue(waypointLgn);
                     }
 
                     //finish();
