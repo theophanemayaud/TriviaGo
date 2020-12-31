@@ -63,15 +63,17 @@ public class TriviaQuestion implements Serializable {
         Categories.add("Entertainment: Cartoon & Animations");
     }
 
-//    static final ArrayList<String> DIFFICULTY = new ArrayList<>();
-//    static {
-//        DIFFICULTY.add("easy");
-//        DIFFICULTY.add("medium");
-//        DIFFICULTY.add("hard");
-//    }
+    static final ArrayList<String> DIFFICULTY = new ArrayList<>();
+    static {
+        DIFFICULTY.add("easy");
+        DIFFICULTY.add("medium");
+        DIFFICULTY.add("hard");
+    }
 
     private final Integer MAX_INDEX_QCM = 4;
     private final Integer MAX_INDEX_BOOL = 2;
+
+    public static final Integer MAX_CATEGORIES = 23;
 
     public String mQuestion;
     public String mDifficulty;
