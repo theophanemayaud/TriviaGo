@@ -39,7 +39,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateWaypoints<onMapLongClick> extends AppCompatActivity implements OnMapReadyCallback {
+public class CreateWaypointsActivity<onMapLongClick> extends AppCompatActivity implements OnMapReadyCallback {
     static final int RESULT_WAYPOINTS_LIST_CODE = 2131;
     static final String RESULT_WAYPOINTS_LIST_NAME = "waypoints_list_result";
     private static final int NO_CATEG_SELECTION = 0;

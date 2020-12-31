@@ -25,7 +25,7 @@
         <activity android:name=".WelcomeActivity"></activity>
         <activity android:name=".SetUpActivity"></activity>
         <activity android:name=".ChooseNextWaypoint" />
-        <activity android:name=".CreateWaypoints" />
+        <activity android:name=".CreateWaypointsActivity" />
 
 
         <!--

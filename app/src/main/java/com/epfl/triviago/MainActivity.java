@@ -1,14 +1,11 @@
 package com.epfl.triviago;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -54,8 +51,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void clickedGoToCreateWaypointsButtonXmlCallback(View view) {
-        Intent createWaypointsIntent = new Intent(MainActivity.this, CreateWaypoints.class);
-        startActivityForResult(createWaypointsIntent, CreateWaypoints.RESULT_WAYPOINTS_LIST_CODE);
+        Intent createWaypointsIntent = new Intent(MainActivity.this, CreateWaypointsActivity.class);
+        startActivityForResult(createWaypointsIntent, CreateWaypointsActivity.RESULT_WAYPOINTS_LIST_CODE);
     }
 
     @Override
@@ -63,9 +60,9 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         // Check which request we're responding to
-        if (requestCode == CreateWaypoints.RESULT_WAYPOINTS_LIST_CODE) {
+        if (requestCode == CreateWaypointsActivity.RESULT_WAYPOINTS_LIST_CODE) {
             if (resultCode == RESULT_OK) {
-                ArrayList<LatLng> waypointsLatLgnList = (ArrayList<LatLng>) data.getSerializableExtra(CreateWaypoints.RESULT_WAYPOINTS_LIST_NAME);
+                ArrayList<LatLng> waypointsLatLgnList = (ArrayList<LatLng>) data.getSerializableExtra(CreateWaypointsActivity.RESULT_WAYPOINTS_LIST_NAME);
             }
         }
     }
