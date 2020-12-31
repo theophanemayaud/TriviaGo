@@ -3,6 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/delWaypntMenuButton"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="Delete Waypoint"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/saveAllWaypointsMenuItem"
         android:icon="@android:drawable/ic_menu_save"
         android:title="Save all"

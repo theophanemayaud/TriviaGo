@@ -1,11 +1,13 @@
 package com.epfl.triviago;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -103,6 +105,19 @@ public class CreateWaypointsActivity<onMapLongClick> extends AppCompatActivity i
     protected void onResume() {
         super.onResume();
         startLocationUpdates();
+        new AlertDialog.Builder(CreateWaypointsActivity.this)
+                .setTitle("Instructions")
+                .setMessage("Long press anywhere on the map to add waypoints, then select a category for each.")
+                // Specifying a listener allows you to take an action before dismissing the dialog.
+                // The dialog is automatically dismissed when a dialog button is clicked.
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Continue with delete operation
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_map)
+                .show();
+
     }
     @Override
     protected void onPause() {
@@ -238,7 +253,7 @@ public class CreateWaypointsActivity<onMapLongClick> extends AppCompatActivity i
             selectedWaypointListPosition = waypointListPosition;
             String waypointLetter = String.valueOf((char) (waypointListPosition + LIST_POS_TO_LETTER_OFFSET));
             TextView selectedItemView = findViewById(R.id.selectedWaypointText);
-            selectedItemView.setText("Waypoint " + waypointLetter + " is currently selected");
+            selectedItemView.setText("Waypoint " + waypointLetter + " category ➡");
             selectedItemView.setTextColor(Color.RED);
 
             spinner_category.setEnabled(true);
@@ -332,6 +347,7 @@ public class CreateWaypointsActivity<onMapLongClick> extends AppCompatActivity i
                 // TODO : really save all
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra(RESULT_WAYPOINTS_LIST_NAME, (Serializable) waypointsLatLgnList);
+
                 setResult(RESULT_OK, returnIntent);
                 finish();
                 break;
