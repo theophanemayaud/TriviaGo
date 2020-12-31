@@ -1,6 +1,7 @@
 package com.epfl.triviago;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -70,6 +72,8 @@ public class TriviaQuestionActivity extends AppCompatActivity {
     private boolean mResult = false;
     private boolean merror = false;
     private Button reloadQ;
+    private ConstraintLayout container_cat;
+    private ImageView image_cat;
 
 
     @Override
@@ -100,7 +104,7 @@ public class TriviaQuestionActivity extends AppCompatActivity {
             get_views();
             if (merror) {
 //                Log.e(TAG, "Hiding all");
-                hide_all();
+                hide_all(false);
                 return;
             }
 //            Log.e(TAG, "No errors");
@@ -124,6 +128,8 @@ public class TriviaQuestionActivity extends AppCompatActivity {
 
     private void get_views() {
         layout_parent = findViewById(R.id.triviaParentLayout);
+        container_cat = findViewById(R.id.container_cat_diff);
+        image_cat = findViewById(R.id.category_image);
         checkAnswer = findViewById(R.id.checkResponse);
         question = findViewById(R.id.textQuestion);
         answer_1 = findViewById(R.id.answer_1);
@@ -147,6 +153,7 @@ public class TriviaQuestionActivity extends AppCompatActivity {
         backButton.setVisibility(View.GONE);
 //        checkAnswer.setBackground(layout_parent.getBackground());
         checkAnswer.setText("");
+        image_cat.setImageResource(R.mipmap.general_knoledge);
 
         question.setText(R.string.loading_question);
         answer_1.setText(R.string.loading_prop);
@@ -191,7 +198,7 @@ public class TriviaQuestionActivity extends AppCompatActivity {
                 Integer response_api = body.getResponseCode();
                 if (response_api == 1){
                     Log.e(TAG, "No question found relaunching a request");
-                    reloadQ.setVisibility(View.VISIBLE);
+                    hide_all(true);
                     return;
                 }
                 TriviaResult result = body.getResults().get(0);
@@ -210,23 +217,33 @@ public class TriviaQuestionActivity extends AppCompatActivity {
                 Toast.makeText(TriviaQuestionActivity.this, getResources().getString(R.string.no_internet), Toast.LENGTH_SHORT).show();
                 // stop progress bar and tell the user it has to check the internet connection
                 merror = true;
-                hide_all();
+                hide_all(false);
             }
         });
     }
 
     private void fillView() {
+        radioGroup.setVisibility(View.VISIBLE);
+        question.setTextColor(getResources().getColor(R.color.black));
         question.setText(Html.fromHtml(mTrivia.mQuestion));
+        answer_1.setVisibility(View.VISIBLE);
+        answer_2.setVisibility(View.VISIBLE);
         answer_1.setText(Html.fromHtml(mTrivia.mResponses.get(0)));
         answer_2.setText(Html.fromHtml(mTrivia.mResponses.get(1)));
         if (mIsQCM_type) {
+            answer_3.setVisibility(View.VISIBLE);
+            answer_4.setVisibility(View.VISIBLE);
             answer_3.setText(Html.fromHtml(mTrivia.mResponses.get(2)));
             answer_4.setText(Html.fromHtml(mTrivia.mResponses.get(3)));
         }
+        category.setVisibility(View.VISIBLE);
         category.setText(Html.fromHtml(mTrivia.mCategory));
+        difficulty.setVisibility(View.VISIBLE);
         difficulty.setText(Html.fromHtml(mTrivia.mDifficulty));
         loader.setVisibility(View.INVISIBLE);
+        okButton.setVisibility(View.VISIBLE);
 //        checkAnswer.setBackground(layout_parent.getBackground());
+        checkAnswer.setVisibility(View.VISIBLE);
         checkAnswer.setText(R.string.select_answer);
     }
 
@@ -268,9 +285,18 @@ public class TriviaQuestionActivity extends AppCompatActivity {
         }
     }
 
-    private void hide_all() {
+    private void hide_all(boolean randQ) {
         loader.setVisibility(View.INVISIBLE);
-        question.setText(R.string.no_internet_error);
+        radioGroup.setVisibility(View.INVISIBLE);
+
+        if (randQ){
+            question.setText(R.string.no_question_found);
+            reloadQ.setVisibility(View.VISIBLE);
+        } else {
+            question.setText(R.string.no_internet_error);
+            backButton.setVisibility(View.VISIBLE);
+            mfinished = true;
+        }
         question.setTextColor(getResources().getColor(R.color.red));
         answer_1.setVisibility(View.INVISIBLE);
         answer_2.setVisibility(View.INVISIBLE);
@@ -282,8 +308,6 @@ public class TriviaQuestionActivity extends AppCompatActivity {
         difficulty.setVisibility(View.INVISIBLE);
         okButton.setVisibility(View.INVISIBLE);
         checkAnswer.setVisibility(View.INVISIBLE);
-        backButton.setVisibility(View.VISIBLE);
-        mfinished = true;
     }
 
     private void validate_answer() {
