@@ -31,6 +31,11 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.maps.android.ui.IconGenerator;
 
 import java.util.ArrayList;
@@ -49,6 +54,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     Spinner spinner;
 
     private GoogleMap mMap;
+    private DatabaseReference mDatabase;
 
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
@@ -57,12 +63,17 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     List<LatLng> waypointsLatLgn = new ArrayList<LatLng>();
     List<Marker> waypointsMarkers = new ArrayList<Marker>();
 
-    LatLng selectedDestinationLatLgn;
+    private int selectedDestinationIndex;
 
     IconGenerator iconGenerator;
 
     public static final String DEST_LAT_LNG = "DestinationLatLgn";
     public static final String LATEST_USER_LOC = "LatestUserLocation";
+
+    //Variable for database
+    boolean type_db;
+    String diff_db;
+    int cat_db;
 
 
     @Override
@@ -70,20 +81,46 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_next_waypoint);
 
-        // TODO do these initializations from firebase ?
         // Initialising the spinner values, should be taken from activity input values or DB
         // and some placeholder waypoints values, should be taken from activity inputs or DB
         spinner = (Spinner) findViewById(R.id.chooseNextWaypointSpinner);
-        waypointsLatLgn.add(new LatLng(50.9265, 5.2205));
-        spinnerValuesList.add("Waypoint 0");
-        waypointsLatLgn.add(new LatLng(50.9265, 4.13));
-        spinnerValuesList.add("Waypoint 1");
-        waypointsLatLgn.add(new LatLng(48.13, 5.2205));
-        spinnerValuesList.add("Waypoint 2");
-        waypointsLatLgn.add(new LatLng(48.13, 4.13));
-        spinnerValuesList.add("Waypoint 3");
+
+        // TODO do these initializations from firebase ?
+        String gameName = "ABC";
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                double wayptLat;
+                double wayptLgn;
+                long numWaypts = snapshot.child("Games").child(gameName).child("Waypoints").getChildrenCount();
+                numWaypts = numWaypts/3;
+
+                for(int i=0; i<numWaypts; i++){
+                    wayptLat = snapshot.child("Games").child(gameName).child("Waypoints").child(i+"-Lat:").getValue(double.class);
+                    wayptLgn = snapshot.child("Games").child(gameName).child("Waypoints").child(i+"-Lgn:").getValue(double.class);
+                    waypointsLatLgn.add(new LatLng(wayptLat,wayptLgn));
+                    spinnerValuesList.add("Waypoint "+i);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+
+        //waypointsLatLgn.add(new LatLng(50.9265, 5.2205));
+        //spinnerValuesList.add("Waypoint 0");
+        //waypointsLatLgn.add(new LatLng(50.9265, 4.13));
+        //spinnerValuesList.add("Waypoint 1");
+        //waypointsLatLgn.add(new LatLng(48.13, 5.2205));
+        //spinnerValuesList.add("Waypoint 2");
+        //waypointsLatLgn.add(new LatLng(48.13, 4.13));
+        //spinnerValuesList.add("Waypoint 3");
+
+
         // By default first is selected
-        selectedDestinationLatLgn = waypointsLatLgn.get(0);
+        selectedDestinationIndex = 0;
 
         // Link the spinner and it's adapter with listener for modifications
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
@@ -207,9 +244,8 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
 
                 // Show waypoint title on map and center map on it
                 if (waypointsMarkers.isEmpty() == false) {
-                    LatLng selectedWaypointLatLng = waypointsLatLgn.get(pos);
-                    selectedDestinationLatLgn = selectedWaypointLatLng;
-                    mMap.animateCamera(CameraUpdateFactory.newLatLng(selectedWaypointLatLng));
+                    selectedDestinationIndex = pos;
+                    mMap.animateCamera(CameraUpdateFactory.newLatLng(waypointsLatLgn.get(pos)));
                     waypointsMarkers.get(pos).showInfoWindow();
                 }
             }
@@ -223,7 +259,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
 
     public void goToNextWaypointPressedCallback(View view) {
         Intent TravelToNextWaypointIntent = new Intent(ChooseNextWaypoint.this, TravelToNextWaypointActivity.class);
-        TravelToNextWaypointIntent.putExtra( DEST_LAT_LNG, selectedDestinationLatLgn);
+        TravelToNextWaypointIntent.putExtra( DEST_LAT_LNG, waypointsLatLgn.get(selectedDestinationIndex));
         if(currentLocation!=null) {
             TravelToNextWaypointIntent.putExtra(LATEST_USER_LOC, currentLocation);
         }
@@ -243,14 +279,39 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                         Intent intent = new Intent(ChooseNextWaypoint.this, TriviaQuestionActivity.class);
                         // choose QCM or V/F
                         // TODO: change this to be the value from Database
+                        String gameName = "ABC";
+
+                        mDatabase = FirebaseDatabase.getInstance().getReference();
+                        // Read from the database
+                        mDatabase.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                // This method is called once with the initial value and again
+                                // whenever data at this location is updated.
+                                diff_db = snapshot.child("Games").child(gameName).child("Difficulty").getValue(String.class);
+                                String type_db_Str = snapshot.child("Games").child(gameName).child("QuestionType").getValue(String.class);
+                                if (type_db_Str=="QCM") {
+                                    type_db = false;
+                                }
+                                else {type_db = true;}
+                                cat_db = snapshot.child("Games").child(gameName).child("Waypoints").child(selectedDestinationIndex+"-Cat:").getValue(Integer.class);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Log.w(TAG, "Failed to read value.", error.toException());
+                            }
+                        });
+
                         boolean type = (Math.random() < 0.5);
                         Random rand = new Random();
                         int cat = rand.nextInt(TriviaQuestion.MAX_CATEGORIES)+9;
                         String diff = TriviaQuestion.DIFFICULTY.get(rand.nextInt(3));
+
                         Log.e(TAG, "Params are : type  = " + type + ", cat value = " + cat + ", diff value = " + diff);
-                        intent.putExtra(TriviaQuestionActivity.INTENT_QCM_TYPE, type);
-                        intent.putExtra(TriviaQuestionActivity.INTENT_CATEGORY, cat);
-                        intent.putExtra(TriviaQuestionActivity.INTENT_DIFFICULTY, diff);
+                        intent.putExtra(TriviaQuestionActivity.INTENT_QCM_TYPE, type_db);
+                        intent.putExtra(TriviaQuestionActivity.INTENT_CATEGORY, cat_db);
+                        intent.putExtra(TriviaQuestionActivity.INTENT_DIFFICULTY, diff_db);
                         startActivityForResult(intent, ASK_QUESTION);
                     }
                 } else {
