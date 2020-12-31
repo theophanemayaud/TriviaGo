@@ -47,7 +47,7 @@ public class CreateWaypointsActivity<onMapLongClick> extends AppCompatActivity i
     static final String RESULT_CATEG_LIST_NAME = "waypoints_category_list";
     private static final int NO_CATEG_SELECTION = 0;
     private static final int NO_WAYPOINT_SELECTION = -1;
-    private static final int LIST_POS_TO_LETTER_OFFSET=65;
+    static final int LIST_POS_TO_LETTER_OFFSET=65;
 
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
@@ -129,13 +129,6 @@ public class CreateWaypointsActivity<onMapLongClick> extends AppCompatActivity i
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101);
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
         fusedLocationClient.requestLocationUpdates(locationRequest,

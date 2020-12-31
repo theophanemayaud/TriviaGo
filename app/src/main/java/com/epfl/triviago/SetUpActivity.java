@@ -29,9 +29,6 @@ import java.util.ArrayList;
 
 public class SetUpActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    // [START declare_database_ref]
-    private DatabaseReference mDatabase;
-
     //Useful Variables
     String numPlayer = "2";
     boolean questionType = false; //FALSE = Multiple choice & TRUE = true/false
@@ -40,18 +37,13 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
     ArrayList<LatLng> waypointsLatLgnList;
     ArrayList<Integer> waypointsCategList;
 
-    //UI Elements
-    private View button_done;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup);
 
         //Views
-        button_done = findViewById(R.id.button_done);
-        button_done.setVisibility(View.GONE);
+        findViewById(R.id.button_done).setVisibility(View.GONE);
 
         //DatabaseReference myRef = database.getReference("message");
         //myRef.setValue("Hello, World!");
@@ -68,17 +60,17 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
         Intent createWaypointsIntent = new Intent(SetUpActivity.this, CreateWaypointsActivity.class);
         startActivityForResult(createWaypointsIntent, CreateWaypointsActivity.RESULT_WAYPOINTS_CODE);
 
-        button_done.setVisibility(View.VISIBLE);
+        findViewById(R.id.button_done).setVisibility(View.VISIBLE);
+        findViewById(R.id.button_done).setClickable(true);
     }
 
 
     public void clickedDoneButtonXmlCallback(View view) {
         TextView nameGame = findViewById(R.id.nameGame);
         String gameName = nameGame.getText().toString();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (snapshot.child("Games").hasChild(gameName)) {
@@ -122,9 +114,9 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
                     //finish();
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("TxGO", "Error writing to database");
             }
         });
     }

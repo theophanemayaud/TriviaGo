@@ -43,7 +43,7 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
     private LocationCallback locationCallback;
 
     private static final int INITIAL_MAP_ZOOM = 7;
-    private static final int MAP_MARKER_PADDING = 100; // offset from edges of the map in pixels
+    static final int MAP_MARKER_PADDING = 100; // offset from edges of the map in pixels
 
     // intent result
     public static final String INTENT_RESULT = "RESULT";
@@ -179,7 +179,6 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
                             currentLocationLatLgn.longitude, destinationWaypointLatLgn.latitude,
                             destinationWaypointLatLgn.longitude, distance);
 
-                    // TODO set distance to textView !
                     TextView distanceDisplayTextview = findViewById(R.id.distanceToDestination);
                     String displayText = getString(R.string.distToDestText) + String.valueOf(Math.round(distance[0])) + " meters";
                     if(distance[0]>10000){ //display in KM if above 10km, such that it is more readable
@@ -234,13 +233,6 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101);
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
         fusedLocationClient.requestLocationUpdates(locationRequest,
