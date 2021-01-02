@@ -46,7 +46,7 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@drawable/buttonshape_welcome"
+            android:background="@drawable/shadow_white_box"
             android:fontFamily="casual"
             android:stateListAnimator="@drawable/selector"
             android:text="Create Game"
@@ -56,11 +56,12 @@
 
         <Button
             android:id="@+id/button_join_game"
+            android:onClick="clickedJoinGameButtonXmlCallback"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_gravity="center"
-            android:background="@drawable/buttonshape_welcome"
+            android:background="@drawable/shadow_white_box"
             android:fontFamily="casual"
             android:stateListAnimator="@drawable/selector"
             android:text="Join Game"

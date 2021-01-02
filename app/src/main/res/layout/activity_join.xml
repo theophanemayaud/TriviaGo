@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/app_background">
+
+
+    <TextView
+        android:id="@+id/waitingMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shadow_white_box"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="200dp"
+        android:text="Waiting for all players to join..."
+        android:padding="10dp"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+
+    <SeekBar
+        android:id="@+id/seekBar2"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/app_logo_background"
+        android:indeterminate="false"
+        android:max="3"
+        android:progress="1"
+        android:progressDrawable="@drawable/seek_bar"
+        android:progressTint="#FFB547"
+        android:thumb="@drawable/seek"
+        app:layout_constraintLeft_toLeftOf="@id/waitingMessage"
+        app:layout_constraintRight_toRightOf="@id/waitingMessage"
+        app:layout_constraintTop_toBottomOf="@id/waitingMessage" />
+
+    <TextView
+        android:id="@+id/progressMessage"
+        android:layout_width="136dp"
+        android:layout_height="45dp"
+        android:background="@drawable/buttonshape_difficulty_unselected"
+        android:padding="10dp"
+        android:layout_marginTop="20dp"
+        android:text=" 1/3 players"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/seekBar2" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,6 @@
 package com.epfl.triviago;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -111,7 +112,11 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
                         mDatabase.child("Games").child(gameName).child("Waypoints").child(wayptIdx+"-Cat").setValue(category);
                     }
 
-                    //finish();
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra("name",gameName);
+                    returnIntent.putExtra("numPlayers",numPlayer);
+                    setResult(Activity.RESULT_OK,returnIntent);
+                    finish();
                 }
             }
             @Override
