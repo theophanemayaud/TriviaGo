@@ -8,6 +8,52 @@
     android:background="@drawable/app_background">
 
 
+    <LinearLayout
+        android:id="@+id/enterGame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:padding="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/nameMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/shadow_white_box"
+            android:padding="10dp"
+            android:layout_gravity="center_horizontal"
+            android:text="Enter the name of the game you wish to join:"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/writeCode"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="textCapCharacters"
+            android:hint="AAAAA" />
+
+        <Button
+            android:id="@+id/button_done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Done"
+            android:onClick="clickedJoinButtonXmlCallback"
+            android:background="@drawable/shadow_white_box"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="right"
+            app:layout_constraintTop_toBottomOf="@id/setup_parameters"
+            app:layout_constraintRight_toRightOf="@id/setup_parameters"/>
+    </LinearLayout>
+
     <TextView
         android:id="@+id/waitingMessage"
         android:layout_width="wrap_content"
@@ -22,7 +68,6 @@
         android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold" />
-
 
     <SeekBar
         android:id="@+id/seekBar2"
@@ -48,7 +93,7 @@
         android:background="@drawable/buttonshape_difficulty_unselected"
         android:padding="10dp"
         android:layout_marginTop="20dp"
-        android:text=" 1/3 players"
+        android:text=" 0/3 players"
         android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold"

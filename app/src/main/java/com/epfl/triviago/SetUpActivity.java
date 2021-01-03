@@ -31,7 +31,7 @@ import java.util.ArrayList;
 public class SetUpActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     //Useful Variables
-    String numPlayer = "2";
+    int numPlayer = 2;
     boolean questionType = false; //FALSE = Multiple choice & TRUE = true/false
     String difficulty = "easy";
     String maxAttemps = "3";
@@ -79,7 +79,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
                             "please choose another one", Toast.LENGTH_SHORT).show();
                 } else {
                     //Default values
-                    mDatabase.child("Games").child(gameName).child("NumPlayers").setValue("2");
+                    mDatabase.child("Games").child(gameName).child("NumPlayers").setValue(2);
                     mDatabase.child("Games").child(gameName).child("QuestionType").setValue("QCM");
                     mDatabase.child("Games").child(gameName).child("Difficulty").setValue("easy");
                     mDatabase.child("Games").child(gameName).child("MaxAttempts").setValue("3");
@@ -114,7 +114,6 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
 
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("name",gameName);
-                    returnIntent.putExtra("numPlayers",numPlayer);
                     setResult(Activity.RESULT_OK,returnIntent);
                     finish();
                 }
@@ -127,7 +126,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     public void clicked1pButtonXmlCallback(View view) {
-        numPlayer = "1";
+        numPlayer = 1;
         findViewById(R.id.button_1p).setBackgroundResource(R.drawable.buttonshape_difficulty_selected);
         findViewById(R.id.button_2p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         findViewById(R.id.button_3p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
@@ -136,7 +135,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     public void clicked2pButtonXmlCallback(View view) {
-        numPlayer = "2";
+        numPlayer = 2;
         findViewById(R.id.button_1p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         findViewById(R.id.button_2p).setBackgroundResource(R.drawable.buttonshape_difficulty_selected);
         findViewById(R.id.button_3p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
@@ -145,7 +144,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     public void clicked3pButtonXmlCallback(View view) {
-        numPlayer = "3";
+        numPlayer = 3;
         findViewById(R.id.button_1p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         findViewById(R.id.button_2p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         findViewById(R.id.button_3p).setBackgroundResource(R.drawable.buttonshape_difficulty_selected);
@@ -154,7 +153,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     public void clicked4pButtonXmlCallback(View view) {
-        numPlayer = "4";
+        numPlayer = 4;
         findViewById(R.id.button_1p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         findViewById(R.id.button_2p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         findViewById(R.id.button_3p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
@@ -163,7 +162,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     public void clicked5pButtonXmlCallback(View view) {
-        numPlayer = "5";
+        numPlayer = 5;
         findViewById(R.id.button_1p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         findViewById(R.id.button_2p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         findViewById(R.id.button_3p).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
