@@ -5,6 +5,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -40,12 +42,14 @@ public class TriviaQuestionActivity extends AppCompatActivity {
     public static final String INTENT_QCM_TYPE = "TYPE";
     public static final String INTENT_CATEGORY = "CATEGORY";
     public static final String INTENT_DIFFICULTY = "DIFFICULTY";
+    public static final String INTENT_MAX_ATTEMPTS = "MAX_ATTEMPTS";
 
     // String Keys
     private static final String TRIVIA_STATE = "TRIVIA_QUESTION";
     private static final String RESPONSE_INDEX = "RESPONSE_INDEX";
     private static final String FINISHED_BOOL = "FINISHED_BOOL";
     private static final String ERROR_BOOL = "ERROR_BOOL";
+    private static final String ATTEMPTS_COUNTER = "ATTEMPTS_COUNTER";
 
 
     private Integer mResponse_index = -1;
@@ -53,7 +57,9 @@ public class TriviaQuestionActivity extends AppCompatActivity {
     private boolean mfinished = false;
     private boolean mIsQCM_type = true;
     private Integer intent_cat = 9;
+    private Integer intent_cat_no_offset = 0;
     private String intent_diff = "easy";
+    private Integer attempts_number = 1;
 
     // UI elements
     private View layout_parent;
@@ -74,28 +80,24 @@ public class TriviaQuestionActivity extends AppCompatActivity {
     private Button reloadQ;
     private ConstraintLayout container_cat;
     private ImageView image_cat;
+    private ConstraintLayout container_attempt;
+    private TextView attempt_text;
+    private int intent_max_attempts;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // TODO: keep ?
+        getSupportActionBar().hide();
 
-        // get intent with difficulty, category and type
-        Bundle b1 = getIntent().getExtras();
-        mIsQCM_type = b1.getBoolean(INTENT_QCM_TYPE);
-        intent_cat = b1.getInt(INTENT_CATEGORY);
-        intent_diff = b1.getString(INTENT_DIFFICULTY);
 
-        if (mIsQCM_type) {
-            setContentView(R.layout.activity_trivia_question);
-        } else {
-            setContentView(R.layout.activity_trivia_question_vf);
-        }
-
+        // in case of an orientation change
         if (savedInstanceState != null) {
-//            Log.e(TAG, "Restart");
             merror = savedInstanceState.getBoolean(ERROR_BOOL);
             mIsQCM_type = savedInstanceState.getBoolean(INTENT_QCM_TYPE);
+
             if (mIsQCM_type) {
                 setContentView(R.layout.activity_trivia_question);
             } else {
@@ -111,14 +113,30 @@ public class TriviaQuestionActivity extends AppCompatActivity {
             mTrivia = (TriviaQuestion) savedInstanceState.getSerializable(TRIVIA_STATE);
             mResponse_index = savedInstanceState.getInt(RESPONSE_INDEX);
             mfinished = savedInstanceState.getBoolean(FINISHED_BOOL);
+            attempts_number = savedInstanceState.getInt(ATTEMPTS_COUNTER);
+            intent_cat = savedInstanceState.getInt(INTENT_CATEGORY);
+            intent_cat_no_offset = intent_cat - TriviaQuestion.TRIVIA_API_ARRAY_OFFSET;
+            intent_diff = savedInstanceState.getString(INTENT_DIFFICULTY);
+            intent_max_attempts = savedInstanceState.getInt(INTENT_MAX_ATTEMPTS);
             prepare_view();
             fillView();
             if (mfinished) {
                 validate_answer();
             }
         } else {
-            // get intent for settings
-//        Log.v(TAG, "OK");
+            // set appropriate layout
+            if (mIsQCM_type) {
+                setContentView(R.layout.activity_trivia_question);
+            } else {
+                setContentView(R.layout.activity_trivia_question_vf);
+            }
+            // get intent with difficulty, category and type
+            Bundle b1 = getIntent().getExtras();
+            mIsQCM_type = b1.getBoolean(INTENT_QCM_TYPE);
+            intent_cat = b1.getInt(INTENT_CATEGORY);
+            intent_cat_no_offset = intent_cat - TriviaQuestion.TRIVIA_API_ARRAY_OFFSET;
+            intent_diff = b1.getString(INTENT_DIFFICULTY);
+            intent_max_attempts = b1.getInt(INTENT_MAX_ATTEMPTS);
 
             get_views();
             prepare_view();
@@ -128,6 +146,8 @@ public class TriviaQuestionActivity extends AppCompatActivity {
 
     private void get_views() {
         layout_parent = findViewById(R.id.triviaParentLayout);
+        container_attempt = findViewById(R.id.container_attempt);
+        attempt_text = findViewById(R.id.attemps_counter);
         container_cat = findViewById(R.id.container_cat_diff);
         image_cat = findViewById(R.id.category_image);
         checkAnswer = findViewById(R.id.checkResponse);
@@ -151,18 +171,28 @@ public class TriviaQuestionActivity extends AppCompatActivity {
         loader.setVisibility(View.VISIBLE);
         reloadQ.setVisibility(View.GONE);
         backButton.setVisibility(View.GONE);
-//        checkAnswer.setBackground(layout_parent.getBackground());
+        checkAnswer.setVisibility(View.VISIBLE);
         checkAnswer.setText("");
-        image_cat.setImageResource(R.mipmap.general_knoledge);
-
+        question.setVisibility(View.VISIBLE);
         question.setText(R.string.loading_question);
+        radioGroup.setVisibility(View.VISIBLE);
+        answer_1.setVisibility(View.VISIBLE);
         answer_1.setText(R.string.loading_prop);
+        answer_2.setVisibility(View.VISIBLE);
         answer_2.setText(R.string.loading_prop);
         if (mIsQCM_type) {
+            answer_3.setVisibility(View.VISIBLE);
+            answer_4.setVisibility(View.VISIBLE);
             answer_3.setText(R.string.loading_prop);
             answer_4.setText(R.string.loading_prop);
         }
+        container_attempt.setVisibility(View.INVISIBLE);
+        container_cat.setVisibility(View.VISIBLE);
+        image_cat.setVisibility(View.VISIBLE);
+        image_cat.setImageResource(R.mipmap.loading);
+        category.setVisibility(View.VISIBLE);
         category.setText(R.string.loading_cat);
+        difficulty.setVisibility(View.VISIBLE);
         difficulty.setText(R.string.loading_dif);
     }
 
@@ -174,18 +204,17 @@ public class TriviaQuestionActivity extends AppCompatActivity {
         // let retrofit create the implementation
         TriviaService triviaService = retrofit.create(TriviaService.class);
         Call<TriviaModel> call;
-        String cat = intent_cat.toString();
-        String diff = intent_diff;
         Random rand = new Random();
         if (randQ){
-            Integer cat_int = rand.nextInt(TriviaQuestion.MAX_CATEGORIES)+9;
-            cat = cat_int.toString();
-            diff = TriviaQuestion.DIFFICULTY.get(rand.nextInt(3));
+            intent_cat = rand.nextInt(TriviaQuestion.MAX_CATEGORIES)+TriviaQuestion.TRIVIA_API_ARRAY_OFFSET;
+            intent_cat_no_offset = intent_cat - TriviaQuestion.TRIVIA_API_ARRAY_OFFSET;
+            intent_diff = TriviaQuestion.DIFFICULTY.get(rand.nextInt(TriviaQuestion.MAX_DIFFICULTY));
         }
+        String cat = intent_cat.toString();
         if (mIsQCM_type) {
-            call = triviaService.getQCMQuestion(cat, diff);
+            call = triviaService.getQCMQuestion(cat, intent_diff);
         } else {
-            call = triviaService.getTFQuestion(cat, diff);
+            call = triviaService.getTFQuestion(cat, intent_diff);
         }
 
         call.enqueue(new Callback<TriviaModel>() {
@@ -223,6 +252,10 @@ public class TriviaQuestionActivity extends AppCompatActivity {
     }
 
     private void fillView() {
+        String color_hex_code = TriviaQuestion.Bg_colors.get(intent_cat_no_offset);
+        int bg_tint = Color.parseColor(color_hex_code);
+        layout_parent.getBackground().setColorFilter(bg_tint, PorterDuff.Mode.ADD);
+//        Log.e(TAG, "Color is : " + color_hex_code + " and int is : " + bg_tint);
         radioGroup.setVisibility(View.VISIBLE);
         question.setTextColor(getResources().getColor(R.color.black));
         question.setText(Html.fromHtml(mTrivia.mQuestion));
@@ -236,6 +269,10 @@ public class TriviaQuestionActivity extends AppCompatActivity {
             answer_3.setText(Html.fromHtml(mTrivia.mResponses.get(2)));
             answer_4.setText(Html.fromHtml(mTrivia.mResponses.get(3)));
         }
+        container_attempt.setVisibility(View.VISIBLE);
+        container_cat.setVisibility(View.VISIBLE);
+        image_cat.setVisibility(View.VISIBLE);
+        image_cat.setImageResource(TriviaQuestion.Cat_icons.get(intent_cat_no_offset));
         category.setVisibility(View.VISIBLE);
         category.setText(Html.fromHtml(mTrivia.mCategory));
         difficulty.setVisibility(View.VISIBLE);
@@ -286,6 +323,9 @@ public class TriviaQuestionActivity extends AppCompatActivity {
     }
 
     private void hide_all(boolean randQ) {
+        container_cat.setVisibility(View.INVISIBLE);
+        container_attempt.setVisibility(View.INVISIBLE);
+        image_cat.setVisibility(View.INVISIBLE);
         loader.setVisibility(View.INVISIBLE);
         radioGroup.setVisibility(View.INVISIBLE);
 
@@ -355,13 +395,19 @@ public class TriviaQuestionActivity extends AppCompatActivity {
             outState.putSerializable(TRIVIA_STATE, mTrivia);
             outState.putInt(RESPONSE_INDEX, mResponse_index);
             outState.putBoolean(FINISHED_BOOL, mfinished);
+            outState.putInt(ATTEMPTS_COUNTER, attempts_number);
         }
 //        Log.e(TAG, "Save errors");
         outState.putBoolean(ERROR_BOOL, merror);
         outState.putBoolean(INTENT_QCM_TYPE, mIsQCM_type);
+        outState.putInt(INTENT_CATEGORY, intent_cat);
+        outState.putString(INTENT_DIFFICULTY, intent_diff);
+        outState.putInt(INTENT_MAX_ATTEMPTS, intent_max_attempts);
+
     }
 
     public void reloadRandomQuestion(View view) {
+        prepare_view();
         build_view(true);
         reloadQ.setVisibility(View.GONE);
     }

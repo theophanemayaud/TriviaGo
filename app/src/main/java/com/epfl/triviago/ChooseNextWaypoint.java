@@ -57,7 +57,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
 
     private final String TAG = this.getClass().getSimpleName();
 
-    private List<String> spinnerValuesList = new ArrayList<String>();
+    private List<String> spinnerValuesList = new ArrayList<>();
     private Spinner spinner;
 
     private GoogleMap mMap;
@@ -67,9 +67,9 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     private LocationCallback locationCallback;
     LatLng currentLocation;
     private Marker mapMarker;
-    private List<LatLng> waypointsLatLgn = new ArrayList<LatLng>();
-    private List<Marker> waypointsMarkers = new ArrayList<Marker>();
-    private List<WaypointStatus> waypointsStatus = new ArrayList<WaypointStatus>();
+    private List<LatLng> waypointsLatLgn = new ArrayList<>();
+    private List<Marker> waypointsMarkers = new ArrayList<>();
+    private List<WaypointStatus> waypointsStatus = new ArrayList<>();
 
     private int selectedDestinationIndex;
 
@@ -77,6 +77,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
 
     public static final String DEST_LAT_LNG = "DestinationLatLgn";
     public static final String LATEST_USER_LOC = "LatestUserLocation";
+    public static final String INTENT_GAME_NAME = "GAMENAME";
 
     private String gameName;
 
@@ -90,8 +91,9 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         // and some placeholder waypoints values, should be taken from activity inputs or DB
         spinner = (Spinner) findViewById(R.id.chooseNextWaypointSpinner);
 
-        // TODO get game name from intent
-        gameName = "ABC";
+        // get intent with difficulty, category and type
+        Bundle b1 = getIntent().getExtras();
+        gameName = b1.getString(INTENT_GAME_NAME);;
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.addListenerForSingleValueEvent(new onCreateGetDatabaseValues());
 
@@ -307,23 +309,24 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                 boolean type_db;
                 String diff_db;
                 int cat_db;
+                int max_attempts_db;
 
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 diff_db = snapshot.child("Games").child(gameName).child("Difficulty").getValue(String.class);
                 String type_db_Str = snapshot.child("Games").child(gameName).child("QuestionType").getValue(String.class);
-                if (type_db_Str=="QCM") {
-                    type_db = false;
-                }
-                else {type_db = true;}
+                type_db = type_db_Str != "QCM";
                 cat_db = snapshot.child("Games").child(gameName).child("Waypoints")
                         .child(String.valueOf(selectedDestinationIndex)+"-Cat")
-                        .getValue(Integer.class)+9;
+                        .getValue(Integer.class)+TriviaQuestion.TRIVIA_SPINNER_API_OFFSET;
+                max_attempts_db = snapshot.child("Games").child(gameName).child("MaxAttempts").getValue(Integer.class);
+
 
                 Log.e("TxGO", "Params are : type  = " + type_db + ", cat value = " + cat_db + ", diff value = " + diff_db);
                 intent.putExtra(TriviaQuestionActivity.INTENT_QCM_TYPE, type_db);
                 intent.putExtra(TriviaQuestionActivity.INTENT_CATEGORY, cat_db);
                 intent.putExtra(TriviaQuestionActivity.INTENT_DIFFICULTY, diff_db);
+                intent.putExtra(TriviaQuestionActivity.INTENT_MAX_ATTEMPTS, max_attempts_db);
                 startActivityForResult(intent, ASK_QUESTION);
             }
 

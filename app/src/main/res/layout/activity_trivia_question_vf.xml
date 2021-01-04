@@ -54,6 +54,38 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container_attempt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:background="@drawable/shadow_white_box"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/textAttemptsTrivia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:text="@string/attempt" />
+
+        <TextView
+            android:id="@+id/attemps_counter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1 of 5"
+            app:layout_constraintTop_toBottomOf="@+id/textAttemptsTrivia"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <TextView
         android:id="@+id/textQuestion"
         android:layout_width="0dp"

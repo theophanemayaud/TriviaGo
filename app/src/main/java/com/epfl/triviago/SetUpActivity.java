@@ -34,7 +34,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
     int numPlayer = 2;
     boolean questionType = false; //FALSE = Multiple choice & TRUE = true/false
     String difficulty = "easy";
-    String maxAttemps = "3";
+    Integer maxAttemps = 3;
     ArrayList<LatLng> waypointsLatLgnList;
     ArrayList<Integer> waypointsCategList;
 
@@ -192,21 +192,21 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     public void clicked1AtpButtonXmlCallback(View view) {
-        maxAttemps = "1";
+        maxAttemps = 1;
         findViewById(R.id.button_1atp).setBackgroundResource(R.drawable.buttonshape_difficulty_selected);
         findViewById(R.id.button_3atp).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         findViewById(R.id.button_5atp).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
     }
 
     public void clicked3AtpButtonXmlCallback(View view) {
-        maxAttemps = "3";
+        maxAttemps = 3;
         findViewById(R.id.button_1atp).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         findViewById(R.id.button_3atp).setBackgroundResource(R.drawable.buttonshape_difficulty_selected);
         findViewById(R.id.button_5atp).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
     }
 
     public void clicked5AtpButtonXmlCallback(View view) {
-        maxAttemps = "5";
+        maxAttemps = 5;
         findViewById(R.id.button_1atp).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         findViewById(R.id.button_3atp).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         findViewById(R.id.button_5atp).setBackgroundResource(R.drawable.buttonshape_difficulty_selected);

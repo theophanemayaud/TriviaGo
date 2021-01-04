@@ -75,6 +75,7 @@ public class JoinActivity extends AppCompatActivity {
 
                     if (current_players == max_players) {
                         Intent intentChooseNextWaypoint = new Intent(JoinActivity.this, ChooseNextWaypoint.class);
+                        intentChooseNextWaypoint.putExtra(ChooseNextWaypoint.INTENT_GAME_NAME, gameName);
                         startActivity(intentChooseNextWaypoint);
                     }
 
