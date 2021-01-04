@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void clickedChooseNextWaypointButtonXmlCallback(View view) {
         Intent intentChooseNextWaypoint = new Intent(MainActivity.this, ChooseNextWaypoint.class);
+        intentChooseNextWaypoint.putExtra(ChooseNextWaypoint.INTENT_GAME_NAME, "ABC");
         startActivity(intentChooseNextWaypoint);
     }
 
