@@ -86,6 +86,13 @@
             android:onClick="clickedGoToCreateWaypointsButtonXmlCallback"
             android:text="Go to CreateWaypoints" />
 
+        <Button
+            android:id="@+id/EndButton"
+            android:layout_width="169dp"
+            android:layout_height="wrap_content"
+            android:onClick="clickedGoEndButtonXmlCallback"
+            android:text="Go to END" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

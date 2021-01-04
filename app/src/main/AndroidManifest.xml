@@ -17,7 +17,8 @@
         android:roundIcon="@mipmap/app_logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TriviaGo">
-        <activity android:name=".JoinActivity"></activity>
+        <activity android:name=".EndActivity"></activity>
+        <activity android:name=".JoinActivity" />
         <activity android:name=".TriviaQuestionActivity" />
         <activity android:name=".WelcomeActivity" />
         <activity android:name=".SetUpActivity" />
@@ -34,6 +35,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
 
         <activity
             android:name=".MapsActivity"

@@ -55,6 +55,11 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(createWaypointsIntent, CreateWaypointsActivity.RESULT_WAYPOINTS_CODE);
     }
 
+    public void clickedGoEndButtonXmlCallback(View view) {
+        Intent i = new Intent(MainActivity.this, EndActivity.class);
+        startActivity(i);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
