@@ -2,6 +2,7 @@ package com.epfl.triviago;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -17,9 +18,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class JoinActivity extends AppCompatActivity {
-
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private DatabaseReference mDatabase = database.getReference();
 
     //Useful variables
     int max_players;
@@ -43,11 +41,6 @@ public class JoinActivity extends AppCompatActivity {
         waiting_message.setVisibility(View.GONE);
         progress_message.setVisibility(View.GONE);
 
-
-        int num = 0;
-        seekbar.setMax(num);
-        seekbar.setProgress(0);
-
     }
 
     public void clickedJoinButtonXmlCallback(View view) {
@@ -61,7 +54,10 @@ public class JoinActivity extends AppCompatActivity {
         gameName = name_text.getText().toString();
 
         //Check game name to see if it exists
-        mDatabase.addValueEventListener(new ValueEventListener() {
+        FirebaseDatabase data = FirebaseDatabase.getInstance();
+        DatabaseReference mData = data.getReference();
+
+        mData.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (snapshot.child("Games").hasChild(gameName)) {
@@ -71,8 +67,16 @@ public class JoinActivity extends AppCompatActivity {
                     // Update the number of players in waiting room
                     max_players = snapshot.child("Games").child(gameName).child("NumPlayers").getValue(Integer.class);
                     current_players = snapshot.child("Games").child(gameName).child("WaitingRoom").child("Players").getValue(Integer.class);
-                    current_players += 1;   //PROBLEMMMMMMM !!!
-                    mDatabase.child("Games").child(gameName).child("WaitingRoom").child("Players").setValue(current_players);
+
+                    if(current_players < max_players) {
+                        current_players += 1;
+                        mData.child("Games").child(gameName).child("WaitingRoom").child("Players").setValue(current_players);
+                    }
+
+                    if (current_players == max_players) {
+                        Intent intentChooseNextWaypoint = new Intent(JoinActivity.this, ChooseNextWaypoint.class);
+                        startActivity(intentChooseNextWaypoint);
+                    }
 
                     //Updating waiting interface
                     enter_code.setVisibility(View.GONE);
@@ -80,7 +84,7 @@ public class JoinActivity extends AppCompatActivity {
                     waiting_message.setVisibility(View.VISIBLE);
                     progress_message.setVisibility(View.VISIBLE);
 
-                    progress_message.setText(" "+current_players+"/3 players");
+                    progress_message.setText(" "+current_players+"/"+max_players+"players");
                     seekbar.setMax(max_players);
                     seekbar.setProgress(current_players);
 
@@ -95,7 +99,9 @@ public class JoinActivity extends AppCompatActivity {
                 // Failed to read value
             }
         });
+
     }
+
 
 }
 
