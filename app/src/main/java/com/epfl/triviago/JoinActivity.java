@@ -1,9 +1,11 @@
 package com.epfl.triviago;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -20,11 +22,12 @@ import com.google.firebase.database.ValueEventListener;
 public class JoinActivity extends AppCompatActivity {
 
     //Useful variables
-    int max_players;
-    int current_players;
-    //boolean waiting = false;
-    //String nameBack;
-
+    private int max_players;
+    private int current_players;
+    private DatabaseReference mData;
+    private String username;
+    private String gameName;
+    private boolean userInGame = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +46,6 @@ public class JoinActivity extends AppCompatActivity {
         seekbar.setVisibility(View.GONE);
         waiting_message.setVisibility(View.GONE);
         progress_message.setVisibility(View.GONE);
-
     }
 
     public void clickedJoinButtonXmlCallback(View view) {
@@ -53,104 +55,97 @@ public class JoinActivity extends AppCompatActivity {
         TextView progress_message = findViewById(R.id.progressMessage);
         LinearLayout enter_code = findViewById(R.id.enterGame);
         EditText name_text = findViewById(R.id.writeCode);
-        String gameName = name_text.getText().toString();
+        gameName = name_text.getText().toString();
         EditText username_text = findViewById(R.id.username);
-        String username = username_text.getText().toString();
+        username = username_text.getText().toString();
 
 
         //Check game name to see if it exists
         FirebaseDatabase data = FirebaseDatabase.getInstance();
-        DatabaseReference mData = data.getReference();
+        mData = data.getReference().child("Games");
 
-
-        mData.addListenerForSingleValueEvent(new ValueEventListener() {
+        mData.child(gameName).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                if (snapshot.child("Games").hasChild(gameName)) {
-                    //nameBack = gameName;
-                    //waiting = true;
-
-                    //Add the player to the game
-                    mData.child("Games").child(gameName).child("Users").setValue(username);
-
-                    // Update the number of players in waiting room
-                    max_players = snapshot.child("Games").child(gameName).child("NumPlayers").getValue(Integer.class);
-                    current_players = snapshot.child("Games").child(gameName).child("WaitingRoom").child("Players").getValue(Integer.class);
-
-                    if (current_players > max_players){
-                        Toast.makeText(JoinActivity.this, "Game is full!", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-
-                    if(current_players < max_players) {
-                        current_players += 1;
-                        mData.child("Games").child(gameName).child("WaitingRoom").child("Players").setValue(current_players);
-                    }
-                    if (current_players == max_players) {
-                        int once = 0;
-                        Intent intentChooseNextWaypoint = new Intent(JoinActivity.this, ChooseNextWaypoint.class);
-                        intentChooseNextWaypoint.putExtra(ChooseNextWaypoint.INTENT_GAME_NAME, gameName);
-                        startActivity(intentChooseNextWaypoint);
-                    }
-                    if (current_players > max_players) {
-                        Toast.makeText(JoinActivity.this, "Game is full!", Toast.LENGTH_SHORT).show();
-                    }
-
-                    //Updating waiting interface
-                    enter_code.setVisibility(View.GONE);
-
-                    seekbar.setVisibility(View.VISIBLE);
-                    waiting_message.setVisibility(View.VISIBLE);
-                    progress_message.setVisibility(View.VISIBLE);
-
-                    progress_message.setText(" "+current_players+"/"+max_players+"players");
-                    seekbar.setMax(max_players);
-                    seekbar.setProgress(current_players);
-
-                    if (current_players == max_players) {
-                        current_players += 1;
-                        mData.child("Games").child(gameName).child("WaitingRoom").child("Players").setValue(current_players);
-                        Intent intentChooseNextWaypoint = new Intent(JoinActivity.this, ChooseNextWaypoint.class);
-                        intentChooseNextWaypoint.putExtra(ChooseNextWaypoint.INTENT_GAME_NAME, gameName);
-                        intentChooseNextWaypoint.putExtra(ChooseNextWaypoint.INTENT_PLAYER_NAME, username);
-                        Toast.makeText(JoinActivity.this, "Joining Game...", Toast.LENGTH_SHORT).show();
-                        startActivity(intentChooseNextWaypoint);
-                    }
-
-                } else {
+            public void onDataChange(DataSnapshot gameSnapshot) {
+                if(!gameSnapshot.exists()){
                     Toast.makeText(JoinActivity.this, "Game "+gameName+ " doesn't exist: " +
                             "create a new one or enter another name! ", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+
+                // Update the number of players in waiting room
+                max_players = gameSnapshot.child("NumPlayers").getValue(Integer.class);
+
+                current_players = (int) gameSnapshot.child("Users").getChildrenCount();
+
+                if (current_players >= max_players){
+                    Toast.makeText(JoinActivity.this, "This game is full!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                //Add the player to the game if doesn't exist
+                if(gameSnapshot.child("Users").hasChild(username)){
+                    Toast.makeText(JoinActivity.this, "This username is taken !", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                //add current player to db, as child of Users
+                mData.child(gameName).child("Users").child(username)
+                        .child("latitude").setValue(0); //Dummy value to save player to db
+
+                //Update waiting interface
+                enter_code.setVisibility(View.GONE);
+
+                seekbar.setVisibility(View.VISIBLE);
+                waiting_message.setVisibility(View.VISIBLE);
+                progress_message.setVisibility(View.VISIBLE);
+
+                progress_message.setText(" "+current_players+"/"+max_players+" players");
+                seekbar.setMax(max_players);
+                seekbar.setProgress(current_players);
+
+                mData.child(gameName).child("Users").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot usersSnapshot) {
+                        if(userInGame==true){
+                            return; //We are already in the game, or waiting to enter
+                        }
+
+                        current_players = (int) usersSnapshot.getChildrenCount();
+                        if(current_players<max_players) {
+                            progress_message.setText(" "+current_players+"/"+max_players+" players");
+                            seekbar.setProgress(current_players);
+                            Toast.makeText(JoinActivity.this, "A new player just joined !", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            userInGame=true;
+                            Intent intentChooseNextWaypoint = new Intent(JoinActivity.this, ChooseNextWaypoint.class);
+                            intentChooseNextWaypoint.putExtra(ChooseNextWaypoint.INTENT_GAME_NAME, gameName);
+                            intentChooseNextWaypoint.putExtra(ChooseNextWaypoint.INTENT_PLAYER_NAME, username);
+                            Toast.makeText(JoinActivity.this, "Joining Game...", Toast.LENGTH_SHORT).show();
+                            startActivity(intentChooseNextWaypoint);
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError e) {
+                        Log.e(""+e.getClass(), "Error with database" + e.getDetails());
+                    }
+                });
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
+            public void onCancelled(DatabaseError e) {
+                Log.e(""+e.getClass(), "Error with database" + e.getDetails());
             }
         });
 
     }
 
-    //@Override
-    //protected void onDestroy() {
-    //    super.onDestroy();
-    //    FirebaseDatabase data = FirebaseDatabase.getInstance();
-    //    DatabaseReference mData = data.getReference();
-    //    if(waiting == true) {
-    //        mData.addListenerForSingleValueEvent(new ValueEventListener() {
-    //            @Override
-    //            public void onDataChange(DataSnapshot snapshot) {
-    //                if (snapshot.child("Games").hasChild(nameBack)) {
-    //                    mData.child("Games").child(nameBack).child("WaitingRoom").child("Players").setValue(current_players);
-    //                    Toast.makeText(JoinActivity.this, "DESTROYYYYYY!", Toast.LENGTH_SHORT).show();
-    //                }
-    //            }
-    //            @Override
-    //            public void onCancelled(DatabaseError error) {
-    //                // Failed to read value
-    //            }
-    //        });
-    //    }
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(userInGame == true ){ // if gone it means the user was added to DB
+            mData.child(gameName).child("Users").child(username).removeValue();
+        }
+    }
 }
 

@@ -8,7 +8,6 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
@@ -40,6 +39,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.maps.android.ui.IconGenerator;
 
+import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,6 +71,8 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     private List<LatLng> waypointsLatLgn = new ArrayList<>();
     private List<Marker> waypointsMarkers = new ArrayList<>();
     private List<WaypointStatus> waypointsStatus = new ArrayList<>();
+
+    public static final String INTENT_PLAYER_STATS_LIST = "PLAYER_STATS_LIST";
     private List<Integer> waypointsAttemptsList = new ArrayList<>();
 
     private int selectedDestinationIndex;
@@ -96,14 +99,12 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         // and some placeholder waypoints values, should be taken from activity inputs or DB
         spinner = (Spinner) findViewById(R.id.chooseNextWaypointSpinner);
 
-        // get intent with difficulty, category and type
+        // get intent with game name and player name
         Bundle b1 = getIntent().getExtras();
         gameName = b1.getString(INTENT_GAME_NAME);
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.addListenerForSingleValueEvent(new onCreateGetDatabaseValues()); //TODO listen only for this game changes, not whole DB !
+        mDatabase = FirebaseDatabase.getInstance().getReference(); // IDEA maybe not get whole database but sub-part ?
+        mDatabase.addListenerForSingleValueEvent(new onCreateGetDatabaseValues()); //IDEA listen only for this game changes, not whole DB !
         playerName = b1.getString(INTENT_PLAYER_NAME);
-
-        //Update player number
 
         // Obtain the SupportMapFragment and get notified
         // when the map is ready to be used
@@ -160,6 +161,12 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                             mapMarker.setPosition(updatedLocation);
                         }
                         currentLocation = updatedLocation;
+
+                        // update location in firebase
+                        mDatabase.child("Games").child(gameName).child("Users").child(playerName)
+                                .child("latitude").setValue(currentLocation.latitude);
+                        mDatabase.child("Games").child(gameName).child("Users").child(playerName)
+                                .child("longitude").setValue(currentLocation.longitude);
 
                         // Now add all markers of elements to go to
                         // if no waypoint markers, then we'll set all of them
@@ -273,9 +280,10 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                     "You already got this one right !!!", Toast.LENGTH_SHORT).show();
         }
         else{
-            // TODO : pass the number of attempts allowed and implement it in TriviaQuestionActivity
             Intent TravelToNextWaypointIntent = new Intent(ChooseNextWaypoint.this, TravelToNextWaypointActivity.class);
             TravelToNextWaypointIntent.putExtra( DEST_LAT_LNG, waypointsLatLgn.get(selectedDestinationIndex));
+            TravelToNextWaypointIntent.putExtra(INTENT_GAME_NAME, gameName);
+            TravelToNextWaypointIntent.putExtra(INTENT_PLAYER_NAME, playerName);
             if(currentLocation!=null) {
                 TravelToNextWaypointIntent.putExtra(LATEST_USER_LOC, currentLocation);
             }
@@ -290,9 +298,6 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
             case REACH_DEST:
                 if (resultCode == RESULT_OK) {
                     boolean reached_waypoint = data.getExtras().getBoolean(TravelToNextWaypointActivity.INTENT_RESULT);
-                    int newAttempsNb = waypointsAttemptsList.get(selectedDestinationIndex)
-                            + data.getIntExtra(TriviaQuestionActivity.INTENT_EFFECTIVE_ATTEMPTS, 0);
-                    waypointsAttemptsList.set(selectedDestinationIndex, newAttempsNb);
 
                     if (reached_waypoint) {
                         // launch triviaquestion
@@ -317,6 +322,10 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                 }
                 break;
             case ASK_QUESTION:
+                int newAttempsNb = waypointsAttemptsList.get(selectedDestinationIndex)
+                        + data.getIntExtra(TriviaQuestionActivity.INTENT_EFFECTIVE_ATTEMPTS, 0);
+                waypointsAttemptsList.set(selectedDestinationIndex, newAttempsNb);
+
                 if (resultCode == RESULT_OK) {
                     boolean correct_answer = data.getExtras().getBoolean(TriviaQuestionActivity.INTENT_RESULT);
                     if (correct_answer) {
@@ -349,10 +358,29 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                         }
                     }
                     // If here, then there are no more waypoints to go to
-                    // TODO implement actual finish and go to stats activity !
                     if(stillSomeWaypointsToDo==false){
-                        Log.e(TAG, "User got to all waypoints !");
-                        finish();
+                        int waypointAttemptsTotal = 0;
+                        List<Double> waypointsRatesList = new ArrayList<>();
+                        for(int i=0; i<waypointsAttemptsList.size();i++){
+                            waypointAttemptsTotal += waypointsAttemptsList.get(i);
+                            waypointsRatesList.add(calcRate(
+                                    waypointsAttemptsList.get(i)
+                            ));
+                        }
+
+                        double playerSuccessRate = calcRate(waypointAttemptsTotal);
+                        mDatabase.child("Games").child(gameName).child("Users").child(playerName)
+                                .child("rate").setValue(playerSuccessRate);
+
+                        Intent endIntent = new Intent(ChooseNextWaypoint.this, EndActivity.class);
+                        endIntent.putExtra(ChooseNextWaypoint.INTENT_GAME_NAME, gameName);
+                        endIntent.putExtra(ChooseNextWaypoint.INTENT_PLAYER_NAME, playerName);
+                        endIntent.putExtra(ChooseNextWaypoint.INTENT_PLAYER_STATS_LIST,
+                                (Serializable) waypointsRatesList);
+
+                        Toast.makeText(ChooseNextWaypoint.this, "All done !!!",
+                                Toast.LENGTH_SHORT).show();
+                        startActivity(endIntent); //TODO finish when end activity finishes
                     }
                     lastDestinationIndex = selectedDestinationIndex; //remember for next attempt
                 }
@@ -428,7 +456,6 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     private class onCreateGetDatabaseValues implements ValueEventListener {
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
-            Log.e("THEO-INFO", "We got data change");
             double wayptLat;
             double wayptLgn;
             long numWaypts = snapshot.child("Games").child(gameName).child("Waypoints").getChildrenCount();
@@ -460,6 +487,13 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         public void onCancelled(@NonNull DatabaseError error) {
             Log.w(TAG, "Failed to read value.", error.toException());
         }
+    }
+
+    private double calcRate(int attempts){
+        double rate = 0.;
+        double numbWaypts = waypointsLatLgn.size();
+        rate = numbWaypts/attempts;
+        return rate;
     }
     // -------- End : Small diverse functions functions --------
 }

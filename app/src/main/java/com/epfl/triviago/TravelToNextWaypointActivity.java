@@ -12,9 +12,11 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -29,6 +31,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.maps.android.ui.IconGenerator;
 
 import java.util.ArrayList;
@@ -59,6 +66,9 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
 
     IconGenerator iconGenerator;
 
+    private DatabaseReference mDatabase;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,17 +93,6 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
         // get the generator for player name icons
         iconGenerator = new IconGenerator(this);
 
-        // TODO initialize with firebase not those dumb values !
-        // Initialize player names and LatLgn
-        otherPlayerLatLgn.add(new LatLng(51.9265, 5.2205));
-        otherPlayerNames.add("WW");
-        otherPlayerLatLgn.add(new LatLng(49.9265, 4.13));
-        otherPlayerNames.add("The Bat");
-        otherPlayerLatLgn.add(new LatLng(48.13, 5.2205));
-        otherPlayerNames.add("Arielle");
-        otherPlayerLatLgn.add(new LatLng(52.13, 4.13));
-        otherPlayerNames.add("Harry");
-
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         if(extras.containsKey(ChooseNextWaypoint.DEST_LAT_LNG)) {
@@ -102,6 +101,31 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
         if(extras.containsKey(ChooseNextWaypoint.LATEST_USER_LOC)) {
             currentLocationLatLgn = intent.getParcelableExtra(ChooseNextWaypoint.LATEST_USER_LOC);
         }
+
+        String gameName = extras.getString(ChooseNextWaypoint.INTENT_GAME_NAME);
+        String playerName = extras.getString(ChooseNextWaypoint.INTENT_PLAYER_NAME);
+
+        // Initialize player names and LatLgn
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Games").child(gameName);
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for(DataSnapshot userSnapshot: snapshot.child("Users").getChildren()){
+                    String userName = userSnapshot.getKey();
+                    if(!userName.equals(playerName)){
+                        otherPlayerNames.add(userName);
+                        otherPlayerLatLgn.add(new LatLng(
+                                userSnapshot.child("latitude").getValue(Double.class),
+                                userSnapshot.child("longitude").getValue(Double.class)
+                                ));
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("TxGO", "Error writing to database");
+            }
+        });
     }
 
     @Override
@@ -189,7 +213,6 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
                         destinationReached();
                     }
 
-                    // TODO move next part to firebase listener
                     // Now update other players' locations on the map
                     if (otherPlayerMarkers.isEmpty()) {
                         iconGenerator.setStyle(IconGenerator.STYLE_RED);
@@ -197,7 +220,7 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
                             LatLng playerLatLgn = otherPlayerLatLgn.get(i);
                             String playerName = otherPlayerNames.get(i);
                             Marker playerMarker = mMap.addMarker(
-                                    new MarkerOptions().position(playerLatLgn).title(playerName));
+                                    new MarkerOptions().position(playerLatLgn).title("Other player : " + playerName));
 
                             playerMarker.setIcon(BitmapDescriptorFactory.fromBitmap(
                                     iconGenerator.makeIcon(playerName)));
@@ -206,7 +229,32 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
                     }
                     else{ // Other player location updates
                         for (int i = 0; i < otherPlayerLatLgn.size(); i++) {
-                            otherPlayerMarkers.get(i).setPosition(otherPlayerLatLgn.get(i));
+                            // listen to changes for other player locations
+                            int finalI = i;
+                            mDatabase.child("Users").child(otherPlayerNames.get(i))
+                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot userSnapshot) {
+                                    if(userSnapshot.exists()){
+                                        otherPlayerLatLgn.set(finalI, new LatLng(
+                                                userSnapshot.child("latitude").getValue(Double.class),
+                                                userSnapshot.child("longitude").getValue(Double.class)
+                                        ));
+                                        otherPlayerMarkers.get(finalI).setPosition(
+                                                otherPlayerLatLgn.get(finalI));
+                                    }
+                                    else { // if snapshot is empty : player disappeared !
+                                        otherPlayerNames.remove(finalI);
+                                        otherPlayerLatLgn.remove(finalI);
+                                        otherPlayerMarkers.get(finalI).remove();
+                                        otherPlayerMarkers.remove(finalI);
+                                    }
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    Log.e("TxGO", "Error writing to database");
+                                }
+                            });
                         }
                     }
                 }
