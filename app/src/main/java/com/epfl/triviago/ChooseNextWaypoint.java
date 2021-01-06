@@ -373,7 +373,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                 // whenever data at this location is updated.
                 diff_db = snapshot.child("Games").child(gameName).child("Difficulty").getValue(String.class);
                 String type_db_Str = snapshot.child("Games").child(gameName).child("QuestionType").getValue(String.class);
-                type_db = type_db_Str != "QCM";
+                type_db = type_db_Str == "QCM";
                 cat_db = snapshot.child("Games").child(gameName).child("Waypoints")
                         .child(String.valueOf(selectedDestinationIndex)+"-Cat")
                         .getValue(Integer.class)+TriviaQuestion.TRIVIA_SPINNER_API_OFFSET;

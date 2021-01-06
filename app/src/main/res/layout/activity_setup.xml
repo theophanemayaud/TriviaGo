@@ -250,7 +250,7 @@
         android:layout_height="wrap_content"
         android:text="Done"
         android:onClick="clickedDoneButtonXmlCallback"
-        android:background="@drawable/shadow_white_box"
+        android:background="@drawable/button_shape_final"
         android:layout_marginTop="20dp"
         app:layout_constraintTop_toBottomOf="@id/setup_parameters"
         app:layout_constraintRight_toRightOf="@id/setup_parameters"/>
@@ -261,7 +261,7 @@
         android:layout_height="wrap_content"
         android:text="Choose Waypoints"
         android:onClick="clickedWaypointButtonXmlCallback"
-        android:background="@drawable/shadow_white_box"
+        android:background="@drawable/button_shape_final"
         android:layout_marginTop="20dp"
         app:layout_constraintTop_toBottomOf="@id/setup_parameters"
         app:layout_constraintLeft_toLeftOf="@id/setup_parameters"/>

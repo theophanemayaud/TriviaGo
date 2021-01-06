@@ -18,6 +18,6 @@
         />
     <stroke
         android:width="4dp"
-        android:color="#45E0E6"
+        android:color="@color/button_color"
         />
 </shape>

@@ -61,6 +61,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:inputType="textCapCharacters"
+            android:imeOptions="actionDone"
             android:text="AAAAA" />
 
         <Button
@@ -69,7 +70,7 @@
             android:layout_height="wrap_content"
             android:text="Done"
             android:onClick="clickedJoinButtonXmlCallback"
-            android:background="@drawable/shadow_white_box"
+            android:background="@drawable/button_shape_final"
             android:layout_marginTop="20dp"
             android:layout_gravity="right"
             app:layout_constraintTop_toBottomOf="@id/setup_parameters"

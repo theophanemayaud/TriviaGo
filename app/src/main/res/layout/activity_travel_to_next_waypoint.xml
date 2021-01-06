@@ -23,7 +23,7 @@
         android:layout_height="60dp"
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="30dp"
-        android:background="@drawable/main_buttonshape"
+        android:background="@drawable/button_shape_final"
         android:foreground="@drawable/baseline_my_location_black_36dp"
         android:onClick="moveToCurrentLocationButtonCallback"
         android:paddingTop="10dp"

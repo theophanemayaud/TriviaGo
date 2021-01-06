@@ -22,4 +22,6 @@
     <color name="wrong_answer">#E41010</color>
     <color name="nice_orange">#FF8E2B</color>
     <color name="app_logo_background">#FFFFFF</color>
+    <color name="button_color">#E68A3A</color>
+    <color name="button_laurence_old">#45E0E6</color>
 </resources>

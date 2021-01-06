@@ -93,9 +93,7 @@ public class TriviaQuestionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // TODO: keep ?
         getSupportActionBar().hide();
-
 
         // in case of an orientation change
         if (savedInstanceState != null) {
@@ -291,7 +289,7 @@ public class TriviaQuestionActivity extends AppCompatActivity {
         category.setVisibility(View.VISIBLE);
         category.setText(Html.fromHtml(mTrivia.mCategory));
         difficulty.setVisibility(View.VISIBLE);
-        difficulty.setText(Html.fromHtml(mTrivia.mDifficulty));
+        difficulty.setText(getString(R.string.difficulty, Html.fromHtml(mTrivia.mDifficulty).toString()));
         loader.setVisibility(View.INVISIBLE);
         okButton.setVisibility(View.VISIBLE);
 //        checkAnswer.setBackground(layout_parent.getBackground());
