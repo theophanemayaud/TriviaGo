@@ -82,7 +82,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
                     mDatabase.child("Games").child(gameName).child("NumPlayers").setValue(2);
                     mDatabase.child("Games").child(gameName).child("QuestionType").setValue("QCM");
                     mDatabase.child("Games").child(gameName).child("Difficulty").setValue("easy");
-                    mDatabase.child("Games").child(gameName).child("MaxAttempts").setValue("3");
+                    mDatabase.child("Games").child(gameName).child("MaxAttempts").setValue(3);
 
                     //Adjusted values
                     ToggleButton toggle = findViewById(R.id.button_questionType);

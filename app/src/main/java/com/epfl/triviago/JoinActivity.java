@@ -77,6 +77,11 @@ public class JoinActivity extends AppCompatActivity {
                         Intent intentChooseNextWaypoint = new Intent(JoinActivity.this, ChooseNextWaypoint.class);
                         intentChooseNextWaypoint.putExtra(ChooseNextWaypoint.INTENT_GAME_NAME, gameName);
                         startActivity(intentChooseNextWaypoint);
+                        current_players += 1;
+                    }
+
+                    if (current_players > max_players) {
+                        Toast.makeText(JoinActivity.this, "Game is full!", Toast.LENGTH_SHORT).show();
                     }
 
                     //Updating waiting interface
