@@ -86,6 +86,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_choose_next_waypoint);
 
         // Initialising the spinner values, should be taken from activity input values or DB
@@ -96,7 +97,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         Bundle b1 = getIntent().getExtras();
         gameName = b1.getString(INTENT_GAME_NAME);
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.addListenerForSingleValueEvent(new onCreateGetDatabaseValues());
+        mDatabase.addListenerForSingleValueEvent(new onCreateGetDatabaseValues()); //TODO listen only for this game changes, not whole DB !
 
         // Obtain the SupportMapFragment and get notified
         // when the map is ready to be used
@@ -158,7 +159,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                         // Now add all markers of elements to go to
                         // if no waypoint markers, then we'll set all of them
                         if (waypointsMarkers.isEmpty()) {
-                            iconGenerator.setStyle(IconGenerator.STYLE_BLUE);
+                            iconGenerator.setStyle(IconGenerator.STYLE_ORANGE);
                             LatLngBounds.Builder builder = new LatLngBounds.Builder();
                             builder.include(currentLocation);
                             for (int i = 0; i < waypointsLatLgn.size(); i++) {
@@ -170,6 +171,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
 
                                 waypointMarker.setIcon(BitmapDescriptorFactory.fromBitmap(
                                         iconGenerator.makeIcon(waypointLetter)));
+                                waypointMarker.setTag(i);
                                 waypointsMarkers.add(waypointMarker);
                                 builder.include(waypointLatLong);
                             }
@@ -217,9 +219,34 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
 
         //Disable Map Toolbar:
         mMap.getUiSettings().setMapToolbarEnabled(false);
+
+        mMap.setOnMarkerClickListener(getOnMarkerClickListener());
     }
 
-    // -------- End : Location related functions --------
+    private GoogleMap.OnMarkerClickListener getOnMarkerClickListener() {
+        return new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                int listPosition = (int)(marker.getTag());
+
+                selectedDestinationIndex = listPosition;
+
+                String itemLetter = String.valueOf((char)(listPosition + CreateWaypointsActivity.LIST_POS_TO_LETTER_OFFSET));
+                TextView selectedItemView = findViewById(R.id.selectedItemText);
+                selectedItemView.setText("Waypoint " + itemLetter + " is currently selected");
+                selectedItemView.setTextColor(Color.RED); // TODO set color GREEN if reached
+
+                spinner.setSelection(listPosition);
+
+                selectedDestinationIndex = listPosition;
+
+                return false; //true to disable standard show title and center behavior
+            }
+        };
+    }
+
+
+    // -------- End : Location and map related functions --------
 
     // -----------------------------------------------------------
     // -------- ⬇️ Start : sub activity related functions --------
@@ -358,7 +385,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                 // Just show the selection in textfield
                 TextView selectedItemView = findViewById(R.id.selectedItemText);
                 selectedItemView.setText("Waypoint " + itemLetter + " is currently selected");
-                selectedItemView.setTextColor(Color.RED);
+                selectedItemView.setTextColor(Color.RED); // TODO set color to green if already reached
 
                 // Show waypoint title on map and center map on it
                 if (waypointsMarkers.isEmpty() == false) {
