@@ -11,4 +11,7 @@ public class EndActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_end);
     }
+
+    @Override
+    protected void onDestroy()
 }
