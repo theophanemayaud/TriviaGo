@@ -152,7 +152,6 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                                 mapMarker.showInfoWindow();
                             }
                             mapMarker.setPosition(updatedLocation);
-
                         }
                         currentLocation = updatedLocation;
 
@@ -229,22 +228,12 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
             public boolean onMarkerClick(Marker marker) {
                 int listPosition = (int)(marker.getTag());
 
-                selectedDestinationIndex = listPosition;
-
-                String itemLetter = String.valueOf((char)(listPosition + CreateWaypointsActivity.LIST_POS_TO_LETTER_OFFSET));
-                TextView selectedItemView = findViewById(R.id.selectedItemText);
-                selectedItemView.setText("Waypoint " + itemLetter + " is currently selected");
-                selectedItemView.setTextColor(Color.RED); // TODO set color GREEN if reached
-
-                spinner.setSelection(listPosition);
-
-                selectedDestinationIndex = listPosition;
+                spinner.setSelection(listPosition); // fires callback of adapter
 
                 return false; //true to disable standard show title and center behavior
             }
         };
     }
-
 
     // -------- End : Location and map related functions --------
 
@@ -305,6 +294,14 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                         // reset previous waypoint to not reached if it was failed
                         if(waypointsStatus.get(lastDestinationIndex) == WaypointStatus.BAD_ANSWER){
                             waypointsStatus.set(lastDestinationIndex, WaypointStatus.NOT_REACHED);
+                            //Set marker color to red
+                            iconGenerator.setStyle(IconGenerator.STYLE_ORANGE);
+                            String waypointLetter = String.valueOf((char)(lastDestinationIndex +
+                                    CreateWaypointsActivity.LIST_POS_TO_LETTER_OFFSET));
+                            waypointsMarkers.get(lastDestinationIndex).setIcon(
+                                    BitmapDescriptorFactory.fromBitmap(
+                                            iconGenerator.makeIcon(waypointLetter))
+                            );
                         }
                     }
                 }
@@ -314,9 +311,26 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                     boolean correct_answer = data.getExtras().getBoolean(TriviaQuestionActivity.INTENT_RESULT);
                     if (correct_answer) {
                         waypointsStatus.set(selectedDestinationIndex, WaypointStatus.REACHED);
-                        // TODO make the icon green
+                        iconGenerator.setStyle(IconGenerator.STYLE_GREEN);
+
+                        //Set marker color to green
+                        String waypointLetter = String.valueOf((char)(selectedDestinationIndex +
+                                CreateWaypointsActivity.LIST_POS_TO_LETTER_OFFSET));
+                        waypointsMarkers.get(selectedDestinationIndex).setIcon(
+                                BitmapDescriptorFactory.fromBitmap(
+                                        iconGenerator.makeIcon(waypointLetter))
+                        );
                     } else {
                         waypointsStatus.set(selectedDestinationIndex, WaypointStatus.BAD_ANSWER);
+
+                        //Set marker color to red
+                        iconGenerator.setStyle(IconGenerator.STYLE_RED);
+                        String waypointLetter = String.valueOf((char)(selectedDestinationIndex +
+                                CreateWaypointsActivity.LIST_POS_TO_LETTER_OFFSET));
+                        waypointsMarkers.get(selectedDestinationIndex).setIcon(
+                                BitmapDescriptorFactory.fromBitmap(
+                                        iconGenerator.makeIcon(waypointLetter))
+                        );
                     }
                     boolean stillSomeWaypointsToDo=false;
                     for(int i = 0; i<waypointsLatLgn.size(); i++){
@@ -385,7 +399,6 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                 // Just show the selection in textfield
                 TextView selectedItemView = findViewById(R.id.selectedItemText);
                 selectedItemView.setText("Waypoint " + itemLetter + " is currently selected");
-                selectedItemView.setTextColor(Color.RED); // TODO set color to green if already reached
 
                 // Show waypoint title on map and center map on it
                 if (waypointsMarkers.isEmpty() == false) {
