@@ -33,8 +33,9 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, TriviaQuestionActivity.class);
                 // choose QCM or V/F
                 intent.putExtra(TriviaQuestionActivity.INTENT_QCM_TYPE, false);
-                intent.putExtra(TriviaQuestionActivity.INTENT_CATEGORY, 27);
+                intent.putExtra(TriviaQuestionActivity.INTENT_CATEGORY, 9);
                 intent.putExtra(TriviaQuestionActivity.INTENT_DIFFICULTY, "hard");
+                intent.putExtra(TriviaQuestionActivity.INTENT_MAX_ATTEMPTS, 3);
                 startActivityForResult(intent, ASK_QUESTION);
             }
         });

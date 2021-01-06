@@ -4,35 +4,57 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ChooseNextWaypoint">
+    tools:context=".ChooseNextWaypoint"
+    android:background="@drawable/tile_background"
+    android:backgroundTint="#FF7474"
+    android:backgroundTintMode="add">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="150dp"
-        android:layout_height="54dp"
-        android:text="Choose Your Next waypoint !"
-        app:layout_constraintBottom_toTopOf="@+id/chooseNextWaypointSpinner"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Spinner
-        android:id="@+id/chooseNextWaypointSpinner"
-        android:layout_width="213dp"
-        android:layout_height="33dp"
-        app:layout_constraintBottom_toTopOf="@+id/selectedItemText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
-
-    <TextView
-        android:id="@+id/selectedItemText"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/selectNextWaypointContainer"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Please select item"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chooseNextWaypointSpinner" />
+        android:background="@drawable/answer_shape"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:text="Choose Your Next waypoint !"
+            app:layout_constraintBottom_toTopOf="@+id/chooseNextWaypointSpinner"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Spinner
+            android:id="@+id/chooseNextWaypointSpinner"
+            android:background="@drawable/shadow_white_box"
+            android:padding="20dp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/selectedItemText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+        <TextView
+            android:id="@+id/selectedItemText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Please select item"
+            android:layout_gravity="center"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chooseNextWaypointSpinner" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <fragment
         android:id="@+id/GoogleMap"
@@ -46,7 +68,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selectedItemText"
+        app:layout_constraintTop_toBottomOf="@+id/selectNextWaypointContainer"
         tools:context=".MapsActivity" />
 
     <Button

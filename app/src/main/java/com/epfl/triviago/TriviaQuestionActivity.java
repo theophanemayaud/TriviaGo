@@ -43,6 +43,7 @@ public class TriviaQuestionActivity extends AppCompatActivity {
     public static final String INTENT_CATEGORY = "CATEGORY";
     public static final String INTENT_DIFFICULTY = "DIFFICULTY";
     public static final String INTENT_MAX_ATTEMPTS = "MAX_ATTEMPTS";
+    public static final String INTENT_EFFECTIVE_ATTEMPTS = "EFFECTIVE_ATTEMPTS";
 
     // String Keys
     private static final String TRIVIA_STATE = "TRIVIA_QUESTION";
@@ -56,10 +57,14 @@ public class TriviaQuestionActivity extends AppCompatActivity {
     private TriviaQuestion mTrivia = null;
     private boolean mfinished = false;
     private boolean mIsQCM_type = true;
+    private Integer mAttempts_number = 1;
+
     private Integer intent_cat = 9;
     private Integer intent_cat_no_offset = 0;
     private String intent_diff = "easy";
-    private Integer attempts_number = 1;
+    private Integer intent_max_attempts;
+
+
 
     // UI elements
     private View layout_parent;
@@ -82,7 +87,6 @@ public class TriviaQuestionActivity extends AppCompatActivity {
     private ImageView image_cat;
     private ConstraintLayout container_attempt;
     private TextView attempt_text;
-    private int intent_max_attempts;
 
 
 
@@ -113,7 +117,7 @@ public class TriviaQuestionActivity extends AppCompatActivity {
             mTrivia = (TriviaQuestion) savedInstanceState.getSerializable(TRIVIA_STATE);
             mResponse_index = savedInstanceState.getInt(RESPONSE_INDEX);
             mfinished = savedInstanceState.getBoolean(FINISHED_BOOL);
-            attempts_number = savedInstanceState.getInt(ATTEMPTS_COUNTER);
+            mAttempts_number = savedInstanceState.getInt(ATTEMPTS_COUNTER);
             intent_cat = savedInstanceState.getInt(INTENT_CATEGORY);
             intent_cat_no_offset = intent_cat - TriviaQuestion.TRIVIA_API_ARRAY_OFFSET;
             intent_diff = savedInstanceState.getString(INTENT_DIFFICULTY);
@@ -124,12 +128,6 @@ public class TriviaQuestionActivity extends AppCompatActivity {
                 validate_answer();
             }
         } else {
-            // set appropriate layout
-            if (mIsQCM_type) {
-                setContentView(R.layout.activity_trivia_question);
-            } else {
-                setContentView(R.layout.activity_trivia_question_vf);
-            }
             // get intent with difficulty, category and type
             Bundle b1 = getIntent().getExtras();
             mIsQCM_type = b1.getBoolean(INTENT_QCM_TYPE);
@@ -137,6 +135,14 @@ public class TriviaQuestionActivity extends AppCompatActivity {
             intent_cat_no_offset = intent_cat - TriviaQuestion.TRIVIA_API_ARRAY_OFFSET;
             intent_diff = b1.getString(INTENT_DIFFICULTY);
             intent_max_attempts = b1.getInt(INTENT_MAX_ATTEMPTS);
+
+            // set appropriate layout
+            if (mIsQCM_type) {
+                setContentView(R.layout.activity_trivia_question);
+            } else {
+                setContentView(R.layout.activity_trivia_question_vf);
+            }
+
 
             get_views();
             prepare_view();
@@ -176,11 +182,19 @@ public class TriviaQuestionActivity extends AppCompatActivity {
         question.setVisibility(View.VISIBLE);
         question.setText(R.string.loading_question);
         radioGroup.setVisibility(View.VISIBLE);
+        answer_1.setEnabled(true);
+        answer_2.setEnabled(true);
+        answer_1.setChecked(false);
+        answer_2.setChecked(false);
         answer_1.setVisibility(View.VISIBLE);
-        answer_1.setText(R.string.loading_prop);
         answer_2.setVisibility(View.VISIBLE);
+        answer_1.setText(R.string.loading_prop);
         answer_2.setText(R.string.loading_prop);
         if (mIsQCM_type) {
+            answer_3.setEnabled(true);
+            answer_4.setEnabled(true);
+            answer_3.setChecked(false);
+            answer_4.setChecked(false);
             answer_3.setVisibility(View.VISIBLE);
             answer_4.setVisibility(View.VISIBLE);
             answer_3.setText(R.string.loading_prop);
@@ -270,6 +284,7 @@ public class TriviaQuestionActivity extends AppCompatActivity {
             answer_4.setText(Html.fromHtml(mTrivia.mResponses.get(3)));
         }
         container_attempt.setVisibility(View.VISIBLE);
+        attempt_text.setText(getString(R.string.attempts, mAttempts_number, intent_max_attempts));
         container_cat.setVisibility(View.VISIBLE);
         image_cat.setVisibility(View.VISIBLE);
         image_cat.setImageResource(TriviaQuestion.Cat_icons.get(intent_cat_no_offset));
@@ -282,6 +297,8 @@ public class TriviaQuestionActivity extends AppCompatActivity {
 //        checkAnswer.setBackground(layout_parent.getBackground());
         checkAnswer.setVisibility(View.VISIBLE);
         checkAnswer.setText(R.string.select_answer);
+        // TODO: remove this for production
+        Toast.makeText(this, "ANSWER : " + mTrivia.mResponses.get(mTrivia.mCorrectIndex), Toast.LENGTH_LONG).show();
     }
 
     public void answerRadioButtonClicked(View view) {
@@ -355,22 +372,35 @@ public class TriviaQuestionActivity extends AppCompatActivity {
             checkAnswer.setBackground(getResources().getDrawable(R.drawable.correct_answer_shape));
             checkAnswer.setText(R.string.correct);
             mResult = true;
+            mfinished = true;
         }
         else {
             checkAnswer.setBackground(getResources().getDrawable(R.drawable.incorrect_answer_shape));
             checkAnswer.setText(getString(R.string.wrong) + " " + Html.fromHtml(mTrivia.mResponses.get(mTrivia.mCorrectIndex)));
-            mResult = false;
+            if (mAttempts_number >= intent_max_attempts){
+                mResult = false;
+                mfinished = true;
+            }
         }
         checkAnswer.setTextColor(getResources().getColor(R.color.white));
-        mfinished = true;
         okButton.setVisibility(View.INVISIBLE);
-        backButton.setVisibility(View.VISIBLE);
         answer_1.setEnabled(false);
         answer_2.setEnabled(false);
         if (mIsQCM_type) {
             answer_3.setEnabled(false);
             answer_4.setEnabled(false);
         }
+        backButton.setVisibility(View.VISIBLE);
+        if (mfinished){
+            if (mResult) {
+                backButton.setText(R.string.next_way_message_trivia);
+            } else {
+                backButton.setText(R.string.failed_too_much);
+            }
+        } else {
+            backButton.setText(R.string.try_again);
+        }
+
     }
 
     public void backButtonOnClick(View view) {
@@ -378,10 +408,14 @@ public class TriviaQuestionActivity extends AppCompatActivity {
             // send score back as an Intent
             Intent intent = new Intent(TriviaQuestionActivity.this, MainActivity.class);
             intent.putExtra(INTENT_RESULT, mResult);
+            intent.putExtra(INTENT_EFFECTIVE_ATTEMPTS, mAttempts_number);
             setResult(Activity.RESULT_OK, intent);
             finish();
         } else {
-            Toast.makeText(this, "You did not validate your answer", Toast.LENGTH_SHORT).show();
+            mAttempts_number += 1;
+            prepare_view();
+            build_view(false);
+            Toast.makeText(this, "You wanna try again ?", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -395,7 +429,7 @@ public class TriviaQuestionActivity extends AppCompatActivity {
             outState.putSerializable(TRIVIA_STATE, mTrivia);
             outState.putInt(RESPONSE_INDEX, mResponse_index);
             outState.putBoolean(FINISHED_BOOL, mfinished);
-            outState.putInt(ATTEMPTS_COUNTER, attempts_number);
+            outState.putInt(ATTEMPTS_COUNTER, mAttempts_number);
         }
 //        Log.e(TAG, "Save errors");
         outState.putBoolean(ERROR_BOOL, merror);

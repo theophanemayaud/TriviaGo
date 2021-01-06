@@ -18,6 +18,10 @@
     <string name="no_question_found">No question was found for the desired combo, please reload a random question</string>
     <string name="distToDestText">Distance to destination is : "</string>
     <string name="attempt">Attempt</string>
+    <string name="attempts">%1$d / %2$d</string>
+    <string name="next_way_message_trivia">Let\'s go to the next waypoint !</string>
+    <string name="try_again">Try again !</string>
+    <string name="failed_too_much">You failed the question too many times .. sorry</string>
 
     <!--String arrays for spinners used in game setup-->
     <string-array name="spinner_players">
