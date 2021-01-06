@@ -72,6 +72,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     private List<WaypointStatus> waypointsStatus = new ArrayList<>();
 
     private int selectedDestinationIndex;
+    private int lastDestinationIndex = 0;
 
     private IconGenerator iconGenerator;
 
@@ -270,10 +271,14 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                     if (reached_waypoint) {
                         // launch triviaquestion
                         Intent intent = new Intent(ChooseNextWaypoint.this, TriviaQuestionActivity.class);
-
                         mDatabase = FirebaseDatabase.getInstance().getReference();
                         // Read from the database, and launch the intent
                         mDatabase.addListenerForSingleValueEvent(getListenerForStartingActivityWithDbValues(intent));
+
+                        // reset previous waypoint to not reached if it was failed
+                        if(waypointsStatus.get(lastDestinationIndex) == WaypointStatus.BAD_ANSWER){
+                            waypointsStatus.set(lastDestinationIndex, WaypointStatus.NOT_REACHED);
+                        }
                     }
                 }
                 break;
@@ -282,6 +287,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                     boolean correct_answer = data.getExtras().getBoolean(TriviaQuestionActivity.INTENT_RESULT);
                     if (correct_answer) {
                         waypointsStatus.set(selectedDestinationIndex, WaypointStatus.REACHED);
+                        // TODO make the icon green
                     } else {
                         waypointsStatus.set(selectedDestinationIndex, WaypointStatus.BAD_ANSWER);
                     }
@@ -297,6 +303,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                         Log.e(TAG, "User got to all waypoints !");
                         finish();
                     }
+                    lastDestinationIndex = selectedDestinationIndex; //remember for next attempt
                 }
                 break;
         }
