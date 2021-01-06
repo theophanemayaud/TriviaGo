@@ -93,9 +93,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
 
         // get intent with difficulty, category and type
         Bundle b1 = getIntent().getExtras();
-        gameName = b1.getString(INTENT_GAME_NAME);;
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.addListenerForSingleValueEvent(new onCreateGetDatabaseValues());
+        gameName = b1.getString(INTENT_GAME_NAME);
 
         // Obtain the SupportMapFragment and get notified
         // when the map is ready to be used
