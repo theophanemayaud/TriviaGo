@@ -70,6 +70,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     private List<LatLng> waypointsLatLgn = new ArrayList<>();
     private List<Marker> waypointsMarkers = new ArrayList<>();
     private List<WaypointStatus> waypointsStatus = new ArrayList<>();
+    private List<Integer> waypointsAttemptsList = new ArrayList<>();
 
     private int selectedDestinationIndex;
     private int lastDestinationIndex = 0;
@@ -79,8 +80,10 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     public static final String DEST_LAT_LNG = "DestinationLatLgn";
     public static final String LATEST_USER_LOC = "LatestUserLocation";
     public static final String INTENT_GAME_NAME = "GAMENAME";
+    public static final String INTENT_PLAYER_NAME = "PLAYERNAME";
 
     private String gameName;
+    private String playerName;
 
     // -------- Start : Lifecycle methods --------
     @Override
@@ -98,6 +101,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         gameName = b1.getString(INTENT_GAME_NAME);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.addListenerForSingleValueEvent(new onCreateGetDatabaseValues()); //TODO listen only for this game changes, not whole DB !
+        playerName = b1.getString(INTENT_PLAYER_NAME);
 
         //Update player number
 
@@ -286,6 +290,10 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
             case REACH_DEST:
                 if (resultCode == RESULT_OK) {
                     boolean reached_waypoint = data.getExtras().getBoolean(TravelToNextWaypointActivity.INTENT_RESULT);
+                    int newAttempsNb = waypointsAttemptsList.get(selectedDestinationIndex)
+                            + data.getIntExtra(TriviaQuestionActivity.INTENT_EFFECTIVE_ATTEMPTS, 0);
+                    waypointsAttemptsList.set(selectedDestinationIndex, newAttempsNb);
+
                     if (reached_waypoint) {
                         // launch triviaquestion
                         Intent intent = new Intent(ChooseNextWaypoint.this, TriviaQuestionActivity.class);
@@ -432,6 +440,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                 wayptLgn = snapshot.child("Games").child(gameName).child("Waypoints").child(wayptIdx+"-Lgn").getValue(double.class);
                 waypointsLatLgn.add(new LatLng(wayptLat,wayptLgn));
                 waypointsStatus.add(WaypointStatus.NOT_REACHED);
+                waypointsAttemptsList.add(0); //starts at 0 attempts !
                 String wayptLetter = String.valueOf((char)(i + CreateWaypointsActivity.LIST_POS_TO_LETTER_OFFSET));
                 spinnerValuesList.add("Waypoint "+wayptLetter);
             }
