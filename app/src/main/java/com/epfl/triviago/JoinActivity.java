@@ -57,6 +57,7 @@ public class JoinActivity extends AppCompatActivity {
         FirebaseDatabase data = FirebaseDatabase.getInstance();
         DatabaseReference mData = data.getReference();
 
+
         mData.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -72,14 +73,12 @@ public class JoinActivity extends AppCompatActivity {
                         current_players += 1;
                         mData.child("Games").child(gameName).child("WaitingRoom").child("Players").setValue(current_players);
                     }
-
                     if (current_players == max_players) {
-                        current_players += 1;
+                        int once = 0;
                         Intent intentChooseNextWaypoint = new Intent(JoinActivity.this, ChooseNextWaypoint.class);
                         intentChooseNextWaypoint.putExtra(ChooseNextWaypoint.INTENT_GAME_NAME, gameName);
                         startActivity(intentChooseNextWaypoint);
                     }
-
                     if (current_players > max_players) {
                         Toast.makeText(JoinActivity.this, "Game is full!", Toast.LENGTH_SHORT).show();
                     }

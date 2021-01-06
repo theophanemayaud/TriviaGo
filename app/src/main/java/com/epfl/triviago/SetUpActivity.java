@@ -115,6 +115,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("name",gameName);
                     setResult(Activity.RESULT_OK,returnIntent);
+                    Toast.makeText(SetUpActivity.this, "Game created!", Toast.LENGTH_SHORT).show();
                     finish();
                 }
             }
