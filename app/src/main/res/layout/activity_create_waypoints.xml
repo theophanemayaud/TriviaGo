@@ -45,6 +45,7 @@
         <Spinner
             android:id="@+id/categorySelectionSpinner"
             android:layout_width="400dp"
+            android:spinnerMode="dropdown"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
