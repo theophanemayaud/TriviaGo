@@ -53,8 +53,10 @@ public class JoinActivity extends AppCompatActivity {
         TextView progress_message = findViewById(R.id.progressMessage);
         LinearLayout enter_code = findViewById(R.id.enterGame);
         EditText name_text = findViewById(R.id.writeCode);
-        String gameName;
-        gameName = name_text.getText().toString();
+        String gameName = name_text.getText().toString();
+        EditText username_text = findViewById(R.id.username);
+        String username = username_text.getText().toString();
+
 
         //Check game name to see if it exists
         FirebaseDatabase data = FirebaseDatabase.getInstance();
@@ -66,6 +68,9 @@ public class JoinActivity extends AppCompatActivity {
                 if (snapshot.child("Games").hasChild(gameName)) {
                     //nameBack = gameName;
                     //waiting = true;
+
+                    //Add the player to the game
+                    mData.child("Games").child(gameName).child("Users").setValue(username);
 
                     // Update the number of players in waiting room
                     max_players = snapshot.child("Games").child(gameName).child("NumPlayers").getValue(Integer.class);
@@ -83,6 +88,7 @@ public class JoinActivity extends AppCompatActivity {
 
                     //Updating waiting interface
                     enter_code.setVisibility(View.GONE);
+
                     seekbar.setVisibility(View.VISIBLE);
                     waiting_message.setVisibility(View.VISIBLE);
                     progress_message.setVisibility(View.VISIBLE);
@@ -96,6 +102,7 @@ public class JoinActivity extends AppCompatActivity {
                         mData.child("Games").child(gameName).child("WaitingRoom").child("Players").setValue(current_players);
                         Intent intentChooseNextWaypoint = new Intent(JoinActivity.this, ChooseNextWaypoint.class);
                         intentChooseNextWaypoint.putExtra(ChooseNextWaypoint.INTENT_GAME_NAME, gameName);
+                        intentChooseNextWaypoint.putExtra(ChooseNextWaypoint.INTENT_PLAYER_NAME, username);
                         Toast.makeText(JoinActivity.this, "Joining Game...", Toast.LENGTH_SHORT).show();
                         startActivity(intentChooseNextWaypoint);
                     }

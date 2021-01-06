@@ -20,6 +20,28 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/usernameMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/shadow_white_box"
+            android:padding="10dp"
+            android:layout_gravity="center_horizontal"
+            android:text="Enter your Name:"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/username"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="textCapCharacters"
+            android:text="AAAAA" />
+
+        <TextView
             android:id="@+id/nameMessage"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
