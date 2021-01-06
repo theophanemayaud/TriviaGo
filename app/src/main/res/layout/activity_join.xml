@@ -39,7 +39,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:inputType="textCapCharacters"
-            android:hint="AAAAA" />
+            android:text="AAAAA" />
 
         <Button
             android:id="@+id/button_done"

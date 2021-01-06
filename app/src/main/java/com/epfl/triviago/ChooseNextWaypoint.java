@@ -99,6 +99,8 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.addListenerForSingleValueEvent(new onCreateGetDatabaseValues()); //TODO listen only for this game changes, not whole DB !
 
+        //Update player number
+
         // Obtain the SupportMapFragment and get notified
         // when the map is ready to be used
         SupportMapFragment mapFragment = (SupportMapFragment)

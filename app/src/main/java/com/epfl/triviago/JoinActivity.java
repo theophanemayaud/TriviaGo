@@ -22,6 +22,9 @@ public class JoinActivity extends AppCompatActivity {
     //Useful variables
     int max_players;
     int current_players;
+    //boolean waiting = false;
+    //String nameBack;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,30 +60,25 @@ public class JoinActivity extends AppCompatActivity {
         FirebaseDatabase data = FirebaseDatabase.getInstance();
         DatabaseReference mData = data.getReference();
 
-
         mData.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (snapshot.child("Games").hasChild(gameName)) {
-
-                    Toast.makeText(JoinActivity.this, "Joining Game...", Toast.LENGTH_SHORT).show();
+                    //nameBack = gameName;
+                    //waiting = true;
 
                     // Update the number of players in waiting room
                     max_players = snapshot.child("Games").child(gameName).child("NumPlayers").getValue(Integer.class);
                     current_players = snapshot.child("Games").child(gameName).child("WaitingRoom").child("Players").getValue(Integer.class);
 
+                    if (current_players > max_players){
+                        Toast.makeText(JoinActivity.this, "Game is full!", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+
                     if(current_players < max_players) {
                         current_players += 1;
                         mData.child("Games").child(gameName).child("WaitingRoom").child("Players").setValue(current_players);
-                    }
-                    if (current_players == max_players) {
-                        int once = 0;
-                        Intent intentChooseNextWaypoint = new Intent(JoinActivity.this, ChooseNextWaypoint.class);
-                        intentChooseNextWaypoint.putExtra(ChooseNextWaypoint.INTENT_GAME_NAME, gameName);
-                        startActivity(intentChooseNextWaypoint);
-                    }
-                    if (current_players > max_players) {
-                        Toast.makeText(JoinActivity.this, "Game is full!", Toast.LENGTH_SHORT).show();
                     }
 
                     //Updating waiting interface
@@ -92,6 +90,15 @@ public class JoinActivity extends AppCompatActivity {
                     progress_message.setText(" "+current_players+"/"+max_players+"players");
                     seekbar.setMax(max_players);
                     seekbar.setProgress(current_players);
+
+                    if (current_players == max_players) {
+                        current_players += 1;
+                        mData.child("Games").child(gameName).child("WaitingRoom").child("Players").setValue(current_players);
+                        Intent intentChooseNextWaypoint = new Intent(JoinActivity.this, ChooseNextWaypoint.class);
+                        intentChooseNextWaypoint.putExtra(ChooseNextWaypoint.INTENT_GAME_NAME, gameName);
+                        Toast.makeText(JoinActivity.this, "Joining Game...", Toast.LENGTH_SHORT).show();
+                        startActivity(intentChooseNextWaypoint);
+                    }
 
                 } else {
                     Toast.makeText(JoinActivity.this, "Game "+gameName+ " doesn't exist: " +
@@ -107,6 +114,26 @@ public class JoinActivity extends AppCompatActivity {
 
     }
 
+    //@Override
+    //protected void onDestroy() {
+    //    super.onDestroy();
+    //    FirebaseDatabase data = FirebaseDatabase.getInstance();
+    //    DatabaseReference mData = data.getReference();
+    //    if(waiting == true) {
+    //        mData.addListenerForSingleValueEvent(new ValueEventListener() {
+    //            @Override
+    //            public void onDataChange(DataSnapshot snapshot) {
+    //                if (snapshot.child("Games").hasChild(nameBack)) {
+    //                    mData.child("Games").child(nameBack).child("WaitingRoom").child("Players").setValue(current_players);
+    //                    Toast.makeText(JoinActivity.this, "DESTROYYYYYY!", Toast.LENGTH_SHORT).show();
+    //                }
+    //            }
+    //            @Override
+    //            public void onCancelled(DatabaseError error) {
+    //                // Failed to read value
+    //            }
+    //        });
+    //    }
 
 }
 
