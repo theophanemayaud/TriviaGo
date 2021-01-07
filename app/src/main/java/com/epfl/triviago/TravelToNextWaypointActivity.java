@@ -107,7 +107,7 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
         String playerName = extras.getString(ChooseNextWaypoint.INTENT_PLAYER_NAME);
 
         // Initialize player names and LatLgn
-        gameDb = FirebaseDatabase.getInstance().getReference().child("Games").child(gameName);
+        gameDb = FirebaseDatabase.getInstance().getReference().child(gameName);
         gameDb.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {

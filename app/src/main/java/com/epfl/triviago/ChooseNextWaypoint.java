@@ -104,8 +104,8 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         playerName = b1.getString(INTENT_PLAYER_NAME);
 
         // load game infos from DB
-        gameDb = FirebaseDatabase.getInstance().getReference().child("Games").child(gameName); // IDEA maybe not get whole database but sub-part ?
-        gameDb.child("Waypoints").addListenerForSingleValueEvent(new onCreateGetDatabaseValues()); //IDEA listen only for this game changes, not whole DB !
+        gameDb = FirebaseDatabase.getInstance().getReference().child(gameName);
+        gameDb.child("Waypoints").addListenerForSingleValueEvent(new onCreateGetDatabaseValues());
 
         // Obtain the SupportMapFragment and get notified
         // when the map is ready to be used
@@ -399,14 +399,13 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
 
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                diff_db = gameSnapshot.child("Difficulty").getValue(String.class);
-                String type_db_Str = gameSnapshot.child("QuestionType").getValue(String.class);
+                diff_db = gameSnapshot.child("Settings").child("Difficulty").getValue(String.class);
+                String type_db_Str = gameSnapshot.child("Settings").child("QuestionType").getValue(String.class);
                 type_db = type_db_Str.equals("QCM");
                 cat_db = gameSnapshot.child("Waypoints")
-                        .child(String.valueOf(selectedDestinationIndex)+"-Cat")
+                        .child(Integer.toString(selectedDestinationIndex)).child("category")
                         .getValue(Integer.class)+TriviaQuestion.TRIVIA_SPINNER_API_OFFSET;
-                max_attempts_db = gameSnapshot.child("MaxAttempts").getValue(Integer.class);
-
+                max_attempts_db = gameSnapshot.child("Settings").child("MaxAttempts").getValue(Integer.class);
 
                 // TODO prod remove those logs
 //                Log.e("TxGO", "Params are : type  = " + type_db + ", cat value = " + cat_db + ", diff value = " + diff_db);
@@ -461,19 +460,24 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
             double wayptLat;
             double wayptLgn;
             long numWaypts = wayptsSnapshot.getChildrenCount();
-            numWaypts = numWaypts/3;
+            Log.e(TAG, "There are : "+ numWaypts + " waypoints");
+//            numWaypts = numWaypts/3; TODO remove
 
-            for(int i=0; i<numWaypts; i++){
+            int i=0;
+            for(DataSnapshot oneWayptsSnapshot: wayptsSnapshot.getChildren()){
                 String wayptIdx = String.valueOf(i);
-                wayptLat = wayptsSnapshot.child(wayptIdx+"-Lat").getValue(double.class);
-                wayptLgn = wayptsSnapshot.child(wayptIdx+"-Lgn").getValue(double.class);
+                wayptLat = oneWayptsSnapshot.child("latitude").getValue(double.class);
+                wayptLgn = oneWayptsSnapshot.child("longitude").getValue(double.class);
                 waypointsLatLgn.add(new LatLng(wayptLat,wayptLgn));
                 waypointsStatus.add(WaypointStatus.NOT_REACHED);
                 waypointsAttemptsList.add(0); //starts at 0 attempts !
-                String wayptLetter = String.valueOf((char)(i + CreateWaypointsActivity.LIST_POS_TO_LETTER_OFFSET));
+                String wayptLetter =
+                        String.valueOf((char)(i + CreateWaypointsActivity.LIST_POS_TO_LETTER_OFFSET));
                 spinnerValuesList.add("Waypoint "+wayptLetter);
+                i++;
             }
-            // By default first is selected
+
+            // By default first waypoint is selected
             selectedDestinationIndex = 0;
 
             // Link the spinner and it's adapter with listener for modifications

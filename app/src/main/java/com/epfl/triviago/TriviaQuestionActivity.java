@@ -233,6 +233,7 @@ public class TriviaQuestionActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<TriviaModel> call, Response<TriviaModel> response) {
                 if (!response.isSuccessful()) {
+                    // TODO basile : keep this ?
                     Toast.makeText(TriviaQuestionActivity.this, "Error code : " + response.code(), Toast.LENGTH_SHORT).show();
                 }
                 TriviaModel body = response.body();
@@ -413,6 +414,7 @@ public class TriviaQuestionActivity extends AppCompatActivity {
             mAttempts_number += 1;
             prepare_view();
             build_view(false);
+            // TODO Basile : is this useful ? It doesn't look nice with new ui button
             Toast.makeText(this, "You wanna try again ?", Toast.LENGTH_SHORT).show();
         }
 

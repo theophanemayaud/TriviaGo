@@ -20,7 +20,13 @@
         <activity android:name=".EndActivity"></activity>
         <activity android:name=".JoinActivity" />
         <activity android:name=".TriviaQuestionActivity" />
-        <activity android:name=".WelcomeActivity" />
+        <activity android:name=".WelcomeActivity">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
         <activity android:name=".SetUpActivity" />
         <activity android:name=".ChooseNextWaypoint" />
         <activity android:name=".CreateWaypointsActivity" />
@@ -45,13 +51,7 @@
         <activity
             android:name=".TravelToNextWaypointActivity"
             android:label="@string/title_activity_travel_to_next_waypoint" />
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".MainActivity"/>
     </application>
 
 </manifest>

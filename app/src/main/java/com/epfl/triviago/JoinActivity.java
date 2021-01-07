@@ -28,6 +28,7 @@ public class JoinActivity extends AppCompatActivity {
     private String username;
     private String gameName;
     private boolean userInGame = false;
+    private boolean userAddedToDb = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +62,7 @@ public class JoinActivity extends AppCompatActivity {
 
 
         //Check game name to see if it exists
-        gameDb = FirebaseDatabase.getInstance().getReference()
-                .child("Games").child(gameName);
+        gameDb = FirebaseDatabase.getInstance().getReference().child(gameName);
 
         gameDb.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -74,7 +74,7 @@ public class JoinActivity extends AppCompatActivity {
                 }
 
                 // Update the number of players in waiting room
-                max_players = gameSnapshot.child("NumPlayers").getValue(Integer.class);
+                max_players = gameSnapshot.child("Settings").child("NumPlayers").getValue(Integer.class);
 
                 current_players = (int) gameSnapshot.child("Users").getChildrenCount();
 
@@ -90,7 +90,10 @@ public class JoinActivity extends AppCompatActivity {
                 }
                 //add current player to db, as child of Users
                 gameDb.child("Users").child(username)
-                        .child("latitude").setValue(0); //Dummy value to save player to db
+                        .child("latitude").setValue(0); //default value to save player to db
+                gameDb.child("Users").child(username)
+                        .child("longitude").setValue(0);
+                userAddedToDb = true;
 
                 //Update waiting interface
                 enter_code.setVisibility(View.GONE);
@@ -143,7 +146,7 @@ public class JoinActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(userInGame == true ){ // if gone it means the user was added to DB
+        if(userInGame == true || userAddedToDb == true){
             gameDb.child("Users").child(username).removeValue();
         }
     }

@@ -18,8 +18,9 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private int SETUP_ACTIVITY = 1;
 
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private DatabaseReference mDatabase = database.getReference();
+    //TODO laurence remove this ?
+//    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+//    private DatabaseReference mDatabase = database.getReference();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,8 @@ public class WelcomeActivity extends AppCompatActivity {
             if(resultCode == Activity.RESULT_OK){
                 String gameName = data.getStringExtra("name");
                 int players = 0;
-                mDatabase.child("Games").child(gameName).child("WaitingRoom").child("Players").setValue(players);
+                // TODO remove this Laurence ?
+                //  mDatabase.child(gameName).child("WaitingRoom").child("Players").setValue(players);
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 Toast.makeText(WelcomeActivity.this, "Sorry, a problem " +

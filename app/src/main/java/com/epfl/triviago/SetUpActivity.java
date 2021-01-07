@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.service.autofill.CharSequenceTransformation;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewDebug;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -27,6 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class SetUpActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -70,33 +72,33 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
         TextView nameGame = findViewById(R.id.nameGame);
         String gameName = nameGame.getText().toString();
 
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference gameDb = FirebaseDatabase.getInstance().getReference().child(gameName);
+        gameDb.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                if (snapshot.child("Games").hasChild(gameName)) {
+            public void onDataChange(DataSnapshot gameSnapshot) {
+                if(gameSnapshot.exists()){
                     Toast.makeText(SetUpActivity.this, "Game name already exists, " +
                             "please choose another one", Toast.LENGTH_SHORT).show();
-                } else {
-                    //Default values
-                    mDatabase.child("Games").child(gameName).child("NumPlayers").setValue(2);
-                    mDatabase.child("Games").child(gameName).child("QuestionType").setValue("QCM");
-                    mDatabase.child("Games").child(gameName).child("Difficulty").setValue("easy");
-                    mDatabase.child("Games").child(gameName).child("MaxAttempts").setValue(3);
+                    return;
+                }
+                else {
+                    //Default values TODO laurence : est-ce utile alors qu'on les set juste après ?
+                    gameDb.child("Settings").child("NumPlayers").setValue(2);
+                    gameDb.child("Settings").child("QuestionType").setValue("QCM");
+                    gameDb.child("Settings").child("Difficulty").setValue("easy");
+                    gameDb.child("Settings").child("MaxAttempts").setValue(3);
 
                     //Adjusted values
                     ToggleButton toggle = findViewById(R.id.button_questionType);
-                    mDatabase.child("Games").child(gameName).child("NumPlayers").setValue(numPlayer);
+                    gameDb.child("Settings").child("NumPlayers").setValue(numPlayer);
                     if (toggle.isChecked()) {
                         questionType = true;
-                        mDatabase.child("Games").child(gameName).child("QuestionType").setValue("true/false");
+                        gameDb.child("Settings").child("QuestionType").setValue("true/false");
                     } else {
-                        mDatabase.child("Games").child(gameName).child("QuestionType").setValue("QCM");
+                        gameDb.child("Settings").child("QuestionType").setValue("QCM");
                     }
-                    mDatabase.child("Games").child(gameName).child("Difficulty").setValue(difficulty);
-                    mDatabase.child("Games").child(gameName).child("MaxAttempts").setValue(maxAttemps);
-
-                    //Toast.makeText(SetUpActivity.this, "NEW", Toast.LENGTH_SHORT).show();
+                    gameDb.child("Settings").child("Difficulty").setValue(difficulty);
+                    gameDb.child("Settings").child("MaxAttempts").setValue(maxAttemps);
 
                     int size = waypointsLatLgnList.size();
                     for (int i=0; i<size; i++) {
@@ -107,9 +109,12 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
 
                         String wayptIdx = String.valueOf(i);
 
-                        mDatabase.child("Games").child(gameName).child("Waypoints").child(wayptIdx+"-Lat").setValue(waypointLat);
-                        mDatabase.child("Games").child(gameName).child("Waypoints").child(wayptIdx+"-Lgn").setValue(waypointLgn);
-                        mDatabase.child("Games").child(gameName).child("Waypoints").child(wayptIdx+"-Cat").setValue(category);
+                        gameDb.child("Waypoints").child(Integer.toString(i))
+                                .child("latitude").setValue(waypointLat);
+                        gameDb.child("Waypoints").child(Integer.toString(i))
+                                .child("longitude").setValue(waypointLgn);
+                        gameDb.child("Waypoints").child(Integer.toString(i))
+                                .child("category").setValue(category);
                     }
 
                     Intent returnIntent = new Intent();
