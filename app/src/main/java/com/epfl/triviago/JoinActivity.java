@@ -13,6 +13,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,9 +25,11 @@ public class JoinActivity extends AppCompatActivity {
     //Useful variables
     private int max_players;
     private int current_players;
-    private DatabaseReference gameDb;
     private String username;
     private String gameName;
+
+    private DatabaseReference gameDb;
+
     private boolean userInGame = false;
     private boolean userAddedToDb = false;
 

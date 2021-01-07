@@ -31,6 +31,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -68,7 +69,6 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
     IconGenerator iconGenerator;
 
     private DatabaseReference gameDb;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

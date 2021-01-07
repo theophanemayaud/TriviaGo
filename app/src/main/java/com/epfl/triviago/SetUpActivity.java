@@ -21,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -47,16 +48,6 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
 
         //Views
         findViewById(R.id.button_done).setVisibility(View.GONE);
-
-        //DatabaseReference myRef = database.getReference("message");
-        //myRef.setValue("Hello, World!");
-
-        // Spinner spinner_player = (Spinner) findViewById(R.id.spinner_players_num);
-        // ArrayAdapter<CharSequence> adapter_player = ArrayAdapter.createFromResource(this,
-        //         R.array.spinner_players, android.R.layout.simple_spinner_item);
-        // adapter_player.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // spinner_player.setAdapter(adapter_player);
-
     }
 
     public void clickedWaypointButtonXmlCallback(View view) {
