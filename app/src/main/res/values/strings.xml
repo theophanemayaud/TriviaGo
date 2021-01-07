@@ -25,6 +25,7 @@
     <string name="go">Go 🚀</string>
     <string name="please_select_item">Please select an item</string>
     <string name="difficulty">(%1$s)</string>
+    <string name="compass_arrow_image">Compass Arrow image</string>
 
     <!--String arrays for spinners used in game setup-->
     <string-array name="spinner_players">

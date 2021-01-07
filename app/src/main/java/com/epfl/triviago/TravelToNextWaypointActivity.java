@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -36,6 +37,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.maps.android.SphericalUtil;
 import com.google.maps.android.ui.IconGenerator;
 
 import java.util.ArrayList;
@@ -187,8 +189,6 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
                         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, MAP_MARKER_PADDING));
                     }
 
-                    // IDEA add arrow position marker and rotate based on movement ?
-                    // IDEA show movement history (add the trail from the start) ?
                     currentLocationMarker.setPosition(currentLocationLatLgn);
 
                     // check the distance between current location and destination
@@ -212,6 +212,15 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
                     if(distance[0]<TARGET_REACHED_DIST_METERS){
                         destinationReached();
                     }
+
+                    // TODO Basile send angle to watch and move compass image to watch
+                    double angleToDestination = SphericalUtil.computeHeading(
+                            currentLocationLatLgn, destinationWaypointLatLgn);
+                    ImageView compassArrowImgView = findViewById(R.id.compassArrowView);
+                    compassArrowImgView.setPivotX(compassArrowImgView.getWidth()/2);
+                    compassArrowImgView.setPivotY(compassArrowImgView.getHeight()/2);
+                    compassArrowImgView.setRotation((float)angleToDestination);
+
 
                     // Now update other players' locations on the map
                     if (otherPlayerMarkers.isEmpty()) {
@@ -301,4 +310,12 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
         fusedLocationClient.removeLocationUpdates(locationCallback);
     }
 
+    private static double calculateAngle(double x1, double y1, double x2, double y2)
+    {
+        double angle = Math.toDegrees(Math.atan2(x2 - x1, y2 - y1));
+        // Keep angle between 0 and 360
+        angle = angle + Math.ceil( -angle / 360 ) * 360;
+
+        return angle;
+    }
 }
