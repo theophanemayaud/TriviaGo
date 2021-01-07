@@ -408,9 +408,6 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                         .getValue(Integer.class)+TriviaQuestion.TRIVIA_SPINNER_API_OFFSET;
                 max_attempts_db = gameSnapshot.child("Settings").child("MaxAttempts").getValue(Integer.class);
 
-                // TODO prod remove those logs
-//                Log.e("TxGO", "Params are : type  = " + type_db + ", cat value = " + cat_db + ", diff value = " + diff_db);
-//                Log.e("TxGO", "QuestionType is : " + type_db_Str + ", max attemps : "+ max_attempts_db);
                 intent.putExtra(TriviaQuestionActivity.INTENT_QCM_TYPE, type_db);
                 intent.putExtra(TriviaQuestionActivity.INTENT_CATEGORY, cat_db);
                 intent.putExtra(TriviaQuestionActivity.INTENT_DIFFICULTY, diff_db);
@@ -462,7 +459,6 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
             double wayptLgn;
             long numWaypts = wayptsSnapshot.getChildrenCount();
             Log.e(TAG, "There are : "+ numWaypts + " waypoints");
-//            numWaypts = numWaypts/3; TODO remove
 
             int i=0;
             for(DataSnapshot oneWayptsSnapshot: wayptsSnapshot.getChildren()){
