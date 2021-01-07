@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -68,7 +67,7 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
 
     IconGenerator iconGenerator;
 
-    private DatabaseReference mDatabase;
+    private DatabaseReference gameDb;
 
 
     @Override
@@ -108,8 +107,8 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
         String playerName = extras.getString(ChooseNextWaypoint.INTENT_PLAYER_NAME);
 
         // Initialize player names and LatLgn
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Games").child(gameName);
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        gameDb = FirebaseDatabase.getInstance().getReference().child("Games").child(gameName);
+        gameDb.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 for(DataSnapshot userSnapshot: snapshot.child("Users").getChildren()){
@@ -240,7 +239,7 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
                         for (int i = 0; i < otherPlayerLatLgn.size(); i++) {
                             // listen to changes for other player locations
                             int finalI = i;
-                            mDatabase.child("Users").child(otherPlayerNames.get(i))
+                            gameDb.child("Users").child(otherPlayerNames.get(i))
                                     .addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot userSnapshot) {

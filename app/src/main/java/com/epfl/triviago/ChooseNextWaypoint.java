@@ -40,7 +40,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.maps.android.ui.IconGenerator;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +61,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     private Spinner spinner;
 
     private GoogleMap mMap;
-    private DatabaseReference mDatabase;
+    private DatabaseReference gameDb;
 
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
@@ -102,9 +101,11 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         // get intent with game name and player name
         Bundle b1 = getIntent().getExtras();
         gameName = b1.getString(INTENT_GAME_NAME);
-        mDatabase = FirebaseDatabase.getInstance().getReference(); // IDEA maybe not get whole database but sub-part ?
-        mDatabase.addListenerForSingleValueEvent(new onCreateGetDatabaseValues()); //IDEA listen only for this game changes, not whole DB !
         playerName = b1.getString(INTENT_PLAYER_NAME);
+
+        // load game infos from DB
+        gameDb = FirebaseDatabase.getInstance().getReference().child("Games").child(gameName); // IDEA maybe not get whole database but sub-part ?
+        gameDb.child("Waypoints").addListenerForSingleValueEvent(new onCreateGetDatabaseValues()); //IDEA listen only for this game changes, not whole DB !
 
         // Obtain the SupportMapFragment and get notified
         // when the map is ready to be used
@@ -163,9 +164,9 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                         currentLocation = updatedLocation;
 
                         // update location in firebase
-                        mDatabase.child("Games").child(gameName).child("Users").child(playerName)
+                        gameDb.child("Users").child(playerName)
                                 .child("latitude").setValue(currentLocation.latitude);
-                        mDatabase.child("Games").child(gameName).child("Users").child(playerName)
+                        gameDb.child("Users").child(playerName)
                                 .child("longitude").setValue(currentLocation.longitude);
 
                         // Now add all markers of elements to go to
@@ -302,9 +303,8 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                     if (reached_waypoint) {
                         // launch triviaquestion
                         Intent intent = new Intent(ChooseNextWaypoint.this, TriviaQuestionActivity.class);
-                        mDatabase = FirebaseDatabase.getInstance().getReference();
                         // Read from the database, and launch the intent
-                        mDatabase.addListenerForSingleValueEvent(getListenerForStartingActivityWithDbValues(intent));
+                        gameDb.addListenerForSingleValueEvent(getListenerForStartingActivityWithDbValues(intent));
 
                         // reset previous waypoint to not reached if it was failed
                         if(waypointsStatus.get(lastDestinationIndex) == WaypointStatus.BAD_ANSWER){
@@ -369,7 +369,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                         }
 
                         double playerSuccessRate = calcRate(waypointAttemptsTotal);
-                        mDatabase.child("Games").child(gameName).child("Users").child(playerName)
+                        gameDb.child("Users").child(playerName)
                                 .child("rate").setValue(playerSuccessRate);
 
                         Intent endIntent = new Intent(ChooseNextWaypoint.this, EndActivity.class);
@@ -391,7 +391,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     private ValueEventListener getListenerForStartingActivityWithDbValues(Intent intent) {
         return new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            public void onDataChange(@NonNull DataSnapshot gameSnapshot) {
                 boolean type_db;
                 String diff_db;
                 int cat_db;
@@ -399,16 +399,18 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
 
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                diff_db = snapshot.child("Games").child(gameName).child("Difficulty").getValue(String.class);
-                String type_db_Str = snapshot.child("Games").child(gameName).child("QuestionType").getValue(String.class);
-                type_db = type_db_Str == "QCM";
-                cat_db = snapshot.child("Games").child(gameName).child("Waypoints")
+                diff_db = gameSnapshot.child("Difficulty").getValue(String.class);
+                String type_db_Str = gameSnapshot.child("QuestionType").getValue(String.class);
+                type_db = type_db_Str.equals("QCM");
+                cat_db = gameSnapshot.child("Waypoints")
                         .child(String.valueOf(selectedDestinationIndex)+"-Cat")
                         .getValue(Integer.class)+TriviaQuestion.TRIVIA_SPINNER_API_OFFSET;
-                max_attempts_db = snapshot.child("Games").child(gameName).child("MaxAttempts").getValue(Integer.class);
+                max_attempts_db = gameSnapshot.child("MaxAttempts").getValue(Integer.class);
 
 
-                Log.e("TxGO", "Params are : type  = " + type_db + ", cat value = " + cat_db + ", diff value = " + diff_db);
+                // TODO prod remove those logs
+//                Log.e("TxGO", "Params are : type  = " + type_db + ", cat value = " + cat_db + ", diff value = " + diff_db);
+//                Log.e("TxGO", "QuestionType is : " + type_db_Str + ", max attemps : "+ max_attempts_db);
                 intent.putExtra(TriviaQuestionActivity.INTENT_QCM_TYPE, type_db);
                 intent.putExtra(TriviaQuestionActivity.INTENT_CATEGORY, cat_db);
                 intent.putExtra(TriviaQuestionActivity.INTENT_DIFFICULTY, diff_db);
@@ -455,16 +457,16 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
 
     private class onCreateGetDatabaseValues implements ValueEventListener {
         @Override
-        public void onDataChange(@NonNull DataSnapshot snapshot) {
+        public void onDataChange(@NonNull DataSnapshot wayptsSnapshot) {
             double wayptLat;
             double wayptLgn;
-            long numWaypts = snapshot.child("Games").child(gameName).child("Waypoints").getChildrenCount();
+            long numWaypts = wayptsSnapshot.getChildrenCount();
             numWaypts = numWaypts/3;
 
             for(int i=0; i<numWaypts; i++){
                 String wayptIdx = String.valueOf(i);
-                wayptLat = snapshot.child("Games").child(gameName).child("Waypoints").child(wayptIdx+"-Lat").getValue(double.class);
-                wayptLgn = snapshot.child("Games").child(gameName).child("Waypoints").child(wayptIdx+"-Lgn").getValue(double.class);
+                wayptLat = wayptsSnapshot.child(wayptIdx+"-Lat").getValue(double.class);
+                wayptLgn = wayptsSnapshot.child(wayptIdx+"-Lgn").getValue(double.class);
                 waypointsLatLgn.add(new LatLng(wayptLat,wayptLgn));
                 waypointsStatus.add(WaypointStatus.NOT_REACHED);
                 waypointsAttemptsList.add(0); //starts at 0 attempts !

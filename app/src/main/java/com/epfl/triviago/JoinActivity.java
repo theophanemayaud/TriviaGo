@@ -24,7 +24,7 @@ public class JoinActivity extends AppCompatActivity {
     //Useful variables
     private int max_players;
     private int current_players;
-    private DatabaseReference mData;
+    private DatabaseReference gameDb;
     private String username;
     private String gameName;
     private boolean userInGame = false;
@@ -61,10 +61,10 @@ public class JoinActivity extends AppCompatActivity {
 
 
         //Check game name to see if it exists
-        FirebaseDatabase data = FirebaseDatabase.getInstance();
-        mData = data.getReference().child("Games");
+        gameDb = FirebaseDatabase.getInstance().getReference()
+                .child("Games").child(gameName);
 
-        mData.child(gameName).addListenerForSingleValueEvent(new ValueEventListener() {
+        gameDb.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot gameSnapshot) {
                 if(!gameSnapshot.exists()){
@@ -89,7 +89,7 @@ public class JoinActivity extends AppCompatActivity {
                     return;
                 }
                 //add current player to db, as child of Users
-                mData.child(gameName).child("Users").child(username)
+                gameDb.child("Users").child(username)
                         .child("latitude").setValue(0); //Dummy value to save player to db
 
                 //Update waiting interface
@@ -103,7 +103,7 @@ public class JoinActivity extends AppCompatActivity {
                 seekbar.setMax(max_players);
                 seekbar.setProgress(current_players);
 
-                mData.child(gameName).child("Users").addValueEventListener(new ValueEventListener() {
+                gameDb.child("Users").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot usersSnapshot) {
                         if(userInGame==true){
@@ -144,7 +144,7 @@ public class JoinActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if(userInGame == true ){ // if gone it means the user was added to DB
-            mData.child(gameName).child("Users").child(username).removeValue();
+            gameDb.child("Users").child(username).removeValue();
         }
     }
 }
