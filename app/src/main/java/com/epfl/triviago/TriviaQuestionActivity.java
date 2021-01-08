@@ -415,8 +415,6 @@ public class TriviaQuestionActivity extends AppCompatActivity {
             mAttempts_number += 1;
             prepare_view();
             build_view(false);
-            // TODO Basile : is this useful ? It doesn't look nice with new ui button
-            Toast.makeText(this, "You wanna try again ?", Toast.LENGTH_SHORT).show();
         }
 
     }
