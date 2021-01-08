@@ -8,6 +8,7 @@
     <color name="button_start">#F5F540</color>
     <color name="button_center">#FF8E2B</color>
     <color name="button_end">#BF0F0F</color>
+    <color name="end_text">#653434</color>
 
     <!-- Colors previously available -->
     <color name="purple_200">#FFBB86FC</color>

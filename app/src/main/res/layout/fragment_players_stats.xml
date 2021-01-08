@@ -22,55 +22,40 @@
             android:id="@+id/player1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView"
-            android:gravity="center"
-            android:textColor="#653434"
-            android:textSize="20sp"
-            android:fontFamily="@font/acme" />
+            android:text="-"
+            android:gravity="center"/>
 
         <TextView
             android:id="@+id/player2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="TextView"
-            android:gravity="center"
-            android:textColor="#653434"
-            android:textSize="20sp"
-            android:fontFamily="@font/acme"/>
+            android:text="-"
+            android:gravity="center"/>
 
         <TextView
             android:id="@+id/player3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="TextView"
-            android:gravity="center"
-            android:textColor="#653434"
-            android:textSize="20sp"
-            android:fontFamily="@font/acme"/>
+            android:text="-"
+            android:gravity="center"/>
 
         <TextView
             android:id="@+id/player4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView"
-            android:gravity="center"
             android:layout_marginTop="10dp"
-            android:textColor="#653434"
-            android:textSize="20sp"
-            android:fontFamily="@font/acme"/>
+            android:text="-"
+            android:gravity="center"/>
 
         <TextView
             android:id="@+id/player5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="TextView"
-            android:gravity="center"
-            android:textColor="#653434"
-            android:textSize="20sp"
-            android:fontFamily="@font/acme"/>
+            android:text="-"
+            android:gravity="center"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

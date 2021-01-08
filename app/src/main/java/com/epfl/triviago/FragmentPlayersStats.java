@@ -7,9 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,9 +21,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import static android.content.Context.MODE_PRIVATE;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class FragmentPlayersStats extends Fragment {
 
     public static final String MyPREFERENCES = "MyPrefs" ;
@@ -33,8 +28,7 @@ public class FragmentPlayersStats extends Fragment {
     //Data from intent
     String gameName;
     String playerName;
-    int total_players;
-    List<Float> waypointsRatesList = new ArrayList<>();
+    long total_players;
 
     //Views
     TextView player1;
@@ -59,28 +53,29 @@ public class FragmentPlayersStats extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_players_stats, container, false);
 
+        //Retrieve data from EndActivity
         SharedPreferences prefs = getActivity().getSharedPreferences(MyPREFERENCES , MODE_PRIVATE);
         gameName = prefs.getString("name", null);
         playerName = prefs.getString("player", null);
-        total_players = prefs.getInt("max_players", 0);
-        for (int i = 0; i<total_players; i++) {
-            waypointsRatesList.add(prefs.getFloat("list", 0));
-        }
 
-        //Getting the views
+        //Getting the views and setting appearance
         player1 = view.findViewById(R.id.player1);
+        player1.setTextAppearance(getActivity(), R.style.fontForEndGame);
         player2 = view.findViewById(R.id.player2);
+        player2.setTextAppearance(getActivity(), R.style.fontForEndGame);
         player3 = view.findViewById(R.id.player3);
+        player3.setTextAppearance(getActivity(), R.style.fontForEndGame);
         player4 = view.findViewById(R.id.player4);
+        player4.setTextAppearance(getActivity(), R.style.fontForEndGame);
         player5 = view.findViewById(R.id.player5);
+        player5.setTextAppearance(getActivity(), R.style.fontForEndGame);
 
-        //Creates a dynamic view based on the number of players
-        createDynamicLayout (view);
+        createLayout(view);
 
         return  view;
     }
 
-    public void createDynamicLayout(View view) {
+    public void createLayout(View view) {
         // load game infos from DB
         DatabaseReference gameDb;
         gameDb = FirebaseDatabase.getInstance().getReference().child(gameName).child("Users");
@@ -92,27 +87,29 @@ public class FragmentPlayersStats extends Fragment {
 
             @Override
             public void onDataChange(DataSnapshot gameSnapshot) {
+
+                total_players = gameSnapshot.getChildrenCount();
+
                 for(DataSnapshot ds: gameSnapshot.getChildren()) {
                     player_name = ds.getKey();
                     score = gameSnapshot.child(player_name).child("score").getValue(Float.class);
 
                     if (index==0){
-                        player1.setText(player_name+":    "+score*100+"% of correct answers!");
+                        player1.setText(player_name+":    "+score*100+"%   correct!");
                     }
                     if (index==1){
-                        player2.setText(player_name+":    "+score*100+"% of correct answers!");
+                        player2.setText(player_name+":    "+score*100+"%   correct!");
                     }
                     if (index==2){
-                        player3.setText(player_name+":    "+score*100+"% of correct answers!");
+                        player3.setText(player_name+":    "+score*100+"%   correct!");
                     }
                     if (index==3){
-                        player4.setText(player_name+":    "+score*100+"% of correct answers!");
+                        player4.setText(player_name+":    "+score*100+"%   correct!");
                     }
                     if (index==4){
-                        player5.setText(player_name+":    "+score*100+"% of correct answers!");
+                        player5.setText(player_name+":    "+score*100+"%   correct!!");
                     }
 
-                   // Toast.makeText(getContext(), "blabla: "+playersList.get(index), Toast.LENGTH_SHORT).show();
                     index+=1;
                 }
             }
@@ -122,19 +119,7 @@ public class FragmentPlayersStats extends Fragment {
             }
         });
 
-
-        //for (int i=0; i<playersList.size(); i++) {
-        //    LinearLayout llMain = view.findViewById(R.id.rlMain);
-        //    TextView textView = new TextView(getContext());
-        //    textView.setText("Game: "+gameName+"    Name: "+playersList.get(i)+ "TRYYYYY:   "+waypointsRatesList.get(i));
-        //    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-        //            LinearLayout.LayoutParams.MATCH_PARENT,
-        //            LinearLayout.LayoutParams.MATCH_PARENT);
-        //    textView.setLayoutParams(params);
-        //    llMain.addView(textView);
-        //}
-
-        if(total_players == 1) {
+        if(total_players == (long) 1) {
             player1.setVisibility(View.VISIBLE);
             player2.setVisibility(View.GONE);
             player3.setVisibility(View.GONE);
@@ -169,7 +154,5 @@ public class FragmentPlayersStats extends Fragment {
             player4.setVisibility(View.VISIBLE);
             player5.setVisibility(View.VISIBLE);
         }
-
     }
-
 }

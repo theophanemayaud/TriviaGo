@@ -21,20 +21,20 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/num_stars"
             android:layout_gravity="center"
             android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="135dp"
-            app:srcCompat="@drawable/_stars" />
+            app:srcCompat="@drawable/_0stars" />
 
         <TextView
             android:id="@+id/score_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:text="Perfect ! "
-            android:textColor="#653434"
+            android:text=""
+            android:textColor="@color/end_text"
             android:textSize="30sp"
             android:fontFamily="@font/coiny"/>
 

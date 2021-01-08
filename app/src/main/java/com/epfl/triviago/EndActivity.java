@@ -12,6 +12,7 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
@@ -22,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -52,15 +54,11 @@ public class EndActivity extends AppCompatActivity {
     List<Float> waypointsRatesList = new ArrayList<>();
 
     //Structural elements
-    LinearLayout linearLayout_players;
-    LinearLayout linearLayout_individual;
-
-    //Useful variables
-    long total_players;
+    ImageView stars;
+    TextView score_message;
 
     SharedPreferences sharedpreferences;
     public static final String MyPREFERENCES = "MyPrefs" ;
-
 
 
     @Override
@@ -81,25 +79,25 @@ public class EndActivity extends AppCompatActivity {
         waypointsRatesList.add(1, (float) 0.76);
 
 
-
         //Sendind data to the fragments
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString("name", gameName);
         editor.putString("player", playerName);
-        editor.putInt("max_players", waypointsRatesList.size());
+        editor.putInt("tot_waypoints", waypointsRatesList.size());
         for (int i = 0; i<waypointsRatesList.size(); i++) {
             editor.putFloat("list", waypointsRatesList.get(i));
         }
         editor.commit();
 
-
-
         //Getting the Views
+        stars = findViewById(R.id.num_stars);
+        score_message = findViewById(R.id.score_message);
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.pager);
-        //linearLayout_players = (LinearLayout) findViewById(R.id.linearLayout_players);
-        //linearLayout_individual = (LinearLayout) findViewById(R.id.linearLayout_individual);
+
+        //Edit layout according to individual score
+        editLayout ();
 
         getTabs();
     }
@@ -121,10 +119,42 @@ public class EndActivity extends AppCompatActivity {
     }
 
     public void clickedExitButtonXmlCallback(View view) {
-        //TextView text = findViewById(R.id.textView6);
-        //String blabla = text.getText().toString();
+        Toast.makeText(EndActivity.this, "Thanks for playing !", Toast.LENGTH_SHORT).show();
+        finish();
+    }
 
-        Toast.makeText(EndActivity.this, "blabla:", Toast.LENGTH_SHORT).show();
+    public void editLayout () {
+        //Get player score from firebase
+        DatabaseReference gameDb;
+        gameDb = FirebaseDatabase.getInstance().getReference().child(gameName).child("Users");
+        gameDb.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot gameSnapshot) {
+               if(gameSnapshot.child(playerName).exists()) {
+                   float score = gameSnapshot.child(playerName).child("score").getValue(Float.class);
+                   if (score == (float) 1) {
+                       score_message.setText("Perfect!");
+                       stars.setImageDrawable(getResources().getDrawable(R.drawable._stars));
+                   }
+                   else if (score >= (float) 0.7) {
+                       score_message.setText("Good Job!");
+                       stars.setImageDrawable(getResources().getDrawable(R.drawable._2stars));
+                   }
+                   else if (score >= (float) 0.4) {
+                       score_message.setText("Great!");
+                       stars.setImageDrawable(getResources().getDrawable(R.drawable._1star));
+                   }
+                   else {
+                       score_message.setText("Keep Learning !");
+                       stars.setImageDrawable(getResources().getDrawable(R.drawable._0stars));
+                   }
+               }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("TxGO", "Error writing to database");
+            }
+        });
 
     }
 

@@ -1,0 +1,11 @@
+<resources>
+
+    <style name="fontForEndGame">
+        <!--   <item name="android:fontFamily">@font/acme</item>   -->
+        <item name="android:textColor">@color/end_text</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:padding">2dip</item>
+    </style>
+
+</resources>
+
