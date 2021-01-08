@@ -49,6 +49,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     // Request codes for TravelToNextWaypointActivity
     private static final int REACH_DEST = 2;
     private static final int ASK_QUESTION = 3;
+    private static final int SELF_MARKER_TAG = -1;
 
     private enum WaypointStatus {
         NOT_REACHED,
@@ -155,6 +156,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                                 mapMarker = mMap.addMarker(
                                         new MarkerOptions().position(updatedLocation).title("Wow, you're here !!!")
                                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_my_location_black_36dp)));
+                                mapMarker.setTag(SELF_MARKER_TAG);
 
                                 // Move the camera if it was not set
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(updatedLocation, 5));
@@ -241,10 +243,11 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         return new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                int listPosition = (int)(marker.getTag());
+                if((int) marker.getTag() != SELF_MARKER_TAG){
+                    int listPosition = (int)(marker.getTag());
 
-                spinner.setSelection(listPosition); // fires callback of adapter
-
+                    spinner.setSelection(listPosition); // fires callback of adapter
+                }
                 return false; //true to disable standard show title and center behavior
             }
         };
@@ -323,11 +326,11 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                 }
                 break;
             case ASK_QUESTION:
-                int newAttempsNb = waypointsAttemptsList.get(selectedDestinationIndex)
-                        + data.getIntExtra(TriviaQuestionActivity.INTENT_EFFECTIVE_ATTEMPTS, 0);
-                waypointsAttemptsList.set(selectedDestinationIndex, newAttempsNb);
-
                 if (resultCode == RESULT_OK) {
+                    int newAttempsNb = waypointsAttemptsList.get(selectedDestinationIndex)
+                            + data.getIntExtra(TriviaQuestionActivity.INTENT_EFFECTIVE_ATTEMPTS, 0);
+                    waypointsAttemptsList.set(selectedDestinationIndex, newAttempsNb);
+
                     boolean correct_answer = data.getExtras().getBoolean(TriviaQuestionActivity.INTENT_RESULT);
                     if (correct_answer) {
                         waypointsStatus.set(selectedDestinationIndex, WaypointStatus.REACHED);

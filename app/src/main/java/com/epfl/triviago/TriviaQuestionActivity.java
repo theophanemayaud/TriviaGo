@@ -267,6 +267,7 @@ public class TriviaQuestionActivity extends AppCompatActivity {
     private void fillView() {
         String color_hex_code = TriviaQuestion.Bg_colors.get(intent_cat_no_offset);
         int bg_tint = Color.parseColor(color_hex_code);
+        layout_parent.setBackground(getResources().getDrawable(R.drawable.tile_background));
         layout_parent.getBackground().setColorFilter(bg_tint, PorterDuff.Mode.ADD);
 //        Log.e(TAG, "Color is : " + color_hex_code + " and int is : " + bg_tint);
         radioGroup.setVisibility(View.VISIBLE);
