@@ -77,8 +77,10 @@ public class EndActivity extends AppCompatActivity {
 
         gameName = "AAAAA";
         playerName = "FRANK";
-        waypointsRatesList.add((float)0.98);
-        waypointsRatesList.add((float) 0.76);
+        waypointsRatesList.add(0, (float)0.98);
+        waypointsRatesList.add(1, (float) 0.76);
+
+
 
         //Sendind data to the fragments
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);

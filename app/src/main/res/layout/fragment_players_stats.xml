@@ -9,7 +9,9 @@
 
     <LinearLayout
         android:id="@+id/linearLayout_players"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -20,31 +22,55 @@
             android:id="@+id/player1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:text="TextView"
+            android:gravity="center"
+            android:textColor="#653434"
+            android:textSize="20sp"
+            android:fontFamily="@font/acme" />
 
         <TextView
             android:id="@+id/player2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:layout_marginTop="10dp"
+            android:text="TextView"
+            android:gravity="center"
+            android:textColor="#653434"
+            android:textSize="20sp"
+            android:fontFamily="@font/acme"/>
 
         <TextView
             android:id="@+id/player3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:layout_marginTop="10dp"
+            android:text="TextView"
+            android:gravity="center"
+            android:textColor="#653434"
+            android:textSize="20sp"
+            android:fontFamily="@font/acme"/>
 
         <TextView
             android:id="@+id/player4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:text="TextView"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:textColor="#653434"
+            android:textSize="20sp"
+            android:fontFamily="@font/acme"/>
 
         <TextView
             android:id="@+id/player5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:layout_marginTop="10dp"
+            android:text="TextView"
+            android:gravity="center"
+            android:textColor="#653434"
+            android:textSize="20sp"
+            android:fontFamily="@font/acme"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,7 +35,6 @@ public class FragmentPlayersStats extends Fragment {
     String playerName;
     int total_players;
     List<Float> waypointsRatesList = new ArrayList<>();
-    List<String> playersList = new ArrayList<>();
 
     //Views
     TextView player1;
@@ -85,10 +85,35 @@ public class FragmentPlayersStats extends Fragment {
         DatabaseReference gameDb;
         gameDb = FirebaseDatabase.getInstance().getReference().child(gameName).child("Users");
         gameDb.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            int index =0;
+            String player_name;
+            float score;
+
             @Override
             public void onDataChange(DataSnapshot gameSnapshot) {
                 for(DataSnapshot ds: gameSnapshot.getChildren()) {
-                    playersList.add(ds.getKey());
+                    player_name = ds.getKey();
+                    score = gameSnapshot.child(player_name).child("score").getValue(Float.class);
+
+                    if (index==0){
+                        player1.setText(player_name+":    "+score*100+"% of correct answers!");
+                    }
+                    if (index==1){
+                        player2.setText(player_name+":    "+score*100+"% of correct answers!");
+                    }
+                    if (index==2){
+                        player3.setText(player_name+":    "+score*100+"% of correct answers!");
+                    }
+                    if (index==3){
+                        player4.setText(player_name+":    "+score*100+"% of correct answers!");
+                    }
+                    if (index==4){
+                        player5.setText(player_name+":    "+score*100+"% of correct answers!");
+                    }
+
+                   // Toast.makeText(getContext(), "blabla: "+playersList.get(index), Toast.LENGTH_SHORT).show();
+                    index+=1;
                 }
             }
             @Override
@@ -96,6 +121,7 @@ public class FragmentPlayersStats extends Fragment {
                 Log.e("TxGO", "Error writing to database");
             }
         });
+
 
         //for (int i=0; i<playersList.size(); i++) {
         //    LinearLayout llMain = view.findViewById(R.id.rlMain);
@@ -108,37 +134,40 @@ public class FragmentPlayersStats extends Fragment {
         //    llMain.addView(textView);
         //}
 
-        switch ((int) total_players) {
-            case 1:
-                player1.setVisibility(View.VISIBLE);
-                player2.setVisibility(View.GONE);
-                player3.setVisibility(View.GONE);
-                player4.setVisibility(View.GONE);
-                player5.setVisibility(View.GONE);
-            case 2:
-                player1.setVisibility(View.VISIBLE);
-                player2.setVisibility(View.VISIBLE);
-                player3.setVisibility(View.GONE);
-                player4.setVisibility(View.GONE);
-                player5.setVisibility(View.GONE);
-            case 3:
-                player1.setVisibility(View.VISIBLE);
-                player2.setVisibility(View.VISIBLE);
-                player3.setVisibility(View.VISIBLE);
-                player4.setVisibility(View.GONE);
-                player5.setVisibility(View.GONE);
-            case 4:
-                player1.setVisibility(View.VISIBLE);
-                player2.setVisibility(View.VISIBLE);
-                player3.setVisibility(View.VISIBLE);
-                player4.setVisibility(View.VISIBLE);
-                player5.setVisibility(View.GONE);
-            case 5:
-                player1.setVisibility(View.VISIBLE);
-                player2.setVisibility(View.VISIBLE);
-                player3.setVisibility(View.VISIBLE);
-                player4.setVisibility(View.VISIBLE);
-                player5.setVisibility(View.VISIBLE);
+        if(total_players == 1) {
+            player1.setVisibility(View.VISIBLE);
+            player2.setVisibility(View.GONE);
+            player3.setVisibility(View.GONE);
+            player4.setVisibility(View.GONE);
+            player5.setVisibility(View.GONE);
+        }
+        if(total_players == 2) {
+            player1.setVisibility(View.VISIBLE);
+            player2.setVisibility(View.VISIBLE);
+            player3.setVisibility(View.GONE);
+            player4.setVisibility(View.GONE);
+            player5.setVisibility(View.GONE);
+        }
+        if(total_players == 3) {
+            player1.setVisibility(View.VISIBLE);
+            player2.setVisibility(View.VISIBLE);
+            player3.setVisibility(View.VISIBLE);
+            player4.setVisibility(View.GONE);
+            player5.setVisibility(View.GONE);
+        }
+        if(total_players == 4) {
+            player1.setVisibility(View.VISIBLE);
+            player2.setVisibility(View.VISIBLE);
+            player3.setVisibility(View.VISIBLE);
+            player4.setVisibility(View.VISIBLE);
+            player5.setVisibility(View.GONE);
+        }
+        if(total_players == 5) {
+            player1.setVisibility(View.VISIBLE);
+            player2.setVisibility(View.VISIBLE);
+            player3.setVisibility(View.VISIBLE);
+            player4.setVisibility(View.VISIBLE);
+            player5.setVisibility(View.VISIBLE);
         }
 
     }
