@@ -74,10 +74,10 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
                 }
                 else {
                     //Default values TODO laurence : est-ce utile alors qu'on les set juste après ?
-                    gameDb.child("Settings").child("NumPlayers").setValue(2);
-                    gameDb.child("Settings").child("QuestionType").setValue("QCM");
-                    gameDb.child("Settings").child("Difficulty").setValue("easy");
-                    gameDb.child("Settings").child("MaxAttempts").setValue(3);
+                    //gameDb.child("Settings").child("NumPlayers").setValue(2);
+                    //gameDb.child("Settings").child("QuestionType").setValue("QCM");
+                    //gameDb.child("Settings").child("Difficulty").setValue("easy");
+                    //gameDb.child("Settings").child("MaxAttempts").setValue(3);
 
                     //Adjusted values
                     ToggleButton toggle = findViewById(R.id.button_questionType);

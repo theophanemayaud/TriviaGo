@@ -69,16 +69,9 @@ public class EndActivity extends AppCompatActivity {
 
         // Get intent extras with game name and player name
         Bundle b1 = getIntent().getExtras();
-        // TODO: CHECK why i can't get the values
-        //gameName = b1.getString("name");
-        //playerName = b1.getString("player");
-        //waypointsRatesList = (List<Float>) b1.getSerializable("list");
-
-        gameName = "AAAAA";
-        playerName = "FRANK";
-        waypointsRatesList.add(0, (float)0.98);
-        waypointsRatesList.add(1, (float) 0.76);
-
+        gameName = b1.getString("name");
+        playerName = b1.getString("player");
+        waypointsRatesList = (List<Float>) b1.getSerializable("list");
 
         //Sendind data to the fragments
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
@@ -127,7 +120,7 @@ public class EndActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot gameSnapshot) {
                if(gameSnapshot.child(playerName).exists()) {
-                   float score = gameSnapshot.child(playerName).child("score").getValue(Float.class);
+                   float score = gameSnapshot.child(playerName).child("rate").getValue(Float.class);
                    if (score == (float) 1) {
                        score_message.setText("Perfect!");
                        stars.setImageDrawable(getResources().getDrawable(R.drawable._stars));
@@ -159,8 +152,6 @@ public class EndActivity extends AppCompatActivity {
         Intent finishIntent = new Intent(this, WelcomeActivity.class);
         finishIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(finishIntent);
-        EndActivity.this.finish();
-
     }
 
 }

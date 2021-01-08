@@ -92,7 +92,7 @@ public class FragmentPlayersStats extends Fragment {
 
                 for(DataSnapshot ds: gameSnapshot.getChildren()) {
                     player_name = ds.getKey();
-                    score = gameSnapshot.child(player_name).child("score").getValue(Float.class);
+                    score = gameSnapshot.child(player_name).child("rate").getValue(Float.class);
 
                     if (index==0){
                         player1.setText(player_name+":    "+score*100+"%   correct!");

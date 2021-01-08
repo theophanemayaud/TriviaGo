@@ -34,21 +34,6 @@ public class WelcomeActivity extends AppCompatActivity {
         startActivityForResult(intentSetUp, SETUP_ACTIVITY);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == SETUP_ACTIVITY) {
-            if(resultCode == Activity.RESULT_OK){
-                String gameName = data.getStringExtra("name");
-                int players = 0;
-                // TODO remove this Laurence ?
-                //  mDatabase.child(gameName).child("WaitingRoom").child("Players").setValue(players);
-            }
-        }
-    }//onActivityResult
-
-
     public void clickedJoinGameButtonXmlCallback(View view) {
         Intent intentJoin = new Intent(WelcomeActivity.this, JoinActivity.class);
         startActivity(intentJoin);
