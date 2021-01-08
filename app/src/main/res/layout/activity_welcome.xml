@@ -49,12 +49,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/button_shape_final"
-            android:fontFamily="casual"
+            android:fontFamily="@font/coiny"
             android:stateListAnimator="@drawable/selector"
             android:text="Create Game"
-            android:textColor="#000000"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textColor="#653434"
+            android:textSize="16sp"/>
 
         <Button
             android:id="@+id/button_join_game"
@@ -64,13 +63,12 @@
             android:layout_marginTop="20dp"
             android:layout_gravity="center"
             android:background="@drawable/button_shape_final"
-            android:fontFamily="casual"
+            android:fontFamily="@font/coiny"
             android:stateListAnimator="@drawable/selector"
             android:text="Join Game"
             android:textAllCaps="true"
-            android:textColor="#000000"
+            android:textColor="#653434"
             android:textSize="16sp"
-            android:textStyle="bold"
             android:typeface="normal" />
 
         <Space

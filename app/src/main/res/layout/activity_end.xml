@@ -5,25 +5,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/app_background"
+    android:padding="40dp"
     tools:context=".EndActivity">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/linearLayout"
+        android:layout_width="400dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="30dp"
+        android:padding="20dp"
         android:background="@drawable/shadow_white_box"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="176dp"
-        tools:layout_editor_absoluteY="109dp">
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_gravity="center"
-            android:layout_width="291dp"
+            android:padding="10dp"
+            android:layout_width="match_parent"
             android:layout_height="135dp"
             app:srcCompat="@drawable/_stars" />
 
@@ -37,48 +38,43 @@
             android:textSize="30sp"
             android:fontFamily="@font/coiny"/>
 
-        <com.google.android.material.tabs.TabLayout
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/pager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="300dp">
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Stats" />
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Questions" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Players" />
-        </com.google.android.material.tabs.TabLayout>
-
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/textView7"
-                    android:layout_width="match_parent"
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/stats_individual"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="TextView" />
+                    android:text="Individual Stats" />
 
-                <TextView
-                    android:id="@+id/textView6"
-                    android:layout_width="match_parent"
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/stats_players"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="TextView" />
-            </LinearLayout>
-        </HorizontalScrollView>
+                    android:text="All Players" />
 
+            </com.google.android.material.tabs.TabLayout>
+        </androidx.viewpager.widget.ViewPager>
     </LinearLayout>
+
+    <Button
+        android:id="@+id/button_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Finish Game"
+        android:onClick="clickedExitButtonXmlCallback"
+        android:background="@drawable/button_shape_final"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/linearLayout"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

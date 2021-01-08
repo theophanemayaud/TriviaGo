@@ -17,19 +17,34 @@
         android:roundIcon="@mipmap/app_logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TriviaGo">
-        <activity android:name=".EndActivity"></activity>
-        <activity android:name=".JoinActivity" />
-        <activity android:name=".TriviaQuestionActivity" />
-        <activity android:name=".WelcomeActivity">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+        <activity android:name=".EndActivity"
+            android:noHistory="true">
         </activity>
-        <activity android:name=".SetUpActivity" />
-        <activity android:name=".ChooseNextWaypoint" />
-        <activity android:name=".CreateWaypointsActivity" />
+
+        <activity android:name=".JoinActivity"
+            android:noHistory="true">
+        </activity>
+
+        <activity android:name=".TriviaQuestionActivity"
+            android:noHistory="true">
+        </activity>
+
+        <activity android:name=".WelcomeActivity"
+            android:noHistory="false">
+        </activity>
+
+        <activity android:name=".SetUpActivity"
+            android:noHistory="true">
+        </activity>
+
+        <activity android:name=".ChooseNextWaypoint"
+            android:noHistory="true">
+        </activity>
+
+        <activity android:name=".CreateWaypointsActivity"
+            android:noHistory="true">
+        </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -47,11 +62,23 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps" />
+            android:label="@string/title_activity_maps"
+            android:noHistory="true">
+        </activity>
+
         <activity
             android:name=".TravelToNextWaypointActivity"
-            android:label="@string/title_activity_travel_to_next_waypoint" />
-        <activity android:name=".MainActivity"/>
+            android:label="@string/title_activity_travel_to_next_waypoint"
+            android:noHistory="true">
+        </activity>
+
+        <activity android:name=".MainActivity">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
+
     </application>
 
 </manifest>

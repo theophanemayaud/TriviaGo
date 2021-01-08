@@ -361,7 +361,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                     // If here, then there are no more waypoints to go to
                     if(stillSomeWaypointsToDo==false){
                         int waypointAttemptsTotal = 0;
-                        List<Double> waypointsRatesList = new ArrayList<>();
+                        List<Float> waypointsRatesList = new ArrayList<>();
                         for(int i=0; i<waypointsAttemptsList.size();i++){
                             waypointAttemptsTotal += waypointsAttemptsList.get(i);
                             waypointsRatesList.add(calcRate(
@@ -369,15 +369,19 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                             ));
                         }
 
-                        double playerSuccessRate = calcRate(waypointAttemptsTotal);
+                        float playerSuccessRate = calcRate(waypointAttemptsTotal);
                         gameDb.child("Users").child(playerName)
                                 .child("rate").setValue(playerSuccessRate);
 
                         Intent endIntent = new Intent(ChooseNextWaypoint.this, EndActivity.class);
-                        endIntent.putExtra(ChooseNextWaypoint.INTENT_GAME_NAME, gameName);
-                        endIntent.putExtra(ChooseNextWaypoint.INTENT_PLAYER_NAME, playerName);
-                        endIntent.putExtra(ChooseNextWaypoint.INTENT_PLAYER_STATS_LIST,
-                                (Serializable) waypointsRatesList);
+                        endIntent.putExtra("name", gameName);
+                        endIntent.putExtra("player", playerName);
+                        endIntent.putExtra("list", (Serializable) waypointsRatesList);
+
+                        //endIntent.putExtra(ChooseNextWaypoint.INTENT_GAME_NAME, gameName);
+                        //endIntent.putExtra(ChooseNextWaypoint.INTENT_PLAYER_NAME, playerName);
+                        //endIntent.putExtra(ChooseNextWaypoint.INTENT_PLAYER_STATS_LIST,
+                        //        (Serializable) waypointsRatesList);
 
                         Toast.makeText(ChooseNextWaypoint.this, "All done !!!",
                                 Toast.LENGTH_SHORT).show();
@@ -492,9 +496,9 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         }
     }
 
-    private double calcRate(int attempts){
-        double rate = 0.;
-        double numbWaypts = waypointsLatLgn.size();
+    private float calcRate(int attempts){
+        float rate = 0;
+        float numbWaypts = waypointsLatLgn.size();
         rate = numbWaypts/attempts;
         return rate;
     }
