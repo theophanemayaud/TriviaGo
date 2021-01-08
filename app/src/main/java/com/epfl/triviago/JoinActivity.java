@@ -131,6 +131,7 @@ public class JoinActivity extends AppCompatActivity {
                             intentChooseNextWaypoint.putExtra(ChooseNextWaypoint.INTENT_PLAYER_NAME, username);
                             Toast.makeText(JoinActivity.this, "Joining Game...", Toast.LENGTH_SHORT).show();
                             startActivity(intentChooseNextWaypoint);
+                            finish();
                         }
                     }
                     @Override

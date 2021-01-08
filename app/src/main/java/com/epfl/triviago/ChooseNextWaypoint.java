@@ -139,12 +139,8 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     protected void onDestroy() {
         super.onDestroy();
 
-        //remove user from the game and go to home activity
+        //remove user from DB
         gameDb.child("Users").child(playerName).removeValue();
-
-        Intent homeIntent = new Intent(this, WelcomeActivity.class);
-        homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(homeIntent);
     }
 
     // -------- End : Lifecycle methods --------
@@ -380,15 +376,17 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                         for(int i=0; i<waypointsAttemptsList.size();i++){
                             waypointAttemptsTotal += waypointsAttemptsList.get(i);
                             waypointsRatesList.add(calcRate(
-                                    waypointsAttemptsList.get(i)
+                                    waypointsAttemptsList.get(i), 1
                             ));
                         }
 
-                        float playerSuccessRate = calcRate(waypointAttemptsTotal);
+                        float playerSuccessRate = calcRate(waypointAttemptsTotal,
+                                waypointsLatLgn.size());
                         gameDb.child("Users").child(playerName)
                                 .child("rate").setValue(playerSuccessRate);
 
-                        Intent endIntent = new Intent(ChooseNextWaypoint.this, EndActivity.class);
+                        Intent endIntent = new Intent(ChooseNextWaypoint.this,
+                                EndActivity.class);
                         endIntent.putExtra("name", gameName);
                         endIntent.putExtra("player", playerName);
                         endIntent.putExtra("list", (Serializable) waypointsRatesList);
@@ -511,10 +509,9 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         }
     }
 
-    private float calcRate(int attempts){
+    private float calcRate(int attempts, int minAttemps){
         float rate = 0;
-        float numbWaypts = waypointsLatLgn.size();
-        rate = numbWaypts/attempts;
+        rate = minAttemps/attempts;
         return rate;
     }
     // -------- End : Small diverse functions functions --------
