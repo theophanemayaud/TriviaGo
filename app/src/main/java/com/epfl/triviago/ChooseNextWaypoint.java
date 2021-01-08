@@ -380,7 +380,8 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                             ));
                         }
 
-                        float playerSuccessRate = calcRate(waypointAttemptsTotal,
+                        float playerSuccessRate = calcRate(
+                                waypointAttemptsTotal,
                                 waypointsLatLgn.size());
                         gameDb.child("Users").child(playerName)
                                 .child("rate").setValue(playerSuccessRate);
@@ -509,9 +510,8 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         }
     }
 
-    private float calcRate(int attempts, int minAttemps){
-        float rate = 0;
-        rate = minAttemps/attempts;
+    private float calcRate(int attempts, int minAttempts){
+        float rate = minAttempts/ (float) attempts; //force convert to float before division
         return rate;
     }
     // -------- End : Small diverse functions functions --------

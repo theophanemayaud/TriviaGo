@@ -32,6 +32,7 @@ public class JoinActivity extends AppCompatActivity {
 
     private boolean userInGame = false;
     private boolean userAddedToDb = false;
+    private boolean skippedFirstNewUser = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,15 +124,19 @@ public class JoinActivity extends AppCompatActivity {
                 gameDb.child("Users").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot usersSnapshot) {
+
                         if(userInGame==true){
                             return; //We are already in the game, or waiting to enter
                         }
 
                         current_players = (int) usersSnapshot.getChildrenCount();
                         if(current_players<max_players) {
-                            progress_message.setText(" "+current_players+"/"+max_players+" players");
-                            seekbar.setProgress(current_players);
-                            Toast.makeText(JoinActivity.this, "A new player just joined !", Toast.LENGTH_SHORT).show();
+                            if(skippedFirstNewUser==false){ //skip first fire of the callback as it is the user itself !
+                                progress_message.setText(" "+current_players+"/"+max_players+" players");
+                                seekbar.setProgress(current_players);
+                                Toast.makeText(JoinActivity.this, "A new player just joined !", Toast.LENGTH_SHORT).show();
+                            }
+                            skippedFirstNewUser = true;
                         }
                         else{
                             userInGame=true;
