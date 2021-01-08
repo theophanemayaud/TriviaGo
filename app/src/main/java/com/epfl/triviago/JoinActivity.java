@@ -62,8 +62,17 @@ public class JoinActivity extends AppCompatActivity {
         LinearLayout enter_code = findViewById(R.id.enterGame);
         EditText name_text = findViewById(R.id.writeCode);
         gameName = name_text.getText().toString();
+        if(gameName.isEmpty()){
+            Toast.makeText(JoinActivity.this, R.string.empty_game_name, Toast.LENGTH_SHORT).show();
+            return;
+        }
         EditText username_text = findViewById(R.id.username);
         username = username_text.getText().toString();
+        if(username.isEmpty()){
+            Toast.makeText(JoinActivity.this,
+                    R.string.empty_user_name, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
 
         //Check game name to see if it exists

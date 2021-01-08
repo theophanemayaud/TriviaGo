@@ -305,7 +305,7 @@ public class CreateWaypointsActivity<onMapLongClick> extends AppCompatActivity i
         switch (item.getItemId()) {
             case R.id.saveAllWaypointsMenuItem:
                 if(waypointsSelectedCategoryList.size()==0){
-                    Toast.makeText(this, "Create at least 1 waypoint !", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.no_waypoints_error_msg, Toast.LENGTH_SHORT).show();
                     break;
                 }
                 for(int i=0; i<waypointsSelectedCategoryList.size(); i++){

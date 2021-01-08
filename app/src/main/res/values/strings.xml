@@ -26,6 +26,9 @@
     <string name="please_select_item">Please select an item</string>
     <string name="difficulty">(%1$s)</string>
     <string name="compass_arrow_image">Compass Arrow image</string>
+    <string name="empty_game_name">Game name can\'t be empty...</string>
+    <string name="empty_user_name">User name can\'t be empty...</string>
+    <string name="no_waypoints_error_msg">Create at least 1 waypoint !</string>
 
     <!--String arrays for spinners used in game setup-->
     <string-array name="spinner_players">

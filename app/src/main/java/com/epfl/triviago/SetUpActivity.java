@@ -62,6 +62,11 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
     public void clickedDoneButtonXmlCallback(View view) {
         TextView nameGame = findViewById(R.id.nameGame);
         String gameName = nameGame.getText().toString();
+        if(gameName.isEmpty()){
+            Toast.makeText(SetUpActivity.this, R.string.empty_game_name,
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         DatabaseReference gameDb = FirebaseDatabase.getInstance().getReference().child(gameName);
         gameDb.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -73,13 +78,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
                     return;
                 }
                 else {
-                    //Default values TODO laurence : est-ce utile alors qu'on les set juste après ?
-                    //gameDb.child("Settings").child("NumPlayers").setValue(2);
-                    //gameDb.child("Settings").child("QuestionType").setValue("QCM");
-                    //gameDb.child("Settings").child("Difficulty").setValue("easy");
-                    //gameDb.child("Settings").child("MaxAttempts").setValue(3);
-
-                    //Adjusted values
+                    // Set values in DB
                     ToggleButton toggle = findViewById(R.id.button_questionType);
                     gameDb.child("Settings").child("NumPlayers").setValue(numPlayer);
                     if (toggle.isChecked()) {
@@ -230,6 +229,10 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
             if (resultCode == RESULT_OK) {
                 waypointsLatLgnList = (ArrayList<LatLng>) data.getSerializableExtra(CreateWaypointsActivity.RESULT_WAYPOINTS_LIST_NAME);
                 waypointsCategList = (ArrayList<Integer>) data.getSerializableExtra(CreateWaypointsActivity.RESULT_CATEG_LIST_NAME);
+            }
+            else {
+                findViewById(R.id.button_done).setVisibility(View.GONE);
+                Toast.makeText(this, R.string.no_waypoints_error_msg, Toast.LENGTH_SHORT).show();
             }
         }
     }
