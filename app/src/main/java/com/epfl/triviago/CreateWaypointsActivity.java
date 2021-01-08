@@ -7,6 +7,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,6 +15,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -315,7 +317,8 @@ public class CreateWaypointsActivity<onMapLongClick> extends AppCompatActivity i
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra(RESULT_WAYPOINTS_LIST_NAME, (Serializable) waypointsLatLgnList);
                 returnIntent.putExtra(RESULT_CATEG_LIST_NAME, (Serializable) waypointsSelectedCategoryList);
-                setResult(RESULT_OK, returnIntent);
+                setResult(Activity.RESULT_OK, returnIntent);
+                //Log.e("THEO", "OK we have finished and no problem so far");
                 finish();
                 break;
             case R.id.delWaypntMenuButton:
