@@ -135,6 +135,18 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         stopLocationUpdates();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        //remove user from the game and go to home activity
+        gameDb.child("Users").child(playerName).removeValue();
+
+        Intent homeIntent = new Intent(this, WelcomeActivity.class);
+        homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(homeIntent);
+    }
+
     // -------- End : Lifecycle methods --------
 
     // -------- Start : Location and map related functions --------
