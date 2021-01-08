@@ -11,6 +11,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -118,11 +119,6 @@ public class EndActivity extends AppCompatActivity {
         });
     }
 
-    public void clickedExitButtonXmlCallback(View view) {
-        Toast.makeText(EndActivity.this, "Thanks for playing !", Toast.LENGTH_SHORT).show();
-        finish();
-    }
-
     public void editLayout () {
         //Get player score from firebase
         DatabaseReference gameDb;
@@ -155,6 +151,15 @@ public class EndActivity extends AppCompatActivity {
                 Log.e("TxGO", "Error writing to database");
             }
         });
+    }
+
+    public void clickedExitButtonXmlCallback(View view) {
+        Toast.makeText(EndActivity.this, "Thanks for playing !", Toast.LENGTH_SHORT).show();
+
+        Intent finishIntent = new Intent(this, WelcomeActivity.class);
+        finishIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(finishIntent);
+        EndActivity.this.finish();
 
     }
 
