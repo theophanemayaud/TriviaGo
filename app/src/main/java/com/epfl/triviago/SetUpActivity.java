@@ -53,9 +53,6 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
     public void clickedWaypointButtonXmlCallback(View view) {
         Intent createWaypointsIntent = new Intent(SetUpActivity.this, CreateWaypointsActivity.class);
         startActivityForResult(createWaypointsIntent, CreateWaypointsActivity.RESULT_WAYPOINTS_CODE);
-
-        findViewById(R.id.button_done).setVisibility(View.VISIBLE);
-        findViewById(R.id.button_done).setClickable(true);
     }
 
 
@@ -229,9 +226,10 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
             if (resultCode == RESULT_OK) {
                 waypointsLatLgnList = (ArrayList<LatLng>) data.getSerializableExtra(CreateWaypointsActivity.RESULT_WAYPOINTS_LIST_NAME);
                 waypointsCategList = (ArrayList<Integer>) data.getSerializableExtra(CreateWaypointsActivity.RESULT_CATEG_LIST_NAME);
+                findViewById(R.id.button_done).setVisibility(View.VISIBLE);
+                findViewById(R.id.button_done).setClickable(true);
             }
             else {
-                findViewById(R.id.button_done).setVisibility(View.GONE);
                 Toast.makeText(this, R.string.no_waypoints_error_msg, Toast.LENGTH_SHORT).show();
             }
         }
