@@ -152,7 +152,8 @@ public class JoinActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(userInGame == true || userAddedToDb == true){
+        // only remove user when pressing back button within this activity
+        if(userInGame == false && userAddedToDb == true){
             gameDb.child("Users").child(username).removeValue();
         }
     }
