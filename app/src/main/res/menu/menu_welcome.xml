@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/rules"
+        android:title="Rules"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/create"
+        android:title="Create game"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/join"
+        android:title="Join Game"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/credits"
+        android:title="Credits"
+        app:showAsAction="never" />
 
 </menu>

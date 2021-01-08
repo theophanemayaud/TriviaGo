@@ -79,7 +79,7 @@ public class FragmentPlayersStats extends Fragment {
         // load game infos from DB
         DatabaseReference gameDb;
         gameDb = FirebaseDatabase.getInstance().getReference().child(gameName).child("Users");
-        gameDb.addListenerForSingleValueEvent(new ValueEventListener() {
+        gameDb.addValueEventListener(new ValueEventListener() {
 
             int index =0;
             String player_name;
@@ -92,25 +92,27 @@ public class FragmentPlayersStats extends Fragment {
 
                 for(DataSnapshot ds: gameSnapshot.getChildren()) {
                     player_name = ds.getKey();
-                    score = gameSnapshot.child(player_name).child("rate").getValue(Float.class);
+                    if(gameSnapshot.child(playerName).child("rate").exists()) {
+                        score = gameSnapshot.child(player_name).child("rate").getValue(Float.class);
 
-                    if (index==0){
-                        player1.setText(player_name+":    "+score*100+"%   correct!");
-                    }
-                    if (index==1){
-                        player2.setText(player_name+":    "+score*100+"%   correct!");
-                    }
-                    if (index==2){
-                        player3.setText(player_name+":    "+score*100+"%   correct!");
-                    }
-                    if (index==3){
-                        player4.setText(player_name+":    "+score*100+"%   correct!");
-                    }
-                    if (index==4){
-                        player5.setText(player_name+":    "+score*100+"%   correct!!");
-                    }
+                        if (index==0){
+                            player1.setText(player_name+":    "+score*100+"%   correct!");
+                        }
+                        if (index==1){
+                            player2.setText(player_name+":    "+score*100+"%   correct!");
+                        }
+                        if (index==2){
+                            player3.setText(player_name+":    "+score*100+"%   correct!");
+                        }
+                        if (index==3){
+                            player4.setText(player_name+":    "+score*100+"%   correct!");
+                        }
+                        if (index==4){
+                            player5.setText(player_name+":    "+score*100+"%   correct!!");
+                        }
 
-                    index+=1;
+                        index+=1;
+                    }
                 }
             }
             @Override

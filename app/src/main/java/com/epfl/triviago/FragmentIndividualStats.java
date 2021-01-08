@@ -69,7 +69,7 @@ public class FragmentIndividualStats extends Fragment {
                 RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
         TextView txtView = new TextView(getContext());
-        txtView.setText("Waypoint "+0+":    "+waypointsRatesList.get(0)+"%   correct!");
+        txtView.setText("Waypoint "+0+":    "+waypointsRatesList.get(0)*100+"%   correct!");
         txtView.setTextAppearance(getActivity(), R.style.fontForEndGame);
         lprams.addRule(RelativeLayout.CENTER_HORIZONTAL);
         txtView.setLayoutParams(lprams);
