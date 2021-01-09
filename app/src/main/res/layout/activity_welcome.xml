@@ -115,9 +115,7 @@
                 android:layout_marginBottom="5dp"
                 android:textColor="#653434"
                 android:textSize="16sp"
-                android:text="Goal: The goal of the game is go to all the waypoints/checkpoints on the map, and
-                 answer the trivia questions at each of them.\n\nRules:\n1) To reach a waypoint, you need to be in a radius of 10m around it.
-                 \n2) If you fail to complete a waypoint, you need to go to another one before coming back." />
+                android:text="@string/rules_text" />
         </LinearLayout>
 
     </LinearLayout>

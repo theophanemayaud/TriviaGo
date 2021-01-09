@@ -30,6 +30,13 @@
     <string name="empty_game_name">Game name can\'t be empty...</string>
     <string name="empty_user_name">User name can\'t be empty...</string>
     <string name="no_waypoints_error_msg">Create at least 1 waypoint !</string>
+    <string name="rules_text">Goal: The goal of the game is go to all the waypoints/checkpoints on
+        the map, and answer the trivia questions at each of them.<br/>
+        <br/>
+        Rules:<br/>
+        1) To reach a waypoint, you need to be in a radius of 10m around it.<br/>
+        2) If you fail to complete a waypoint, you need to go to another one before coming back.
+    </string>
 
     <!--String arrays for spinners used in game setup-->
     <string-array name="spinner_players">
