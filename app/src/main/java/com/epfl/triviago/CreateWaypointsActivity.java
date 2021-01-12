@@ -58,9 +58,9 @@ public class CreateWaypointsActivity<onMapLongClick> extends AppCompatActivity i
 
     private IconGenerator iconGenerator;
 
-    private List<LatLng> waypointsLatLgnList = new ArrayList<LatLng>();
-    private List<Marker> waypointsMarkersList = new ArrayList<Marker>();
-    private List<Integer> waypointsSelectedCategoryList = new ArrayList<Integer>();
+    private ArrayList<LatLng> waypointsLatLgnList = new ArrayList<LatLng>();
+    private ArrayList<Marker> waypointsMarkersList = new ArrayList<Marker>();
+    private ArrayList<Integer> waypointsSelectedCategoryList = new ArrayList<Integer>();
 
     private int selectedWaypointListPosition = NO_WAYPOINT_SELECTION;
 
@@ -96,7 +96,7 @@ public class CreateWaypointsActivity<onMapLongClick> extends AppCompatActivity i
         //Create spinner with everything
         spinner_category = (Spinner) findViewById(R.id.categorySelectionSpinner);
         List<String> categories_name_list = TriviaQuestion.Categories;
-        categories_name_list.add(0, " ");
+//        categories_name_list.add(0, " ");
         ArrayAdapter<String> adapter_category = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_dropdown_item, categories_name_list);
         spinner_category.setAdapter(adapter_category);

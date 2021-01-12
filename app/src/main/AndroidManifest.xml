@@ -31,11 +31,20 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".SetUpActivity"/>
+        <activity android:name=".SetUpActivity"
+            android:screenOrientation="user"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+        </activity>
 
         <activity android:name=".ChooseNextWaypoint"/>
 
-        <activity android:name=".CreateWaypointsActivity"/>
+<!--        TODO: Basile lock orientation of activity to portrait in either direction-->
+        <activity android:name=".CreateWaypointsActivity"
+            android:screenOrientation="user"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+<!--            android:screenOrientation="userPortrait"-->
+<!--            android:configChanges="keyboardHidden|orientation|screenSize">-->
+        </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

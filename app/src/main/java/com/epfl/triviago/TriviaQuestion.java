@@ -37,6 +37,7 @@ public class TriviaQuestion implements Serializable {
 
     static final ArrayList<String> Categories = new ArrayList<>();
     static {
+        Categories.add(" ");
         Categories.add("General Knowledge");
         Categories.add("Entertainment: Books");
         Categories.add("Entertainment: Film");
