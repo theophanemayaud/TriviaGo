@@ -114,6 +114,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.e("TxGO", "Error writing to database");
+                Toast.makeText(SetUpActivity.this, "Problem with database, please try again...", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -227,7 +228,6 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
                 waypointsLatLgnList = (ArrayList<LatLng>) data.getSerializableExtra(CreateWaypointsActivity.RESULT_WAYPOINTS_LIST_NAME);
                 waypointsCategList = (ArrayList<Integer>) data.getSerializableExtra(CreateWaypointsActivity.RESULT_CATEG_LIST_NAME);
                 findViewById(R.id.button_done).setVisibility(View.VISIBLE);
-                findViewById(R.id.button_done).setClickable(true);
             }
             else {
                 Toast.makeText(this, R.string.no_waypoints_error_msg, Toast.LENGTH_SHORT).show();

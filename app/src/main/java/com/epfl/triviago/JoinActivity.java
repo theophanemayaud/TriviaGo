@@ -55,7 +55,6 @@ public class JoinActivity extends AppCompatActivity {
 
     public void clickedJoinButtonXmlCallback(View view) {
 
-        //TODO check if views are empty, otherwise get error
         //Getting the structural elements
         SeekBar seekbar = findViewById(R.id.seekBar2);
         TextView waiting_message = findViewById(R.id.waitingMessage);
