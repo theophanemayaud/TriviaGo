@@ -37,6 +37,15 @@
             android:textColor="@color/end_text"
             android:textSize="30sp"
             android:fontFamily="@font/coiny"/>
+        <TextView
+            android:id="@+id/time_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text=""
+            android:textColor="@color/end_text"
+            android:textSize="20sp"
+            android:fontFamily="@font/acme"/>
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/pager"

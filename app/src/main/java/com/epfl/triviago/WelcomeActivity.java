@@ -77,7 +77,6 @@ public class WelcomeActivity extends AppCompatActivity {
                 credits_layout.setVisibility(View.VISIBLE);
                 return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

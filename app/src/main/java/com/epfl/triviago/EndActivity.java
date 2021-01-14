@@ -54,9 +54,16 @@ public class EndActivity extends AppCompatActivity {
     String playerName;
     List<Float> waypointsRatesList = new ArrayList<>();
 
+    //Timer variables
+    long startTime;
+    long endTime;
+    double elapsedSeconds;
+    long tDelta;
+
     //Structural elements
     ImageView stars;
     TextView score_message;
+    TextView time_message;
 
     SharedPreferences sharedpreferences;
     public static final String MyPREFERENCES = "MyPrefs" ;
@@ -69,9 +76,16 @@ public class EndActivity extends AppCompatActivity {
 
         // Get intent extras with game name and player name
         Bundle b1 = getIntent().getExtras();
-        gameName = b1.getString("name");
-        playerName = b1.getString("player");
-        waypointsRatesList = (List<Float>) b1.getSerializable("list");
+
+        gameName = b1.getString(ChooseNextWaypoint.INTENT_GAME_NAME);
+        playerName = b1.getString(ChooseNextWaypoint.INTENT_PLAYER_NAME);
+        waypointsRatesList = (List<Float>) b1.getSerializable(ChooseNextWaypoint.INTENT_PLAYER_STATS_LIST);
+        startTime = b1.getLong("time");
+
+        endTime = System.currentTimeMillis();
+        tDelta = endTime - startTime;
+        elapsedSeconds = tDelta / 1000.0;
+
 
         //Sendind data to the fragments
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
@@ -89,6 +103,7 @@ public class EndActivity extends AppCompatActivity {
         score_message = findViewById(R.id.score_message);
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.pager);
+        time_message = findViewById(R.id.time_message);
 
         //Edit layout according to individual score
         editLayout ();
@@ -104,15 +119,16 @@ public class EndActivity extends AppCompatActivity {
             public void run() {
                 viewPagerAdapter.addFragment(FragmentIndividualStats.getInstance(), "Individual Stats");
                 viewPagerAdapter.addFragment(FragmentPlayersStats.getInstance(), "Players Stats");
-
                 viewPager.setAdapter(viewPagerAdapter);
-
                 tabLayout.setupWithViewPager(viewPager);
             }
         });
     }
 
     public void editLayout () {
+        //Set time score
+        time_message.setText("Time taken: "+String.format("%.2f", elapsedSeconds/60)+" min");
+
         //Get player score from firebase
         DatabaseReference gameDb;
         gameDb = FirebaseDatabase.getInstance().getReference().child(gameName).child("Users");
@@ -153,6 +169,5 @@ public class EndActivity extends AppCompatActivity {
         finishIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(finishIntent);
     }
-
 }
 

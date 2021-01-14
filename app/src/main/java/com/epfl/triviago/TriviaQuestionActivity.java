@@ -52,19 +52,16 @@ public class TriviaQuestionActivity extends AppCompatActivity {
     private static final String ERROR_BOOL = "ERROR_BOOL";
     private static final String ATTEMPTS_COUNTER = "ATTEMPTS_COUNTER";
 
-
+    //Useful variables
     private Integer mResponse_index = -1;
     private TriviaQuestion mTrivia = null;
     private boolean mfinished = false;
     private boolean mIsQCM_type = true;
     private Integer mAttempts_number = 1;
-
     private Integer intent_cat = 9;
     private Integer intent_cat_no_offset = 0;
     private String intent_diff = "easy";
     private Integer intent_max_attempts;
-
-
 
     // UI elements
     private View layout_parent;
@@ -88,8 +85,6 @@ public class TriviaQuestionActivity extends AppCompatActivity {
     private ConstraintLayout container_attempt;
     private TextView attempt_text;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,11 +102,9 @@ public class TriviaQuestionActivity extends AppCompatActivity {
             }
             get_views();
             if (merror) {
-//                Log.e(TAG, "Hiding all");
                 hide_all(false);
                 return;
             }
-//            Log.e(TAG, "No errors");
             mTrivia = (TriviaQuestion) savedInstanceState.getSerializable(TRIVIA_STATE);
             mResponse_index = savedInstanceState.getInt(RESPONSE_INDEX);
             mfinished = savedInstanceState.getBoolean(FINISHED_BOOL);
@@ -140,7 +133,6 @@ public class TriviaQuestionActivity extends AppCompatActivity {
             } else {
                 setContentView(R.layout.activity_trivia_question_vf);
             }
-
 
             get_views();
             prepare_view();
@@ -233,8 +225,7 @@ public class TriviaQuestionActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<TriviaModel> call, Response<TriviaModel> response) {
                 if (!response.isSuccessful()) {
-                    // TODO basile : keep this ?
-                    Toast.makeText(TriviaQuestionActivity.this, "Error code : " + response.code(), Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Error code :" + response.code());
                 }
                 TriviaModel body = response.body();
                 Integer response_api = body.getResponseCode();
@@ -269,7 +260,6 @@ public class TriviaQuestionActivity extends AppCompatActivity {
         int bg_tint = Color.parseColor(color_hex_code);
         layout_parent.setBackground(getResources().getDrawable(R.drawable.tile_background));
         layout_parent.getBackground().setColorFilter(bg_tint, PorterDuff.Mode.ADD);
-//        Log.e(TAG, "Color is : " + color_hex_code + " and int is : " + bg_tint);
         radioGroup.setVisibility(View.VISIBLE);
         question.setTextColor(getResources().getColor(R.color.black));
         question.setText(Html.fromHtml(mTrivia.mQuestion));
@@ -294,7 +284,6 @@ public class TriviaQuestionActivity extends AppCompatActivity {
         difficulty.setText(getString(R.string.difficulty, Html.fromHtml(mTrivia.mDifficulty).toString()));
         loader.setVisibility(View.INVISIBLE);
         okButton.setVisibility(View.VISIBLE);
-//        checkAnswer.setBackground(layout_parent.getBackground());
         checkAnswer.setVisibility(View.VISIBLE);
         checkAnswer.setText(R.string.select_answer);
         // TODO: remove this for production
@@ -400,7 +389,6 @@ public class TriviaQuestionActivity extends AppCompatActivity {
         } else {
             backButton.setText(R.string.try_again);
         }
-
     }
 
     public void backButtonOnClick(View view) {
@@ -416,27 +404,22 @@ public class TriviaQuestionActivity extends AppCompatActivity {
             prepare_view();
             build_view(false);
         }
-
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-//        Log.e(TAG, "begin save state");
         if (!merror) {
-//            Log.e(TAG, "Save with no errors");
             outState.putSerializable(TRIVIA_STATE, mTrivia);
             outState.putInt(RESPONSE_INDEX, mResponse_index);
             outState.putBoolean(FINISHED_BOOL, mfinished);
             outState.putInt(ATTEMPTS_COUNTER, mAttempts_number);
         }
-//        Log.e(TAG, "Save errors");
         outState.putBoolean(ERROR_BOOL, merror);
         outState.putBoolean(INTENT_QCM_TYPE, mIsQCM_type);
         outState.putInt(INTENT_CATEGORY, intent_cat);
         outState.putString(INTENT_DIFFICULTY, intent_diff);
         outState.putInt(INTENT_MAX_ATTEMPTS, intent_max_attempts);
-
     }
 
     public void reloadRandomQuestion(View view) {

@@ -45,47 +45,48 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyCallback {
+    private final String TAG = this.getClass().getSimpleName();
 
     // Request codes for TravelToNextWaypointActivity
     private static final int REACH_DEST = 2;
     private static final int ASK_QUESTION = 3;
     private static final int SELF_MARKER_TAG = -1;
 
-    private enum WaypointStatus {
-        NOT_REACHED,
-        REACHED,
-        BAD_ANSWER
-    };
-
-    private final String TAG = this.getClass().getSimpleName();
-
-    private List<String> spinnerValuesList = new ArrayList<>();
-    private Spinner spinner;
-
-    private GoogleMap mMap;
+    //Database
     private DatabaseReference gameDb;
 
-    private FusedLocationProviderClient fusedLocationClient;
-    private LocationCallback locationCallback;
-    LatLng currentLocation;
-    private Marker mapMarker;
-    private List<LatLng> waypointsLatLgn = new ArrayList<>();
-    private List<Marker> waypointsMarkers = new ArrayList<>();
-    private List<WaypointStatus> waypointsStatus = new ArrayList<>();
+    //Keeps the start time
+    private long start_time;
 
-    public static final String INTENT_PLAYER_STATS_LIST = "list";
-    private List<Integer> waypointsAttemptsList = new ArrayList<>();
-
-    private int selectedDestinationIndex;
-    private int lastDestinationIndex = 0;
-
-    private IconGenerator iconGenerator;
-
+    //Variables for intents
     public static final String DEST_LAT_LNG = "DestinationLatLgn";
     public static final String LATEST_USER_LOC = "LatestUserLocation";
     public static final String INTENT_GAME_NAME = "name";
     public static final String INTENT_PLAYER_NAME = "player";
 
+    //Variables for the map
+    private GoogleMap mMap;
+    private enum WaypointStatus {
+        NOT_REACHED,
+        REACHED,
+        BAD_ANSWER
+    };
+    private int selectedDestinationIndex;
+    private int lastDestinationIndex = 0;
+    private FusedLocationProviderClient fusedLocationClient;
+    private LocationCallback locationCallback;
+    LatLng currentLocation;
+    private Marker mapMarker;
+
+    //Useful variables
+    public static final String INTENT_PLAYER_STATS_LIST = "list";
+    private List<LatLng> waypointsLatLgn = new ArrayList<>();
+    private List<Marker> waypointsMarkers = new ArrayList<>();
+    private List<WaypointStatus> waypointsStatus = new ArrayList<>();
+    private List<Integer> waypointsAttemptsList = new ArrayList<>();
+    private List<String> spinnerValuesList = new ArrayList<>();
+    private Spinner spinner;
+    private IconGenerator iconGenerator;
     private String gameName;
     private String playerName;
 
@@ -98,12 +99,13 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
 
         // Initialising the spinner values, should be taken from activity input values or DB
         // and some placeholder waypoints values, should be taken from activity inputs or DB
-        spinner = (Spinner) findViewById(R.id.chooseNextWaypointSpinner);
+        spinner = findViewById(R.id.chooseNextWaypointSpinner);
 
         // get intent with game name and player name
         Bundle b1 = getIntent().getExtras();
         gameName = b1.getString(INTENT_GAME_NAME);
         playerName = b1.getString(INTENT_PLAYER_NAME);
+        start_time = b1.getLong("time");
 
         // load game infos from DB
         gameDb = FirebaseDatabase.getInstance().getReference().child(gameName);
@@ -142,7 +144,6 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         //remove user from DB
         gameDb.child("Users").child(playerName).removeValue();
     }
-
     // -------- End : Lifecycle methods --------
 
     // -------- Start : Location and map related functions --------
@@ -260,7 +261,6 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
             }
         };
     }
-
     // -------- End : Location and map related functions --------
 
     // -----------------------------------------------------------
@@ -392,6 +392,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                         endIntent.putExtra(ChooseNextWaypoint.INTENT_PLAYER_NAME, playerName);
                         endIntent.putExtra(ChooseNextWaypoint.INTENT_PLAYER_STATS_LIST,
                                 (Serializable) waypointsRatesList);
+                        endIntent.putExtra("time", start_time);
 
                         Toast.makeText(ChooseNextWaypoint.this, "All done !!!",
                                 Toast.LENGTH_SHORT).show();
@@ -437,7 +438,6 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
             }
         };
     }
-
     // -------- ⬆️ End : sub activity related functions --------
     // ---------------------------------------------------------
 
@@ -463,7 +463,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                // your code here
+                // If nothing is selected
             }
         };
     }

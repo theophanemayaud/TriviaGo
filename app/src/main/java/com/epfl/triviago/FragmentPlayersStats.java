@@ -45,7 +45,6 @@ public class FragmentPlayersStats extends Fragment {
 
     @Override
     public void onAttach(@NonNull Context context) {
-
         super.onAttach(context);
     }
 
@@ -72,7 +71,6 @@ public class FragmentPlayersStats extends Fragment {
         player5.setTextAppearance(getActivity(), R.style.fontForEndGame);
 
         createLayout(view);
-
         return  view;
     }
 
@@ -88,17 +86,12 @@ public class FragmentPlayersStats extends Fragment {
 
             @Override
             public void onDataChange(DataSnapshot usersSnapshot) {
-
                 total_players = usersSnapshot.getChildrenCount();
 
                 for(DataSnapshot ds: usersSnapshot.getChildren()) {
                     player_name = ds.getKey();
-                    //Toast.makeText(getContext(), "Name"+player_name, Toast.LENGTH_SHORT).show();
-
                     if(ds.child("rate").exists()) {
                         score = ds.child("rate").getValue(Float.class);
-                        //Toast.makeText(getContext(), "SCOOOOORE"+score, Toast.LENGTH_SHORT).show();
-
                         if (index==0){
                             player1.setText(player_name+":    "+String.format("%.2f", score*100)+"%   correct!");
                             if (player_name.equals(playerName)) {
@@ -129,7 +122,6 @@ public class FragmentPlayersStats extends Fragment {
                                 player1.setTextColor(getResources().getColor(R.color.button_end));
                             }
                         }
-
                         index+=1;
                     }
                 }

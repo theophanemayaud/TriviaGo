@@ -55,7 +55,6 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
         startActivityForResult(createWaypointsIntent, CreateWaypointsActivity.RESULT_WAYPOINTS_CODE);
     }
 
-
     public void clickedDoneButtonXmlCallback(View view) {
         TextView nameGame = findViewById(R.id.nameGame);
         String gameName = nameGame.getText().toString();
@@ -93,8 +92,6 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
                         double waypointLat = waypoint.latitude;
                         double waypointLgn = waypoint.longitude;
                         int category = waypointsCategList.get(i);
-
-                        String wayptIdx = String.valueOf(i);
 
                         gameDb.child("Waypoints").child(Integer.toString(i))
                                 .child("latitude").setValue(waypointLat);
@@ -208,9 +205,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        // An item was selected. You can retrieve the selected item using
-        // parent.getItemAtPosition(pos)
-
+        // Another interface callback
     }
 
     @Override
@@ -221,7 +216,6 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         // Check which request we're responding to
         if (requestCode == CreateWaypointsActivity.RESULT_WAYPOINTS_CODE) {
             if (resultCode == RESULT_OK) {

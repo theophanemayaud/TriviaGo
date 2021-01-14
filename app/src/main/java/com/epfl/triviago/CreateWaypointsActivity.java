@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CreateWaypointsActivity<onMapLongClick> extends AppCompatActivity implements OnMapReadyCallback {
+    //Variables for intents
     static final int RESULT_WAYPOINTS_CODE = 2131;
     static final String RESULT_WAYPOINTS_LIST_NAME = "waypoints_list_result";
     static final String RESULT_CATEG_LIST_NAME = "waypoints_category_list";
@@ -51,19 +52,18 @@ public class CreateWaypointsActivity<onMapLongClick> extends AppCompatActivity i
     private static final int NO_WAYPOINT_SELECTION = -1;
     static final int LIST_POS_TO_LETTER_OFFSET=65;
 
+    //Variables for the map
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
     private Marker currentLocationMarker;
+    private int selectedWaypointListPosition = NO_WAYPOINT_SELECTION;
 
+   //Useful variables
     private IconGenerator iconGenerator;
-
     private ArrayList<LatLng> waypointsLatLgnList = new ArrayList<LatLng>();
     private ArrayList<Marker> waypointsMarkersList = new ArrayList<Marker>();
     private ArrayList<Integer> waypointsSelectedCategoryList = new ArrayList<Integer>();
-
-    private int selectedWaypointListPosition = NO_WAYPOINT_SELECTION;
-
     private Spinner spinner_category;
 
     // ---------------- start lifecycle methods ------------------
@@ -96,7 +96,6 @@ public class CreateWaypointsActivity<onMapLongClick> extends AppCompatActivity i
         //Create spinner with everything
         spinner_category = (Spinner) findViewById(R.id.categorySelectionSpinner);
         List<String> categories_name_list = TriviaQuestion.Categories;
-//        categories_name_list.add(0, " ");
         ArrayAdapter<String> adapter_category = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_dropdown_item, categories_name_list);
         spinner_category.setAdapter(adapter_category);
@@ -234,7 +233,6 @@ public class CreateWaypointsActivity<onMapLongClick> extends AppCompatActivity i
             updateSelectedWaypoint(numberOfWaypoints); // list starts at 0 but size at 1
         }
     }
-
     // -------------------------------- End of map things (excluding geolocation) ----------------
 
     // -------------------------------- Begin of small other things ----------------
@@ -248,7 +246,7 @@ public class CreateWaypointsActivity<onMapLongClick> extends AppCompatActivity i
                 selectedItemView.setTextColor(getResources().getColor(R.color.button_end));
             }
             else{
-                selectedItemView.setTextColor(getResources().getColor(R.color.teal_200));
+                selectedItemView.setTextColor(getResources().getColor(R.color.teal_700));
             }
 
             spinner_category.setEnabled(true);
@@ -282,13 +280,10 @@ public class CreateWaypointsActivity<onMapLongClick> extends AppCompatActivity i
         return new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                Log.v("NICE", "position : " + position );
-//                Log.v("NICE", "Category is : " + TriviaQuestion.getCategoryTextFromInt(position));
                 onCategorySelected(position);
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-//                Log.v("NICE", "Nothing selected" );
             }
         };
     }
@@ -315,10 +310,9 @@ public class CreateWaypointsActivity<onMapLongClick> extends AppCompatActivity i
                     }
                 }
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra(RESULT_WAYPOINTS_LIST_NAME, (Serializable) waypointsLatLgnList);
-                returnIntent.putExtra(RESULT_CATEG_LIST_NAME, (Serializable) waypointsSelectedCategoryList);
+                returnIntent.putExtra(RESULT_WAYPOINTS_LIST_NAME, waypointsLatLgnList);
+                returnIntent.putExtra(RESULT_CATEG_LIST_NAME, waypointsSelectedCategoryList);
                 setResult(Activity.RESULT_OK, returnIntent);
-                //Log.e("THEO", "OK we have finished and no problem so far");
                 finish();
                 break;
             case R.id.delWaypntMenuButton:

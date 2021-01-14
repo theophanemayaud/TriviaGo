@@ -54,7 +54,6 @@ public class JoinActivity extends AppCompatActivity {
     }
 
     public void clickedJoinButtonXmlCallback(View view) {
-
         //Getting the structural elements
         SeekBar seekbar = findViewById(R.id.seekBar2);
         TextView waiting_message = findViewById(R.id.waitingMessage);
@@ -74,10 +73,8 @@ public class JoinActivity extends AppCompatActivity {
             return;
         }
 
-
         //Check game name to see if it exists
         gameDb = FirebaseDatabase.getInstance().getReference().child(gameName);
-
         gameDb.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot gameSnapshot) {
@@ -89,14 +86,12 @@ public class JoinActivity extends AppCompatActivity {
 
                 // Update the number of players in waiting room
                 max_players = gameSnapshot.child("Settings").child("NumPlayers").getValue(Integer.class);
-
                 current_players = (int) gameSnapshot.child("Users").getChildrenCount();
 
                 if (current_players >= max_players){
                     Toast.makeText(JoinActivity.this, "This game is full!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 //Add the player to the game if doesn't exist
                 if(gameSnapshot.child("Users").hasChild(username)){
                     Toast.makeText(JoinActivity.this, "This username is taken !", Toast.LENGTH_SHORT).show();
@@ -111,11 +106,9 @@ public class JoinActivity extends AppCompatActivity {
 
                 //Update waiting interface
                 enter_code.setVisibility(View.GONE);
-
                 seekbar.setVisibility(View.VISIBLE);
                 waiting_message.setVisibility(View.VISIBLE);
                 progress_message.setVisibility(View.VISIBLE);
-
                 progress_message.setText(" "+current_players+"/"+max_players+" players");
                 seekbar.setMax(max_players);
                 seekbar.setProgress(current_players);
@@ -123,7 +116,6 @@ public class JoinActivity extends AppCompatActivity {
                 gameDb.child("Users").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot usersSnapshot) {
-
                         if(userInGame==true){
                             return; //We are already in the game, or waiting to enter
                         }
@@ -139,9 +131,11 @@ public class JoinActivity extends AppCompatActivity {
                         }
                         else{
                             userInGame=true;
+                            long tStart = System.currentTimeMillis();
                             Intent intentChooseNextWaypoint = new Intent(JoinActivity.this, ChooseNextWaypoint.class);
                             intentChooseNextWaypoint.putExtra(ChooseNextWaypoint.INTENT_GAME_NAME, gameName);
                             intentChooseNextWaypoint.putExtra(ChooseNextWaypoint.INTENT_PLAYER_NAME, username);
+                            intentChooseNextWaypoint.putExtra("time", tStart);
                             Toast.makeText(JoinActivity.this, "Joining Game...", Toast.LENGTH_SHORT).show();
                             startActivity(intentChooseNextWaypoint);
                             finish();
@@ -159,7 +153,6 @@ public class JoinActivity extends AppCompatActivity {
                 Log.e(""+e.getClass(), "Error with database" + e.getDetails());
             }
         });
-
     }
 
     @Override

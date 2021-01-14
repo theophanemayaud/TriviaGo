@@ -92,5 +92,4 @@ public class FragmentIndividualStats extends Fragment {
             rLayout.addView(textView);
         }
     }
-
 }

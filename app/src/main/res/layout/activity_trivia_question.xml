@@ -90,6 +90,7 @@
         android:textAlignment="center"
         android:textColor="#000000"
         android:textSize="24sp"
+        android:fontFamily="@font/coiny"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -177,7 +178,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/checkResponse" />
 
-
     <TextView
         android:id="@+id/checkResponse"
         android:layout_width="0dp"
@@ -187,6 +187,8 @@
         android:text="Select a response"
         android:textAlignment="center"
         android:textColor="#000"
+        android:textSize="16dp"
+        android:fontFamily="@font/acme"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/answer_group"
