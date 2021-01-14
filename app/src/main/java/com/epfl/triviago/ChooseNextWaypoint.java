@@ -73,7 +73,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     private List<Marker> waypointsMarkers = new ArrayList<>();
     private List<WaypointStatus> waypointsStatus = new ArrayList<>();
 
-    public static final String INTENT_PLAYER_STATS_LIST = "PLAYER_STATS_LIST";
+    public static final String INTENT_PLAYER_STATS_LIST = "list";
     private List<Integer> waypointsAttemptsList = new ArrayList<>();
 
     private int selectedDestinationIndex;
@@ -83,8 +83,8 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
 
     public static final String DEST_LAT_LNG = "DestinationLatLgn";
     public static final String LATEST_USER_LOC = "LatestUserLocation";
-    public static final String INTENT_GAME_NAME = "GAMENAME";
-    public static final String INTENT_PLAYER_NAME = "PLAYERNAME";
+    public static final String INTENT_GAME_NAME = "name";
+    public static final String INTENT_PLAYER_NAME = "player";
 
     private String gameName;
     private String playerName;
@@ -388,18 +388,16 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
 
                         Intent endIntent = new Intent(ChooseNextWaypoint.this,
                                 EndActivity.class);
-                        endIntent.putExtra("name", gameName);
-                        endIntent.putExtra("player", playerName);
-                        endIntent.putExtra("list", (Serializable) waypointsRatesList);
-
-                        //endIntent.putExtra(ChooseNextWaypoint.INTENT_GAME_NAME, gameName);
-                        //endIntent.putExtra(ChooseNextWaypoint.INTENT_PLAYER_NAME, playerName);
-                        //endIntent.putExtra(ChooseNextWaypoint.INTENT_PLAYER_STATS_LIST,
-                        //        (Serializable) waypointsRatesList);
+                        endIntent.putExtra(ChooseNextWaypoint.INTENT_GAME_NAME, gameName);
+                        endIntent.putExtra(ChooseNextWaypoint.INTENT_PLAYER_NAME, playerName);
+                        endIntent.putExtra(ChooseNextWaypoint.INTENT_PLAYER_STATS_LIST,
+                                (Serializable) waypointsRatesList);
 
                         Toast.makeText(ChooseNextWaypoint.this, "All done !!!",
                                 Toast.LENGTH_SHORT).show();
-                        startActivity(endIntent); //TODO finish when end activity finishes
+
+                        Log.e(TAG, "Waypoints rates for player : " + waypointsRatesList.toString()); //TODO remove
+                        startActivity(endIntent);
                     }
                     lastDestinationIndex = selectedDestinationIndex; //remember for next attempt
                 }
