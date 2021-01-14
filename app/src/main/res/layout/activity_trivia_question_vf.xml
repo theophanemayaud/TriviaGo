@@ -92,7 +92,7 @@
         android:padding="10dp"
         android:textColor="#000000"
         android:textSize="24sp"
-        android:fontFamily="@font/coiny"
+        android:fontFamily="@font/acme"
         app:layout_constraintWidth_max="wrap"
         app:layout_constraintWidth_percent="0.8"
         android:textAlignment="center"
