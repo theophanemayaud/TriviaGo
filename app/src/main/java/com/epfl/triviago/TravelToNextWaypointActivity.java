@@ -128,6 +128,12 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
                 Log.e("TxGO", "Error writing to database");
             }
         });
+
+        // Start the activity on the watch
+        Intent intent_start = new Intent(this, WearService.class);
+        intent_start.setAction(WearService.ACTION_SEND.STARTACTIVITY.name());
+        intent_start.putExtra(WearService.ACTIVITY_TO_START, BuildConfig.W_compass_view);
+        startService(intent_start);
     }
 
     @Override
@@ -222,10 +228,16 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
                     // TODO Basile send angle to watch and move compass image to watch
                     double angleToDestination = SphericalUtil.computeHeading(
                             currentLocationLatLgn, destinationWaypointLatLgn);
-                    ImageView compassArrowImgView = findViewById(R.id.compassArrowView);
-                    compassArrowImgView.setPivotX(compassArrowImgView.getWidth()/2);
-                    compassArrowImgView.setPivotY(compassArrowImgView.getHeight()/2);
-                    compassArrowImgView.setRotation((float)angleToDestination);
+
+                    Intent intent = new Intent(TravelToNextWaypointActivity.this, WearService.class);
+                    intent.setAction(WearService.ACTION_SEND.ANGLE_SEND.name());
+                    intent.putExtra(BuildConfig.W_angle_key, (float) angleToDestination);
+                    startService(intent);
+
+//                    ImageView compassArrowImgView = findViewById(R.id.compassArrowView);
+//                    compassArrowImgView.setPivotX(compassArrowImgView.getWidth()/2);
+//                    compassArrowImgView.setPivotY(compassArrowImgView.getHeight()/2);
+//                    compassArrowImgView.setRotation((float)angleToDestination);
 
 
                     // Now update other players' locations on the map
@@ -279,6 +291,14 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
 
     private void destinationReached(){
         Toast.makeText(this, "Destination reached !!! 🎇", Toast.LENGTH_SHORT).show();
+
+        // Finish activity on watch
+        Intent intent_stop = new Intent(this, WearService.class);
+        intent_stop.setAction(WearService.ACTION_SEND.STOPACTIVITY.name());
+        intent_stop.putExtra(WearService.ACTIVITY_TO_STOP, BuildConfig.W_compass_view);
+        startService(intent_stop);
+
+        // Finish this activity
         Intent intent = new Intent(TravelToNextWaypointActivity.this, ChooseNextWaypoint.class);
         intent.putExtra(INTENT_RESULT, true);
         setResult(Activity.RESULT_OK, intent);

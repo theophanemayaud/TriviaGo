@@ -1,4 +1,4 @@
-package com.epfl.wear;
+package com.epfl.triviago;
 
 import org.junit.Test;
 

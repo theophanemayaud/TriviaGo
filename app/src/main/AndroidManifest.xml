@@ -73,6 +73,19 @@
         <activity android:name=".MainActivity">
         </activity>
 
+
+        <!-- mobile -> AndroidManifest.xml -> <application ...> -->
+        <service android:name=".WearService">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+                <data android:host="*" android:pathPrefix="" android:scheme="wear" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+                <data android:host="*" android:pathPrefix="" android:scheme="wear" />
+        </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

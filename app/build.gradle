@@ -20,6 +20,19 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        buildTypes.each {
+            project.ext.constants.each {
+                    // - String constants used in Java as `BuildConfig.W_a_key`
+                    // - Resources are used as usual:
+                    // - in Java as:
+                    // `[getApplicationContext().]getString(R.string.W_a_key)`
+                    // - in XML as:
+                    // `@string/W_a_key`
+                k, v ->
+                    it.buildConfigField 'String', "W_${k}", "\"${v}\""
+                    it.resValue 'string', "W_${k}", v
+            }
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -53,4 +66,7 @@ dependencies {
 //    This is for RetrofitAPI
     implementation 'com.squareup.retrofit2:retrofit:2.1.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
+
+    // wearservice
+    implementation 'com.google.android.gms:play-services-wearable:17.0.0'
 }

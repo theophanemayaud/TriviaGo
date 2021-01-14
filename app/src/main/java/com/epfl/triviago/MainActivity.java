@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -17,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Request codes for TriviaActivity
     private static final int ASK_QUESTION = 1;
+    private static Float counter = 0.f;
 
     private int mScore = 0;
 
@@ -60,6 +62,37 @@ public class MainActivity extends AppCompatActivity {
     public void clickedGoEndButtonXmlCallback(View view) {
         Intent i = new Intent(MainActivity.this, EndActivity.class);
         startActivity(i);
+    }
+
+
+    // ---------------------------------------- WearService ------
+
+    public void clickedUpdateXmlCallback(View view) {
+        counter +=10.f;
+        Log.e(TAG, "Counter value : " + counter);
+
+        Intent intent = new Intent(this, WearService.class);
+        intent.setAction(WearService.ACTION_SEND.ANGLE_SEND.name());
+        intent.putExtra(BuildConfig.W_angle_key, counter);
+        startService(intent);
+    }
+
+    //TODO:Basile debug
+    public void clickedWatchXmlCallback(View view) {
+        counter = 0.f;
+        Log.w(TAG, "Button to launch activity was pressed");
+        Intent intent_start = new Intent(this, WearService.class);
+        intent_start.setAction(WearService.ACTION_SEND.STARTACTIVITY.name());
+        intent_start.putExtra(WearService.ACTIVITY_TO_START, BuildConfig.W_compass_view);
+        startService(intent_start);
+    }
+
+    public void clickedQuitXmlCallback(View view) {
+        Log.w(TAG, "Button to quit activity was pressed");
+        Intent intent_stop = new Intent(this, WearService.class);
+        intent_stop.setAction(WearService.ACTION_SEND.STOPACTIVITY.name());
+        intent_stop.putExtra(WearService.ACTIVITY_TO_STOP, BuildConfig.W_compass_view);
+        startService(intent_stop);
     }
 
     @Override

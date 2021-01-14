@@ -17,6 +17,28 @@ allprojects {
         google()
         jcenter()
     }
+
+    // Constants defined for all modules, to avoid typing mistakes
+// We use it for communication using the Wear API
+// It is a key-value mapping, auto-prefixed with ”W_” for convenience
+    project.ext {
+        constants = [
+                path_start_activity : "/START_ACTIVITY",
+//                path_acknowledge    : "/ACKNOWLEDGE",
+
+                path_angle          : "/ANGLE",
+                angle_key           : "angle_value",
+
+                path_finish         : "/DESTROY",
+                finish_key          : "some_other_value",
+
+                mainactivity        : "MainActivity",
+                compass_view        : "CompassView",
+
+//                profile_path        : "/PROFILE",
+//                profile_key         : "profile_key",
+        ]
+    }
 }
 
 task clean(type: Delete) {

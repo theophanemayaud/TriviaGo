@@ -85,6 +85,26 @@
             />
 
         <Button
+            android:id="@+id/goToWatch"
+            android:layout_width="169dp"
+            android:layout_height="wrap_content"
+            android:onClick="clickedWatchXmlCallback"
+            android:text="Watch" />
+
+        <Button
+            android:id="@+id/update_button"
+            android:layout_width="169dp"
+            android:layout_height="wrap_content"
+            android:onClick="clickedUpdateXmlCallback"
+            android:text="Update" />
+        <Button
+            android:id="@+id/quit_watch_button"
+            android:layout_width="169dp"
+            android:layout_height="wrap_content"
+            android:onClick="clickedQuitXmlCallback"
+            android:text="QUIT WATCH" />
+
+        <Button
             android:id="@+id/goToCreateWaypointsButton"
             android:layout_width="169dp"
             android:layout_height="wrap_content"
