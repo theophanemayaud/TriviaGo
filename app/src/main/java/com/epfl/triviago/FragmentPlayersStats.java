@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -92,23 +93,41 @@ public class FragmentPlayersStats extends Fragment {
 
                 for(DataSnapshot ds: usersSnapshot.getChildren()) {
                     player_name = ds.getKey();
-                    if(ds.child(playerName).child("rate").exists()) {
-                        score = ds.child(player_name).child("rate").getValue(Float.class);
+                    //Toast.makeText(getContext(), "Name"+player_name, Toast.LENGTH_SHORT).show();
+
+                    if(ds.child("rate").exists()) {
+                        score = ds.child("rate").getValue(Float.class);
+                        //Toast.makeText(getContext(), "SCOOOOORE"+score, Toast.LENGTH_SHORT).show();
 
                         if (index==0){
-                            player1.setText(player_name+":    "+score*100+"%   correct!");
+                            player1.setText(player_name+":    "+String.format("%.2f", score*100)+"%   correct!");
+                            if (player_name.equals(playerName)) {
+                                player1.setTextColor(getResources().getColor(R.color.button_end));
+                            }
                         }
                         if (index==1){
-                            player2.setText(player_name+":    "+score*100+"%   correct!");
+                            player2.setText(player_name+":    "+String.format("%.2f", score*100)+"%   correct!");
+                            if (player_name.equals(playerName)) {
+                                player1.setTextColor(getResources().getColor(R.color.button_end));
+                            }
                         }
                         if (index==2){
-                            player3.setText(player_name+":    "+score*100+"%   correct!");
+                            player3.setText(player_name+":    "+String.format("%.2f", score*100)+"%   correct!");
+                            if (player_name.equals(playerName)) {
+                                player1.setTextColor(getResources().getColor(R.color.button_end));
+                            }
                         }
                         if (index==3){
-                            player4.setText(player_name+":    "+score*100+"%   correct!");
+                            player4.setText(player_name+":    "+String.format("%.2f", score*100)+"%   correct!");
+                            if (player_name.equals(playerName)) {
+                                player1.setTextColor(getResources().getColor(R.color.button_end));
+                            }
                         }
                         if (index==4){
-                            player5.setText(player_name+":    "+score*100+"%   correct!!");
+                            player5.setText(player_name+":    "+String.format("%.2f", score*100)+"%   correct!!");
+                            if (player_name.equals(playerName)) {
+                                player1.setTextColor(getResources().getColor(R.color.button_end));
+                            }
                         }
 
                         index+=1;

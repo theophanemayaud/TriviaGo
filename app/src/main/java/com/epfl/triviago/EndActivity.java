@@ -80,7 +80,7 @@ public class EndActivity extends AppCompatActivity {
         editor.putString("player", playerName);
         editor.putInt("tot_waypoints", waypointsRatesList.size());
         for (int i = 0; i<waypointsRatesList.size(); i++) {
-            editor.putFloat("list", waypointsRatesList.get(i));
+            editor.putFloat("list"+i, waypointsRatesList.get(i));
         }
         editor.commit();
 

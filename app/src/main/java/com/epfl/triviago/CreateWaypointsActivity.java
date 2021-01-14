@@ -245,10 +245,10 @@ public class CreateWaypointsActivity<onMapLongClick> extends AppCompatActivity i
             TextView selectedItemView = findViewById(R.id.selectedWaypointText);
             selectedItemView.setText("Waypoint " + waypointLetter + " category ➡");
             if(waypointsSelectedCategoryList.get(waypointListPosition)==NO_CATEG_SELECTION){
-                selectedItemView.setTextColor(Color.RED);
+                selectedItemView.setTextColor(getResources().getColor(R.color.button_end));
             }
             else{
-                selectedItemView.setTextColor(Color.GREEN);
+                selectedItemView.setTextColor(getResources().getColor(R.color.teal_200));
             }
 
             spinner_category.setEnabled(true);
@@ -273,7 +273,7 @@ public class CreateWaypointsActivity<onMapLongClick> extends AppCompatActivity i
             waypointMarker.setIcon(BitmapDescriptorFactory.fromBitmap(
                     iconGenerator.makeIcon(waypointLetter)));
             TextView selectedItemView = findViewById(R.id.selectedWaypointText);
-            selectedItemView.setTextColor(Color.GREEN);
+            selectedItemView.setTextColor(getResources().getColor(R.color.teal_700));
         }
     }
 

@@ -52,7 +52,7 @@ public class FragmentIndividualStats extends Fragment {
         playerName = prefs.getString("player", null);
         total_waypoints = prefs.getInt("tot_waypoints", 0);
         for (int i = 0; i< total_waypoints; i++) {
-            waypointsRatesList.add(i, prefs.getFloat("list", 0));
+            waypointsRatesList.add(i, prefs.getFloat("list"+i, 0));
         }
 
         //Creates a dynamic layout based on the number waypoints of the game
@@ -69,7 +69,7 @@ public class FragmentIndividualStats extends Fragment {
                 RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
         TextView txtView = new TextView(getContext());
-        txtView.setText("Waypoint "+0+":    "+waypointsRatesList.get(0)*100+"%   correct!");
+        txtView.setText("Waypoint "+0+":    "+String.format("%.2f", waypointsRatesList.get(0)*100)+"%   correct!");
         txtView.setTextAppearance(getActivity(), R.style.fontForEndGame);
         lprams.addRule(RelativeLayout.CENTER_HORIZONTAL);
         txtView.setLayoutParams(lprams);
@@ -82,7 +82,7 @@ public class FragmentIndividualStats extends Fragment {
                     RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
             TextView textView = new TextView(getContext());
-            textView.setText("Waypoint "+i+":    "+waypointsRatesList.get(i)*100+"%   correct!");
+            textView.setText("Waypoint "+i+":    "+String.format("%.2f", waypointsRatesList.get(i)*100)+"%   correct!");
             textView.setTextAppearance(getActivity(), R.style.fontForEndGame);
             newParams.addRule(RelativeLayout.BELOW, i);
             newParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
