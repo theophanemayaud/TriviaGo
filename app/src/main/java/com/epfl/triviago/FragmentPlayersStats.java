@@ -77,23 +77,23 @@ public class FragmentPlayersStats extends Fragment {
 
     public void createLayout(View view) {
         // load game infos from DB
-        DatabaseReference gameDb;
-        gameDb = FirebaseDatabase.getInstance().getReference().child(gameName).child("Users");
-        gameDb.addValueEventListener(new ValueEventListener() {
+        DatabaseReference usersDb;
+        usersDb = FirebaseDatabase.getInstance().getReference().child(gameName).child("Users");
+        usersDb.addValueEventListener(new ValueEventListener() {
 
             int index =0;
             String player_name;
             float score;
 
             @Override
-            public void onDataChange(DataSnapshot gameSnapshot) {
+            public void onDataChange(DataSnapshot usersSnapshot) {
 
-                total_players = gameSnapshot.getChildrenCount();
+                total_players = usersSnapshot.getChildrenCount();
 
-                for(DataSnapshot ds: gameSnapshot.getChildren()) {
+                for(DataSnapshot ds: usersSnapshot.getChildren()) {
                     player_name = ds.getKey();
-                    if(gameSnapshot.child(playerName).child("rate").exists()) {
-                        score = gameSnapshot.child(player_name).child("rate").getValue(Float.class);
+                    if(ds.child(playerName).child("rate").exists()) {
+                        score = ds.child(player_name).child("rate").getValue(Float.class);
 
                         if (index==0){
                             player1.setText(player_name+":    "+score*100+"%   correct!");
