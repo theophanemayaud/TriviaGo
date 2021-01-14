@@ -69,6 +69,7 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
     IconGenerator iconGenerator;
 
     private DatabaseReference gameDb;
+    private String playerName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +105,7 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
         }
 
         String gameName = extras.getString(ChooseNextWaypoint.INTENT_GAME_NAME);
-        String playerName = extras.getString(ChooseNextWaypoint.INTENT_PLAYER_NAME);
+        playerName = extras.getString(ChooseNextWaypoint.INTENT_PLAYER_NAME);
 
         // Initialize player names and LatLgn
         gameDb = FirebaseDatabase.getInstance().getReference().child(gameName);
@@ -189,6 +190,12 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
                     }
 
                     currentLocationMarker.setPosition(currentLocationLatLgn);
+
+                    // update location in firebase
+                    gameDb.child("Users").child(playerName)
+                            .child("latitude").setValue(currentLocationLatLgn.latitude);
+                    gameDb.child("Users").child(playerName)
+                            .child("longitude").setValue(currentLocationLatLgn.longitude);
 
                     // check the distance between current location and destination
                     Location currLoc = new Location("point A");
