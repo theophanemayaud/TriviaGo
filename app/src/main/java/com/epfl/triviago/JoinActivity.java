@@ -86,8 +86,9 @@ public class JoinActivity extends AppCompatActivity {
                     return;
                 }
 
-                // Update the number of players in waiting room
                 max_players = gameSnapshot.child("Settings").child("NumPlayers").getValue(Integer.class);
+
+                // Update the number of players that are waiting
                 current_players = (int) gameSnapshot.child("Users").getChildrenCount();
 
                 if (current_players >= max_players){
@@ -124,7 +125,7 @@ public class JoinActivity extends AppCompatActivity {
 
                         current_players = (int) usersSnapshot.getChildrenCount();
                         if(current_players<max_players) {
-                            if(skippedFirstNewUser==false){ //skip first fire of the callback as it is the user itself !
+                            if(skippedFirstNewUser==true){ //skip first fire of the callback as it is the user itself !
                                 progress_message.setText(" "+current_players+"/"+max_players+" players");
                                 seekbar.setProgress(current_players);
                                 Toast.makeText(JoinActivity.this, "A new player just joined !", Toast.LENGTH_SHORT).show();
