@@ -70,10 +70,6 @@
             android:label="@string/title_activity_travel_to_next_waypoint">
         </activity>
 
-        <activity android:name=".MainActivity">
-        </activity>
-
-
         <!-- mobile -> AndroidManifest.xml -> <application ...> -->
         <service android:name=".WearService">
             <intent-filter>
