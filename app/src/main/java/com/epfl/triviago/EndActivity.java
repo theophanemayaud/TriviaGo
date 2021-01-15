@@ -188,10 +188,6 @@ public class EndActivity extends AppCompatActivity {
                 Log.e("TxGO", "Error with database");
             }
         });
-
-        Intent finishIntent = new Intent(this, WelcomeActivity.class);
-        finishIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(finishIntent);
     }
 
     public void clickedExitButtonXmlCallback(View view) {
