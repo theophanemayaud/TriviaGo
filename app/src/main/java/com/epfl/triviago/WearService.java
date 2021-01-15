@@ -192,12 +192,15 @@ public class WearService extends WearableListenerService {
         Wearable.getNodeClient(this).getConnectedNodes().addOnCompleteListener(new OnCompleteListener<List<Node>>() {
             @Override
             public void onComplete(@NonNull Task<List<Node>> listTask) {
-                List<Node> nodes = listTask.getResult();
-                for (Node node : nodes) {
-                    Log.v(TAG, "Try to send message to a specific node");
-                    WearService.this.sendMessage(message, path, node.getId());
+                if(listTask.isSuccessful()) {
+                    List<Node> nodes = listTask.getResult();
+                    for (Node node : nodes) {
+                        Log.v(TAG, "Try to send message to a specific node");
+                        WearService.this.sendMessage(message, path, node.getId());
+                    }
                 }
             }
+
         });
         Log.w(TAG, "Send message NODES method reached");
     }
