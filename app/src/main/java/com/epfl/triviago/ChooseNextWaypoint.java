@@ -231,7 +231,6 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101);
-            Log.e(TAG, "Permissions was asked"); //TODO
             return;
         }
         fusedLocationClient.requestLocationUpdates(locationRequest,
