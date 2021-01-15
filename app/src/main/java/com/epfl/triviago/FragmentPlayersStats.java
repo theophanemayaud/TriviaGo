@@ -26,16 +26,19 @@ public class FragmentPlayersStats extends Fragment {
 
     // TODO private what doesn't need public
     //Data from intent
-    String gameName;
-    String playerName;
-    long total_players;
+    private String gameName;
+    private String playerName;
+    private long total_players;
 
-    //Views
-    TextView player1;
-    TextView player2;
-    TextView player3;
-    TextView player4;
-    TextView player5;
+    //Views //TODO make into list
+    private TextView player1;
+    private TextView player2;
+    private TextView player3;
+    private TextView player4;
+    private TextView player5;
+
+    private DatabaseReference usersDb;
+    private ValueEventListener usersListener;
 
     public static FragmentPlayersStats getInstance() {
         FragmentPlayersStats fragmentPlayersStats = new FragmentPlayersStats();
@@ -75,9 +78,8 @@ public class FragmentPlayersStats extends Fragment {
 
     public void createLayout(View view) {
         // load game infos from DB
-        DatabaseReference usersDb;
         usersDb = FirebaseDatabase.getInstance().getReference().child(gameName).child("Users");
-        usersDb.addValueEventListener(new ValueEventListener() {
+        usersListener = usersDb.addValueEventListener(new ValueEventListener() {
 
             int index =0;
             String player_name;
@@ -165,6 +167,14 @@ public class FragmentPlayersStats extends Fragment {
             player3.setVisibility(View.VISIBLE);
             player4.setVisibility(View.VISIBLE);
             player5.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(usersListener!=null){
+            usersDb.removeEventListener(usersListener);
         }
     }
 }
