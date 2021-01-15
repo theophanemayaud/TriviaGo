@@ -116,15 +116,11 @@ public class JoinActivity extends AppCompatActivity {
                 progress_message.setVisibility(View.VISIBLE);
                 progress_message.setText(" "+current_players+"/"+max_players+" players");
                 seekbar.setMax(max_players);
-                seekbar.setProgress(current_players);
+                seekbar.setProgress(current_players+1);
 
                 userListener = gameDb.child("Users").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot usersSnapshot) {
-                        if(userInGame==true){
-                            return; //We are already in the game, or waiting to enter
-                        }
-
                         current_players = (int) usersSnapshot.getChildrenCount();
                         progress_message.setText(" "+current_players+"/"+max_players+" players");
                         seekbar.setProgress(current_players);
@@ -134,7 +130,6 @@ public class JoinActivity extends AppCompatActivity {
                         skippedFirstNewUser = true;
 
                         if(current_players>=max_players){
-                            userInGame=true;
                             long tStart = System.currentTimeMillis();
                             Intent intentChooseNextWaypoint = new Intent(JoinActivity.this, ChooseNextWaypoint.class);
                             intentChooseNextWaypoint.putExtra(ChooseNextWaypoint.INTENT_GAME_NAME, gameName);
@@ -167,7 +162,7 @@ public class JoinActivity extends AppCompatActivity {
             gameDb.child("Users").child(username).removeValue();
         }
         if(userListener!=null){
-            gameDb.removeEventListener(userListener);
+            gameDb.child("Users").removeEventListener(userListener);
         }
     }
 }
