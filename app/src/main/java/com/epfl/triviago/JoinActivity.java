@@ -35,6 +35,8 @@ public class JoinActivity extends AppCompatActivity {
     private boolean userAddedToDb = false;
     private boolean skippedFirstNewUser = false;
 
+    ValueEventListener userListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,7 +118,7 @@ public class JoinActivity extends AppCompatActivity {
                 seekbar.setMax(max_players);
                 seekbar.setProgress(current_players);
 
-                gameDb.child("Users").addValueEventListener(new ValueEventListener() {
+                userListener = gameDb.child("Users").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot usersSnapshot) {
                         if(userInGame==true){
@@ -163,6 +165,9 @@ public class JoinActivity extends AppCompatActivity {
         // only remove user when pressing back button within this activity
         if(userInGame == false && userAddedToDb == true){
             gameDb.child("Users").child(username).removeValue();
+        }
+        if(userListener!=null){
+            gameDb.removeEventListener(userListener);
         }
     }
 }
