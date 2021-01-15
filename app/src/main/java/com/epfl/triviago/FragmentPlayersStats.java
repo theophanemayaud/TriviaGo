@@ -24,13 +24,12 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class FragmentPlayersStats extends Fragment {
 
-    // TODO private what doesn't need public
     //Data from intent
     private String gameName;
     private String playerName;
     private long total_players;
 
-    //Views //TODO make into list
+    //Views //TODO make into list ?
     private TextView player1;
     private TextView player2;
     private TextView player3;

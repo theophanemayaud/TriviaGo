@@ -32,14 +32,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SetUpActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-
-    //Useful Variables //TODO private what is not needing public !
-    int numPlayer = 2;
-    boolean questionType = false; //FALSE = Multiple choice & TRUE = true/false
-    String difficulty = "easy";
-    Integer maxAttemps = 3;
-    ArrayList<LatLng> waypointsLatLgnList;
-    ArrayList<Integer> waypointsCategList;
+    private int numPlayer = 2;
+    private boolean questionType = false; //FALSE = Multiple choice & TRUE = true/false
+    private String difficulty = "easy";
+    private Integer maxAttemps = 3;
+    private ArrayList<LatLng> waypointsLatLgnList;
+    private ArrayList<Integer> waypointsCategList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

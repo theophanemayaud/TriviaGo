@@ -22,12 +22,11 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class FragmentIndividualStats extends Fragment {
 
-    // TODO make private what doesn't need to be public
     //Data from intent
-    String gameName;
-    String playerName;
-    int total_waypoints;
-    List<Float> waypointsRatesList = new ArrayList<>();
+    private String gameName;
+    private String playerName;
+    private int total_waypoints;
+    private List<Float> waypointsRatesList = new ArrayList<>();
 
     public static FragmentIndividualStats getInstance() {
         FragmentIndividualStats fragmentIndividualStats = new FragmentIndividualStats();
