@@ -2,13 +2,17 @@ package com.epfl.triviago;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
@@ -76,7 +80,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     private int lastDestinationIndex = 0;
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
-    LatLng currentLocation;
+    private LatLng currentLocation;
     private Marker mapMarker;
     private List<LatLng> waypointsLatLgn = new ArrayList<>();
     private List<Marker> waypointsMarkers = new ArrayList<>();
@@ -155,6 +159,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         return new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
+                Log.e(TAG, "In location result"); //TODO
                 if (locationResult == null) {
                     return;
                 }
@@ -162,7 +167,6 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                     LatLng updatedLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
                     if (mMap != null) {
-
                         if(currentLocation != updatedLocation){
                             if (mapMarker == null) {
                                 // when null, camera view has never been set, and we want to show the marker title !
@@ -216,11 +220,21 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     }
 
     private void startLocationUpdates() {
+        Log.e(TAG, "In startLocationUpdates"); //TODO
+
+        //Check if GPS is enabled on the device
+        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+
+        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            buildAlertMessageNoGps();
+        }
+
         LocationRequest locationRequest = new LocationRequest()
                 .setInterval(5)
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101);
+            Log.e(TAG, "Permissions was asked"); //TODO
             return;
         }
         fusedLocationClient.requestLocationUpdates(locationRequest,
@@ -517,6 +531,26 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         float rate = minAttempts/ (float) attempts; //force convert to float before division
         return rate;
     }
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Your GPS seems to be disabled, you must enable it for the game to work.")
+                .setCancelable(false)
+                .setPositiveButton("Enable", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        finish();
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     // -------- End : Small diverse functions functions --------
 
     //TODO remove this from prod
