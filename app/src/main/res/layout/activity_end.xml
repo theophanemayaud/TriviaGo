@@ -12,40 +12,42 @@
         android:id="@+id/linearLayout"
         android:layout_width="400dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/shadow_white_box"
         android:orientation="vertical"
         android:padding="20dp"
-        android:background="@drawable/shadow_white_box"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintVertical_bias="0.40">
 
         <ImageView
             android:id="@+id/num_stars"
-            android:layout_gravity="center"
-            android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="135dp"
+            android:layout_gravity="center"
+            android:padding="10dp"
             app:srcCompat="@drawable/_0stars" />
 
         <TextView
             android:id="@+id/score_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
+            android:fontFamily="@font/coiny"
             android:text=""
+            android:textAlignment="center"
             android:textColor="@color/end_text"
-            android:textSize="30sp"
-            android:fontFamily="@font/coiny"/>
+            android:textSize="30sp" />
+
         <TextView
             android:id="@+id/time_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
+            android:fontFamily="@font/acme"
             android:text=""
+            android:textAlignment="center"
             android:textColor="@color/end_text"
-            android:textSize="20sp"
-            android:fontFamily="@font/acme"/>
+            android:textSize="20sp" />
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/pager"
@@ -61,7 +63,7 @@
                     android:id="@+id/stats_individual"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Individual Stats"/>
+                    android:text="Individual Stats" />
 
                 <com.google.android.material.tabs.TabItem
                     android:id="@+id/stats_players"

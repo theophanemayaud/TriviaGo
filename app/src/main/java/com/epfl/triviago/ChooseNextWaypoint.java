@@ -63,6 +63,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     public static final String LATEST_USER_LOC = "LatestUserLocation";
     public static final String INTENT_GAME_NAME = "name";
     public static final String INTENT_PLAYER_NAME = "player";
+    public static final String INTENT_PLAYER_STATS_LIST = "list";
 
     //Variables for the map
     private GoogleMap mMap;
@@ -77,18 +78,19 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     private LocationCallback locationCallback;
     LatLng currentLocation;
     private Marker mapMarker;
-
-    //Useful variables
-    public static final String INTENT_PLAYER_STATS_LIST = "list";
     private List<LatLng> waypointsLatLgn = new ArrayList<>();
     private List<Marker> waypointsMarkers = new ArrayList<>();
     private List<WaypointStatus> waypointsStatus = new ArrayList<>();
     private List<Integer> waypointsAttemptsList = new ArrayList<>();
     private List<String> spinnerValuesList = new ArrayList<>();
+
+    // Refs to other items
     private Spinner spinner;
     private IconGenerator iconGenerator;
+
     private String gameName;
     private String playerName;
+    private boolean userSentToEnd = false;
 
     // -------- Start : Lifecycle methods --------
     @Override
@@ -105,7 +107,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         Bundle b1 = getIntent().getExtras();
         gameName = b1.getString(INTENT_GAME_NAME);
         playerName = b1.getString(INTENT_PLAYER_NAME);
-        start_time = b1.getLong("time");
+        start_time = b1.getLong(JoinActivity.START_TIME_MS);
 
         // load game infos from DB
         gameDb = FirebaseDatabase.getInstance().getReference().child(gameName);
@@ -142,7 +144,9 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         super.onDestroy();
 
         //remove user from DB
-        gameDb.child("Users").child(playerName).removeValue();
+        if(userSentToEnd==false) {
+            gameDb.child("Users").child(playerName).removeValue();
+        }
     }
     // -------- End : Lifecycle methods --------
 
@@ -392,13 +396,14 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                         endIntent.putExtra(ChooseNextWaypoint.INTENT_PLAYER_NAME, playerName);
                         endIntent.putExtra(ChooseNextWaypoint.INTENT_PLAYER_STATS_LIST,
                                 (Serializable) waypointsRatesList);
-                        endIntent.putExtra("time", start_time);
+                        endIntent.putExtra(JoinActivity.START_TIME_MS, start_time);
 
                         Toast.makeText(ChooseNextWaypoint.this, "All done !!!",
                                 Toast.LENGTH_SHORT).show();
 
-                        Log.e(TAG, "Waypoints rates for player : " + waypointsRatesList.toString()); //TODO remove
                         startActivity(endIntent);
+                        userSentToEnd = true;
+                        finish();
                     }
                     lastDestinationIndex = selectedDestinationIndex; //remember for next attempt
                 }

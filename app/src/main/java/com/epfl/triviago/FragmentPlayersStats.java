@@ -24,8 +24,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class FragmentPlayersStats extends Fragment {
 
-    public static final String MyPREFERENCES = "MyPrefs" ;
-
+    // TODO private what doesn't need public
     //Data from intent
     String gameName;
     String playerName;
@@ -54,9 +53,9 @@ public class FragmentPlayersStats extends Fragment {
         View view = inflater.inflate(R.layout.fragment_players_stats, container, false);
 
         //Retrieve data from EndActivity
-        SharedPreferences prefs = getActivity().getSharedPreferences(MyPREFERENCES , MODE_PRIVATE);
-        gameName = prefs.getString("name", null);
-        playerName = prefs.getString("player", null);
+        SharedPreferences prefs = getActivity().getSharedPreferences(EndActivity.MyPREFERENCES , MODE_PRIVATE);
+        gameName = prefs.getString(ChooseNextWaypoint.INTENT_GAME_NAME, null);
+        playerName = prefs.getString(ChooseNextWaypoint.INTENT_PLAYER_NAME, null);
 
         //Getting the views and setting appearance
         player1 = view.findViewById(R.id.player1);

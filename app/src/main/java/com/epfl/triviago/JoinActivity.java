@@ -22,7 +22,8 @@ import com.google.firebase.database.ValueEventListener;
 
 public class JoinActivity extends AppCompatActivity {
 
-    //Useful variables
+    public static final String START_TIME_MS = "START_TIME_MS";
+
     private int max_players;
     private int current_players;
     private String username;
@@ -135,7 +136,7 @@ public class JoinActivity extends AppCompatActivity {
                             Intent intentChooseNextWaypoint = new Intent(JoinActivity.this, ChooseNextWaypoint.class);
                             intentChooseNextWaypoint.putExtra(ChooseNextWaypoint.INTENT_GAME_NAME, gameName);
                             intentChooseNextWaypoint.putExtra(ChooseNextWaypoint.INTENT_PLAYER_NAME, username);
-                            intentChooseNextWaypoint.putExtra("time", tStart);
+                            intentChooseNextWaypoint.putExtra(START_TIME_MS, tStart);
                             Toast.makeText(JoinActivity.this, "Joining Game...", Toast.LENGTH_SHORT).show();
                             startActivity(intentChooseNextWaypoint);
                             finish();

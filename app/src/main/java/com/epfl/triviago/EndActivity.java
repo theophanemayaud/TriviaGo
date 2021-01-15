@@ -45,6 +45,7 @@ import java.util.List;
 
 public class EndActivity extends AppCompatActivity {
 
+    // TODO make private what doesn't need to be public !!!!
     //For pagerLayout
     TabLayout tabLayout;
     ViewPager viewPager;
@@ -54,11 +55,8 @@ public class EndActivity extends AppCompatActivity {
     String playerName;
     List<Float> waypointsRatesList = new ArrayList<>();
 
-    //Timer variables
-    long startTime;
-    long endTime;
-    double elapsedSeconds;
-    long tDelta;
+    //Timer variable
+    private int elapsedSeconds;
 
     //Structural elements
     ImageView stars;
@@ -67,6 +65,8 @@ public class EndActivity extends AppCompatActivity {
 
     SharedPreferences sharedpreferences;
     public static final String MyPREFERENCES = "MyPrefs" ;
+    public static final String TOT_WAYPS_COUNT = "tot_waypoints" ;
+    public static final String WAYPS_LIST_ID = "list" ;
 
 
     @Override
@@ -80,21 +80,20 @@ public class EndActivity extends AppCompatActivity {
         gameName = b1.getString(ChooseNextWaypoint.INTENT_GAME_NAME);
         playerName = b1.getString(ChooseNextWaypoint.INTENT_PLAYER_NAME);
         waypointsRatesList = (List<Float>) b1.getSerializable(ChooseNextWaypoint.INTENT_PLAYER_STATS_LIST);
-        startTime = b1.getLong("time");
+        long startTime = b1.getLong(JoinActivity.START_TIME_MS);
 
-        endTime = System.currentTimeMillis();
-        tDelta = endTime - startTime;
-        elapsedSeconds = tDelta / 1000.0;
-
+        long endTime = System.currentTimeMillis();
+        long tDeltaMs = endTime - startTime;
+        elapsedSeconds = (int) tDeltaMs / 1000;
 
         //Sendind data to the fragments
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putString("name", gameName);
-        editor.putString("player", playerName);
-        editor.putInt("tot_waypoints", waypointsRatesList.size());
+        editor.putString(ChooseNextWaypoint.INTENT_GAME_NAME, gameName);
+        editor.putString(ChooseNextWaypoint.INTENT_PLAYER_NAME, playerName);
+        editor.putInt(TOT_WAYPS_COUNT, waypointsRatesList.size());
         for (int i = 0; i<waypointsRatesList.size(); i++) {
-            editor.putFloat("list"+i, waypointsRatesList.get(i));
+            editor.putFloat(WAYPS_LIST_ID+i, waypointsRatesList.get(i));
         }
         editor.commit();
 
@@ -127,7 +126,7 @@ public class EndActivity extends AppCompatActivity {
 
     public void editLayout () {
         //Set time score
-        time_message.setText("Time taken: "+String.format("%.2f", elapsedSeconds/60)+" min");
+        time_message.setText("Time taken: "+ elapsedSeconds/60 +"min " + elapsedSeconds%60 +"sec");
 
         //Get player score from firebase
         DatabaseReference gameDb;

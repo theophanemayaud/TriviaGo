@@ -22,8 +22,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class FragmentIndividualStats extends Fragment {
 
-    public static final String MyPREFERENCES = "MyPrefs" ;
-
+    // TODO make private what doesn't need to be public
     //Data from intent
     String gameName;
     String playerName;
@@ -47,12 +46,12 @@ public class FragmentIndividualStats extends Fragment {
         View view = inflater.inflate(R.layout.fragment_individual_stats, container, false);
 
         //Retrieve data from EndActivity
-        SharedPreferences prefs = getActivity().getSharedPreferences(MyPREFERENCES , MODE_PRIVATE);
-        gameName = prefs.getString("name", null);
-        playerName = prefs.getString("player", null);
-        total_waypoints = prefs.getInt("tot_waypoints", 0);
+        SharedPreferences prefs = getActivity().getSharedPreferences(EndActivity.MyPREFERENCES , MODE_PRIVATE);
+        gameName = prefs.getString(ChooseNextWaypoint.INTENT_GAME_NAME, null);
+        playerName = prefs.getString(ChooseNextWaypoint.INTENT_PLAYER_NAME, null);
+        total_waypoints = prefs.getInt(EndActivity.TOT_WAYPS_COUNT, 0);
         for (int i = 0; i< total_waypoints; i++) {
-            waypointsRatesList.add(i, prefs.getFloat("list"+i, 0));
+            waypointsRatesList.add(i, prefs.getFloat(EndActivity.WAYPS_LIST_ID+i, 0));
         }
 
         //Creates a dynamic layout based on the number waypoints of the game
