@@ -38,12 +38,9 @@
 
         <activity android:name=".ChooseNextWaypoint"/>
 
-<!--        TODO: Basile lock orientation of activity to portrait in either direction-->
         <activity android:name=".CreateWaypointsActivity"
             android:screenOrientation="user"
             android:configChanges="keyboardHidden|orientation|screenSize">
-<!--            android:screenOrientation="userPortrait"-->
-<!--            android:configChanges="keyboardHidden|orientation|screenSize">-->
         </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
