@@ -34,8 +34,8 @@
             android:id="@+id/selectedWaypointText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="end"
             android:padding="10dp"
-            android:gravity="right"
             android:text="@string/no_waypoint_selected_textview"
             app:layout_constraintBottom_toBottomOf="@+id/categorySelectionSpinner"
             app:layout_constraintEnd_toStartOf="@+id/categorySelectionSpinner"
@@ -66,7 +66,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/selectWaypointsSpinnerContainer"
-        tools:context=".MapsActivity" />
+        tools:context=".MapsFragment"
+        tools:layout="@layout/fragment_maps" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

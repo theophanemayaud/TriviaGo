@@ -58,7 +58,7 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity
-            android:name=".MapsActivity"
+            android:name=".MapsFragment"
             android:label="@string/title_activity_maps">
         </activity>
 
