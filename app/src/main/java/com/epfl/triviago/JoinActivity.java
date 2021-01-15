@@ -121,6 +121,10 @@ public class JoinActivity extends AppCompatActivity {
                 userListener = gameDb.child("Users").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot usersSnapshot) {
+                        if(userInGame==true){
+                            return; //We are already in the game, or waiting to enter if multiple button press
+                        }
+
                         current_players = (int) usersSnapshot.getChildrenCount();
                         progress_message.setText(" "+current_players+"/"+max_players+" players");
                         seekbar.setProgress(current_players);
@@ -130,6 +134,7 @@ public class JoinActivity extends AppCompatActivity {
                         skippedFirstNewUser = true;
 
                         if(current_players>=max_players){
+                            userInGame=true;
                             long tStart = System.currentTimeMillis();
                             Intent intentChooseNextWaypoint = new Intent(JoinActivity.this, ChooseNextWaypoint.class);
                             intentChooseNextWaypoint.putExtra(ChooseNextWaypoint.INTENT_GAME_NAME, gameName);
