@@ -44,28 +44,26 @@ import java.util.Collections;
 import java.util.List;
 
 public class EndActivity extends AppCompatActivity {
-
-    // TODO make private what doesn't need to be public !!!!
     //For pagerLayout
-    TabLayout tabLayout;
-    ViewPager viewPager;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
 
     private DatabaseReference usersDB;
 
     //Data from intent
-    String gameName;
-    String playerName;
-    List<Float> waypointsRatesList = new ArrayList<>();
+    private String gameName;
+    private String playerName;
+    private List<Float> waypointsRatesList = new ArrayList<>();
 
     //Timer variable
     private int elapsedSeconds;
 
     //Structural elements
-    ImageView stars;
-    TextView score_message;
-    TextView time_message;
+    private ImageView stars;
+    private TextView score_message;
+    private TextView time_message;
 
-    SharedPreferences sharedpreferences;
+    private SharedPreferences sharedpreferences;
     public static final String MyPREFERENCES = "MyPrefs" ;
     public static final String TOT_WAYPS_COUNT = "tot_waypoints" ;
     public static final String WAYPS_LIST_ID = "list" ;
@@ -134,11 +132,11 @@ public class EndActivity extends AppCompatActivity {
         time_message.setText("Time taken: "+ elapsedSeconds/60 +"min " + elapsedSeconds%60 +"sec");
 
         //Get player score from firebase
-        usersDB.addListenerForSingleValueEvent(new ValueEventListener() {
+        usersDB.child(playerName).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot usersSnappshot) {
-               if(usersSnappshot.child(playerName).exists()) {
-                   float score = usersSnappshot.child(playerName).child("rate").getValue(Float.class);
+            public void onDataChange(DataSnapshot playerSnapshot) {
+               if(playerSnapshot.exists()) {
+                   float score = playerSnapshot.child("rate").getValue(Float.class);
                    if (score == (float) 1) {
                        score_message.setText("Perfect!");
                        stars.setImageDrawable(getResources().getDrawable(R.drawable._stars));
@@ -164,16 +162,40 @@ public class EndActivity extends AppCompatActivity {
         });
     }
 
-    public void clickedExitButtonXmlCallback(View view) {
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         Toast.makeText(EndActivity.this, "Thanks for playing !", Toast.LENGTH_SHORT).show();
 
         usersDB.child(playerName).child("exited").setValue(true);
 
+        // remove game if all have exited
+        usersDB.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot usersSnapshot) {
+                boolean allUsersExited = true;
+                for(DataSnapshot userSnap: usersSnapshot.getChildren()){
+                    if(userSnap.child("exited").exists()==false){
+                        allUsersExited = false;
+                    }
+                }
+                if (allUsersExited){
+                    FirebaseDatabase.getInstance().getReference().child(gameName).removeValue();
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("TxGO", "Error with database");
+            }
+        });
+
         Intent finishIntent = new Intent(this, WelcomeActivity.class);
         finishIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(finishIntent);
+    }
 
-        // TODO remove game if all have exited
+    public void clickedExitButtonXmlCallback(View view) {
+        finish();
     }
 }
 
