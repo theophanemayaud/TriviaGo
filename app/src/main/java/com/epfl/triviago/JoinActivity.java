@@ -124,15 +124,14 @@ public class JoinActivity extends AppCompatActivity {
                         }
 
                         current_players = (int) usersSnapshot.getChildrenCount();
-                        if(current_players<max_players) {
-                            progress_message.setText(" "+current_players+"/"+max_players+" players");
-                            seekbar.setProgress(current_players);
-                            if(skippedFirstNewUser==true){ //skip first fire of the callback as it is the user itself !
-                                Toast.makeText(JoinActivity.this, "A new player just joined !", Toast.LENGTH_SHORT).show();
-                            }
-                            skippedFirstNewUser = true;
+                        progress_message.setText(" "+current_players+"/"+max_players+" players");
+                        seekbar.setProgress(current_players);
+                        if(skippedFirstNewUser==true){ //skip first fire of the callback as it is the user itself !
+                            Toast.makeText(JoinActivity.this, "A new player just joined !", Toast.LENGTH_SHORT).show();
                         }
-                        else{
+                        skippedFirstNewUser = true;
+
+                        if(current_players>=max_players){
                             userInGame=true;
                             long tStart = System.currentTimeMillis();
                             Intent intentChooseNextWaypoint = new Intent(JoinActivity.this, ChooseNextWaypoint.class);
