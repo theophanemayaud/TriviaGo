@@ -159,7 +159,6 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         return new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
-                Log.e(TAG, "In location result"); //TODO
                 if (locationResult == null) {
                     return;
                 }
@@ -220,8 +219,6 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     }
 
     private void startLocationUpdates() {
-        Log.e(TAG, "In startLocationUpdates"); //TODO
-
         //Check if GPS is enabled on the device
         final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
 
@@ -492,8 +489,6 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         public void onDataChange(@NonNull DataSnapshot wayptsSnapshot) {
             double wayptLat;
             double wayptLgn;
-            long numWaypts = wayptsSnapshot.getChildrenCount();
-            Log.e(TAG, "There are : "+ numWaypts + " waypoints");
 
             int i=0;
             for(DataSnapshot oneWayptsSnapshot: wayptsSnapshot.getChildren()){
