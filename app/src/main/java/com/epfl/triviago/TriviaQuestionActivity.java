@@ -394,7 +394,7 @@ public class TriviaQuestionActivity extends AppCompatActivity {
     public void backButtonOnClick(View view) {
         if (mfinished) {
             // send score back as an Intent
-            Intent intent = new Intent(TriviaQuestionActivity.this, MainActivity.class);
+            Intent intent = new Intent();
             intent.putExtra(INTENT_RESULT, mResult);
             intent.putExtra(INTENT_EFFECTIVE_ATTEMPTS, mAttempts_number);
             setResult(Activity.RESULT_OK, intent);
