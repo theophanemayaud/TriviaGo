@@ -33,7 +33,7 @@ import java.util.HashMap;
 
 public class SetUpActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    //Useful Variables
+    //Useful Variables //TODO private what is not needing public !
     int numPlayer = 2;
     boolean questionType = false; //FALSE = Multiple choice & TRUE = true/false
     String difficulty = "easy";
@@ -44,6 +44,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_setup);
 
         //Views

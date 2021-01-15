@@ -50,6 +50,8 @@ public class EndActivity extends AppCompatActivity {
     TabLayout tabLayout;
     ViewPager viewPager;
 
+    private DatabaseReference usersDB;
+
     //Data from intent
     String gameName;
     String playerName;
@@ -72,6 +74,7 @@ public class EndActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_end);
 
         // Get intent extras with game name and player name
@@ -81,6 +84,8 @@ public class EndActivity extends AppCompatActivity {
         playerName = b1.getString(ChooseNextWaypoint.INTENT_PLAYER_NAME);
         waypointsRatesList = (List<Float>) b1.getSerializable(ChooseNextWaypoint.INTENT_PLAYER_STATS_LIST);
         long startTime = b1.getLong(JoinActivity.START_TIME_MS);
+
+        usersDB = FirebaseDatabase.getInstance().getReference().child(gameName).child("Users");
 
         long endTime = System.currentTimeMillis();
         long tDeltaMs = endTime - startTime;
@@ -129,13 +134,11 @@ public class EndActivity extends AppCompatActivity {
         time_message.setText("Time taken: "+ elapsedSeconds/60 +"min " + elapsedSeconds%60 +"sec");
 
         //Get player score from firebase
-        DatabaseReference gameDb;
-        gameDb = FirebaseDatabase.getInstance().getReference().child(gameName).child("Users");
-        gameDb.addListenerForSingleValueEvent(new ValueEventListener() {
+        usersDB.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot gameSnapshot) {
-               if(gameSnapshot.child(playerName).exists()) {
-                   float score = gameSnapshot.child(playerName).child("rate").getValue(Float.class);
+            public void onDataChange(DataSnapshot usersSnappshot) {
+               if(usersSnappshot.child(playerName).exists()) {
+                   float score = usersSnappshot.child(playerName).child("rate").getValue(Float.class);
                    if (score == (float) 1) {
                        score_message.setText("Perfect!");
                        stars.setImageDrawable(getResources().getDrawable(R.drawable._stars));
@@ -164,9 +167,13 @@ public class EndActivity extends AppCompatActivity {
     public void clickedExitButtonXmlCallback(View view) {
         Toast.makeText(EndActivity.this, "Thanks for playing !", Toast.LENGTH_SHORT).show();
 
+        usersDB.child(playerName).child("exited").setValue(true);
+
         Intent finishIntent = new Intent(this, WelcomeActivity.class);
         finishIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(finishIntent);
+
+        // TODO remove game if all have exited
     }
 }
 

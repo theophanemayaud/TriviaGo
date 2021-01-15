@@ -32,7 +32,7 @@
         </activity>
 
         <activity android:name=".SetUpActivity"
-            android:screenOrientation="userPortrait"
+            android:screenOrientation="user"
             android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
 

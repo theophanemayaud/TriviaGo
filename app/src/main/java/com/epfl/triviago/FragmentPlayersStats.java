@@ -90,7 +90,7 @@ public class FragmentPlayersStats extends Fragment {
                 for(DataSnapshot ds: usersSnapshot.getChildren()) {
                     player_name = ds.getKey();
                     if(ds.child("rate").exists()) {
-                        score = ds.child("rate").getValue(Float.class);
+                        score = ds.child("rate").getValue(Float.class); // TODO fix when new player finishes it also re-adds to list some original players
                         if (index==0){
                             player1.setText(player_name+":    "+String.format("%.2f", score*100)+"%   correct!");
                             if (player_name.equals(playerName)) {

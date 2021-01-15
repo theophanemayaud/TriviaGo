@@ -52,7 +52,7 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
     private LocationCallback locationCallback;
 
     private static final int INITIAL_MAP_ZOOM = 7;
-    static final int MAP_MARKER_PADDING = 30; // offset from edges of the map in pixels
+    static final int MAP_MARKER_PADDING = 100; // offset from edges of the map in pixels
 
     // intent result
     public static final String INTENT_RESULT = "RESULT";
