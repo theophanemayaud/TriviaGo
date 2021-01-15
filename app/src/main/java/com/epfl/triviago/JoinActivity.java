@@ -125,9 +125,9 @@ public class JoinActivity extends AppCompatActivity {
 
                         current_players = (int) usersSnapshot.getChildrenCount();
                         if(current_players<max_players) {
+                            progress_message.setText(" "+current_players+"/"+max_players+" players");
+                            seekbar.setProgress(current_players);
                             if(skippedFirstNewUser==true){ //skip first fire of the callback as it is the user itself !
-                                progress_message.setText(" "+current_players+"/"+max_players+" players");
-                                seekbar.setProgress(current_players);
                                 Toast.makeText(JoinActivity.this, "A new player just joined !", Toast.LENGTH_SHORT).show();
                             }
                             skippedFirstNewUser = true;
