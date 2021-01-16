@@ -42,7 +42,11 @@
         <u><b>Preparing a game:</b></u>\n
         \u2022 Create a game, and remember its name: each player will need to enter it
             (with exact upper/lower case).\n
-        \u2022 The game is deleted after it has been played, or automatically after 30 days.
+        \u2022 The game is deleted after it has been played, or automatically after 30 days.\n
+        \n
+        <u><b>Watch companion app:</b></u>\n
+        If you have a WearOS smart watch, you can install the companion app on it, and open the app.
+            The watch app enables easier access to a compass while navigating to a specific waypoint !
     </string>
     <string name="number_of_players_phrase">"Number of Players : "</string>
     <string name="button_plus_player_sign">+</string>
