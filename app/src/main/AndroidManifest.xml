@@ -18,30 +18,39 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TriviaGo">
 
-        <activity android:name=".EndActivity"/>
+        <activity
+            android:name=".EndActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="user" />
 
-        <activity android:name=".JoinActivity"/>
+        <activity android:name=".JoinActivity" />
 
-        <activity android:name=".TriviaQuestionActivity"/>
+        <activity android:name=".TriviaQuestionActivity" />
 
-        <activity android:name=".WelcomeActivity">
+        <activity
+            android:name=".WelcomeActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="user">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".SetUpActivity"
-            android:screenOrientation="user"
-            android:configChanges="keyboardHidden|orientation|screenSize">
-        </activity>
+        <activity
+            android:name=".SetUpActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="user" />
 
-        <activity android:name=".ChooseNextWaypoint"/>
+        <activity
+            android:name=".ChooseNextWaypoint"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="user" />
 
-        <activity android:name=".CreateWaypointsActivity"
-            android:screenOrientation="user"
-            android:configChanges="keyboardHidden|orientation|screenSize">
-        </activity>
+        <activity
+            android:name=".CreateWaypointsActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="user" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -59,24 +68,30 @@
 
         <activity
             android:name=".MapsFragment"
-            android:label="@string/title_activity_maps">
-        </activity>
+            android:label="@string/title_activity_maps" />
 
         <activity
             android:name=".TravelToNextWaypointActivity"
-            android:label="@string/title_activity_travel_to_next_waypoint">
-        </activity>
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/title_activity_travel_to_next_waypoint"
+            android:screenOrientation="user" />
 
         <!-- mobile -> AndroidManifest.xml -> <application ...> -->
         <service android:name=".WearService">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
-                <data android:host="*" android:pathPrefix="" android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix=""
+                    android:scheme="wear" />
             </intent-filter>
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
-                <data android:host="*" android:pathPrefix="" android:scheme="wear" />
-        </intent-filter>
+                <data
+                    android:host="*"
+                    android:pathPrefix=""
+                    android:scheme="wear" />
+            </intent-filter>
         </service>
 
     </application>

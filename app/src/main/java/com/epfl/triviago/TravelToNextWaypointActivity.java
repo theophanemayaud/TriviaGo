@@ -1,10 +1,5 @@
 package com.epfl.triviago;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
@@ -17,6 +12,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -31,7 +31,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -45,19 +44,11 @@ import java.util.List;
 
 public class TravelToNextWaypointActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private static final float TARGET_REACHED_DIST_METERS = 10.f;
-    private GoogleMap mMap;
-
-    private FusedLocationProviderClient fusedLocationClient;
-    private LocationCallback locationCallback;
-
-    private static final int INITIAL_MAP_ZOOM = 7;
-    static final int MAP_MARKER_PADDING = 100; // offset from edges of the map in pixels
-
     // intent result
     public static final String INTENT_RESULT = "RESULT";
-
-
+    static final int MAP_MARKER_PADDING = 100; // offset from edges of the map in pixels
+    private static final float TARGET_REACHED_DIST_METERS = 10.f;
+    private static final int INITIAL_MAP_ZOOM = 7;
     LatLng currentLocationLatLgn;
     Marker currentLocationMarker;
     LatLng destinationWaypointLatLgn;
@@ -65,9 +56,10 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
     List<LatLng> otherPlayerLatLgn = new ArrayList<LatLng>();
     List<String> otherPlayerNames = new ArrayList<String>();
     List<Marker> otherPlayerMarkers = new ArrayList<Marker>();
-
     IconGenerator iconGenerator;
-
+    private GoogleMap mMap;
+    private FusedLocationProviderClient fusedLocationClient;
+    private LocationCallback locationCallback;
     private DatabaseReference gameDb;
     private String playerName;
 
@@ -97,10 +89,10 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
-        if(extras.containsKey(ChooseNextWaypoint.DEST_LAT_LNG)) {
+        if (extras.containsKey(ChooseNextWaypoint.DEST_LAT_LNG)) {
             destinationWaypointLatLgn = intent.getParcelableExtra(ChooseNextWaypoint.DEST_LAT_LNG);
         }
-        if(extras.containsKey(ChooseNextWaypoint.LATEST_USER_LOC)) {
+        if (extras.containsKey(ChooseNextWaypoint.LATEST_USER_LOC)) {
             currentLocationLatLgn = intent.getParcelableExtra(ChooseNextWaypoint.LATEST_USER_LOC);
         }
 
@@ -112,17 +104,18 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
         gameDb.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                for(DataSnapshot userSnapshot: snapshot.child("Users").getChildren()){
+                for (DataSnapshot userSnapshot : snapshot.child("Users").getChildren()) {
                     String userName = userSnapshot.getKey();
-                    if(!userName.equals(playerName)){
+                    if (!userName.equals(playerName)) {
                         otherPlayerNames.add(userName);
                         otherPlayerLatLgn.add(new LatLng(
                                 userSnapshot.child("latitude").getValue(Double.class),
                                 userSnapshot.child("longitude").getValue(Double.class)
-                                ));
+                        ));
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.e("TxGO", "Error writing to database");
@@ -148,6 +141,17 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
         stopLocationUpdates();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // Finish activity on watch
+        Intent intent_stop = new Intent(this, WearService.class);
+        intent_stop.setAction(WearService.ACTION_SEND.STOPACTIVITY.name());
+        intent_stop.putExtra(WearService.ACTIVITY_TO_STOP, BuildConfig.W_compass_view);
+        startService(intent_stop);
+    }
+
     /**
      * This callback is triggered when the map is ready to be used.
      * If Google Play services is not installed on the device, the user will be prompted to install
@@ -157,7 +161,7 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        if(currentLocationLatLgn!=null){
+        if (currentLocationLatLgn != null) {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocationLatLgn, INITIAL_MAP_ZOOM));
         }
     }
@@ -184,7 +188,7 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
                         currentLocationMarker = mMap.addMarker(
                                 new MarkerOptions().position(currentLocationLatLgn).title("Wow, you're here !!!")
                                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_my_location_black_36dp)));
-                        destinationWaypointMarker = mMap.addMarker( new MarkerOptions().position(destinationWaypointLatLgn)
+                        destinationWaypointMarker = mMap.addMarker(new MarkerOptions().position(destinationWaypointLatLgn)
                                 .title("You need to come here 🏆‍").icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_tour_black_36dp)));
 
                         // Zoom the map to show both postition and destination
@@ -210,27 +214,27 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
                     Location destLoc = new Location("point B");
                     destLoc.setLatitude(destinationWaypointLatLgn.latitude);
                     destLoc.setLongitude(destinationWaypointLatLgn.longitude);
-                    float distance[] = new float[3];
+                    float[] distance = new float[3];
                     Location.distanceBetween(currentLocationLatLgn.latitude,
                             currentLocationLatLgn.longitude, destinationWaypointLatLgn.latitude,
                             destinationWaypointLatLgn.longitude, distance);
 
                     TextView distanceDisplayTextview = findViewById(R.id.distanceToDestination);
-                    String displayText = getString(R.string.distToDestText) + String.valueOf(Math.round(distance[0])) + " meters";
-                    if(distance[0]>10000){ //display in KM if above 10km, such that it is more readable
-                        displayText = getString(R.string.distToDestText) + String.valueOf(Math.round(distance[0]/1000)) + " km";
+                    String displayText = getString(R.string.distToDestText) + Math.round(distance[0]) + " meters";
+                    if (distance[0] > 10000) { //display in KM if above 10km, such that it is more readable
+                        displayText = getString(R.string.distToDestText) + Math.round(distance[0] / 1000) + " km";
                     }
                     distanceDisplayTextview.setText(displayText);
-                    if(distance[0]<TARGET_REACHED_DIST_METERS){
+                    if (distance[0] < TARGET_REACHED_DIST_METERS) {
                         destinationReached();
                     }
 
                     double angleToDestination = SphericalUtil.computeHeading(
                             currentLocationLatLgn, destinationWaypointLatLgn);
                     ImageView compassArrowImgView = findViewById(R.id.compassArrowView);
-                    compassArrowImgView.setPivotX(compassArrowImgView.getWidth()/2);
-                    compassArrowImgView.setPivotY(compassArrowImgView.getHeight()/2);
-                    compassArrowImgView.setRotation((float)angleToDestination);
+                    compassArrowImgView.setPivotX(compassArrowImgView.getWidth() / 2);
+                    compassArrowImgView.setPivotY(compassArrowImgView.getHeight() / 2);
+                    compassArrowImgView.setRotation((float) angleToDestination);
 
                     Intent intent = new Intent(TravelToNextWaypointActivity.this, WearService.class);
                     intent.setAction(WearService.ACTION_SEND.ANGLE_SEND.name());
@@ -250,35 +254,34 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
                                     iconGenerator.makeIcon(playerName)));
                             otherPlayerMarkers.add(playerMarker);
                         }
-                    }
-                    else{ // Other player location updates
+                    } else { // Other player location updates
                         for (int i = 0; i < otherPlayerLatLgn.size(); i++) {
                             // listen to changes for other player locations
                             int finalI = i;
                             gameDb.child("Users").child(otherPlayerNames.get(i))
                                     .addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot userSnapshot) {
-                                    if(userSnapshot.exists()){
-                                        otherPlayerLatLgn.set(finalI, new LatLng(
-                                                userSnapshot.child("latitude").getValue(Double.class),
-                                                userSnapshot.child("longitude").getValue(Double.class)
-                                        ));
-                                        otherPlayerMarkers.get(finalI).setPosition(
-                                                otherPlayerLatLgn.get(finalI));
-                                    }
-                                    else { // if snapshot is empty : player disappeared !
-                                        otherPlayerNames.remove(finalI);
-                                        otherPlayerLatLgn.remove(finalI);
-                                        otherPlayerMarkers.get(finalI).remove();
-                                        otherPlayerMarkers.remove(finalI);
-                                    }
-                                }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                    Log.e("TxGO", "Error writing to database");
-                                }
-                            });
+                                        @Override
+                                        public void onDataChange(DataSnapshot userSnapshot) {
+                                            if (userSnapshot.exists()) {
+                                                otherPlayerLatLgn.set(finalI, new LatLng(
+                                                        userSnapshot.child("latitude").getValue(Double.class),
+                                                        userSnapshot.child("longitude").getValue(Double.class)
+                                                ));
+                                                otherPlayerMarkers.get(finalI).setPosition(
+                                                        otherPlayerLatLgn.get(finalI));
+                                            } else { // if snapshot is empty : player disappeared !
+                                                otherPlayerNames.remove(finalI);
+                                                otherPlayerLatLgn.remove(finalI);
+                                                otherPlayerMarkers.get(finalI).remove();
+                                                otherPlayerMarkers.remove(finalI);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+                                            Log.e("TxGO", "Error writing to database");
+                                        }
+                                    });
                         }
                     }
                 }
@@ -286,23 +289,18 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
         };
     }
 
-    private void destinationReached(){
+    private void destinationReached() {
         Toast.makeText(this, "Destination reached !!! 🎇", Toast.LENGTH_SHORT).show();
 
-        // Finish activity on watch
-        Intent intent_stop = new Intent(this, WearService.class);
-        intent_stop.setAction(WearService.ACTION_SEND.STOPACTIVITY.name());
-        intent_stop.putExtra(WearService.ACTIVITY_TO_STOP, BuildConfig.W_compass_view);
-        startService(intent_stop);
-
         // Finish this activity
-        Intent intent = new Intent(TravelToNextWaypointActivity.this, ChooseNextWaypoint.class);
+        Intent intent = new Intent();
         intent.putExtra(INTENT_RESULT, true);
         setResult(Activity.RESULT_OK, intent);
+
         finish();
     }
 
-    public void moveToCurrentLocationButtonCallback(View view){
+    public void moveToCurrentLocationButtonCallback(View view) {
         mMap.animateCamera(CameraUpdateFactory.newLatLng(currentLocationLatLgn));
     }
 
@@ -331,14 +329,5 @@ public class TravelToNextWaypointActivity extends FragmentActivity implements On
 
     private void stopLocationUpdates() {
         fusedLocationClient.removeLocationUpdates(locationCallback);
-    }
-
-    private static double calculateAngle(double x1, double y1, double x2, double y2)
-    {
-        double angle = Math.toDegrees(Math.atan2(x2 - x1, y2 - y1));
-        // Keep angle between 0 and 360
-        angle = angle + Math.ceil( -angle / 360 ) * 360;
-
-        return angle;
     }
 }
