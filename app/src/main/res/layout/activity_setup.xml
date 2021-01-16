@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/setupConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/app_background">
@@ -71,15 +71,29 @@
                 android:imeOptions="actionDone"
                 android:inputType="textShortMessage" />
 
-            <TextView
-                android:id="@+id/textNumPlayer"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_weight="1"
-                android:hint="Number of Players"
-                android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/phraseNumPlayers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/number_of_players_phrase"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/playersNumberTextview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="none"
+                    android:textColor="#FF000000"
+                    android:textSize="20sp" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -88,49 +102,49 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/button_1p"
+                    android:id="@+id/button_1_pnumber"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_weight="1"
                     android:background="@drawable/buttonshape_difficulty_unselected"
-                    android:onClick="clicked1pButtonXmlCallback"
+                    android:onClick="clickedPlayerNumberButton"
                     android:text="1" />
 
                 <Button
-                    android:id="@+id/button_2p"
+                    android:id="@+id/button_2_pnumber"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_weight="1"
-                    android:background="@drawable/buttonshape_difficulty_selected"
-                    android:onClick="clicked2pButtonXmlCallback"
+                    android:background="@drawable/buttonshape_difficulty_unselected"
+                    android:onClick="clickedPlayerNumberButton"
                     android:text="2" />
 
                 <Button
-                    android:id="@+id/button_3p"
+                    android:id="@+id/button_3_pnumber"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_weight="1"
                     android:background="@drawable/buttonshape_difficulty_unselected"
-                    android:onClick="clicked3pButtonXmlCallback"
+                    android:onClick="clickedPlayerNumberButton"
                     android:text="3" />
 
                 <Button
-                    android:id="@+id/button_4p"
+                    android:id="@+id/button_minus_player"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_weight="1"
                     android:background="@drawable/buttonshape_difficulty_unselected"
-                    android:onClick="clicked4pButtonXmlCallback"
-                    android:text="4" />
+                    android:onClick="clickedPlayerPlusMinusButton"
+                    android:text="@string/button_minus_player_sign" />
 
                 <Button
-                    android:id="@+id/button_5p"
+                    android:id="@+id/button_plus_player"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_weight="1"
                     android:background="@drawable/buttonshape_difficulty_unselected"
-                    android:onClick="clicked5pButtonXmlCallback"
-                    android:text="5" />
+                    android:onClick="clickedPlayerPlusMinusButton"
+                    android:text="@string/button_plus_player_sign" />
 
             </LinearLayout>
 

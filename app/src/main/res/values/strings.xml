@@ -37,6 +37,9 @@
         1) To reach a waypoint, you need to be in a radius of 10m around it.\n
         2) If you fail to complete a waypoint, you need to go to another one before coming back.
     </string>
+    <string name="number_of_players_phrase">"Number of Players : "</string>
+    <string name="button_plus_player_sign">+</string>
+    <string name="button_minus_player_sign">-</string>
 
     <!--String arrays for spinners used in game setup-->
     <string-array name="spinner_players">
