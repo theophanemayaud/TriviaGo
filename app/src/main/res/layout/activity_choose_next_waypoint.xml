@@ -90,7 +90,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    //TODO remove from prod
+    <!--TODO remove from prod-->
 
     <Button
         android:id="@+id/skipDebug"
