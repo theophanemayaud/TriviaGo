@@ -75,9 +75,6 @@ public class WearService extends WearableListenerService {
         // Get the URI of the event
         String path = messageEvent.getPath();
         String data = new String(messageEvent.getData());
-        Log.v(TAG, "Received a message for path " + path
-                + " : \"" + data
-                + "\", from node " + messageEvent.getSourceNodeId());
 
         if (path.equals(BuildConfig.W_path_start_activity)
                 && data.equals(BuildConfig.W_mainactivity)) {
@@ -86,7 +83,6 @@ public class WearService extends WearableListenerService {
 
         switch (path) {
             case BuildConfig.W_path_start_activity:
-                Log.v(TAG, "Message asked to open Activity");
                 Intent startIntent = null;
                 switch (data) {
                     case BuildConfig.W_mainactivity:
@@ -105,7 +101,6 @@ public class WearService extends WearableListenerService {
                 startActivity(startIntent);
                 break;
             case BuildConfig.W_path_finish:
-                Log.v(TAG, "Message asked to stop Activity");
                 Intent stopIntent = null;
                 switch (data) {
                     case BuildConfig.W_compass_view:
@@ -122,7 +117,6 @@ public class WearService extends WearableListenerService {
 
     @Override
     public void onDataChanged(DataEventBuffer dataEvents) {
-        Log.v(TAG, "onDataChanged: " + dataEvents);
 
         for (DataEvent event : dataEvents) {
             // Get the URI of the event
@@ -133,11 +127,6 @@ public class WearService extends WearableListenerService {
 
                 // Extract the dataMap from the event
                 DataMapItem dataMapItem = DataMapItem.fromDataItem(event.getDataItem());
-
-                Log.v(TAG, "Received DataItem\n"
-                        + "\tDataItem: " + event.getDataItem().toString() + "\n"
-                        + "\tPath: " + uri
-                        + "\tDatamap: " + dataMapItem.getDataMap());
 
                 Intent intent;
 

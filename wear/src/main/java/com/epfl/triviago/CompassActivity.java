@@ -14,7 +14,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class CompassActivity extends WearableActivity {
 
-    private TextView mTextView;
     private ImageView mArrow;
     public static final String ANGLE_BROADCAST = "ANGLE_BROADCAST";
     public static final String STOP_ACTIVITY_BROADCAST = "STOP_ACTIVITY_BROADCAST";
@@ -40,11 +39,9 @@ public class CompassActivity extends WearableActivity {
         LocalBroadcastManager.getInstance(this).registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Log.e("COMP", "We have received a finish");
                 finish();
             }
         }, new IntentFilter(STOP_ACTIVITY_BROADCAST));
-
 
         // Enables Always-on
         setAmbientEnabled();

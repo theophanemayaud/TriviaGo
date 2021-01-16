@@ -49,7 +49,6 @@ public class WearService extends WearableListenerService {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        Log.w(TAG, "On start entered");
         // If no action defined, return
         if (intent.getAction() == null) return Service.START_NOT_STICKY;
 
@@ -61,20 +60,18 @@ public class WearService extends WearableListenerService {
                 activity = intent.getStringExtra(ACTIVITY_TO_START);
                 //Float angle = intent.getFloatExtra(BuildConfig.W_angle_key, 0);
                 sendMessage(activity, BuildConfig.W_path_start_activity);
-                Log.w(TAG, "Message sent from tablet");
                 break;
             case ANGLE_SEND:
                 Float angle = intent.getFloatExtra(BuildConfig.W_angle_key, 0);
                 PutDataMapRequest putDataMapRequest = PutDataMapRequest.create(BuildConfig.W_path_angle);
                 putDataMapRequest.getDataMap().putFloat(BuildConfig.W_angle_key, angle);
                 sendPutDataMapRequest(putDataMapRequest);
-                Log.w(TAG, "ANGLE sent from tablet");
                 break;
             case STOPACTIVITY:
                 activity = intent.getStringExtra(ACTIVITY_TO_STOP);
                 sendMessage(activity, BuildConfig.W_path_finish);
             default:
-                Log.w(TAG, "Unknown action");
+                Log.e(TAG, "Unknown action");
                 break;
         }
 
@@ -87,19 +84,15 @@ public class WearService extends WearableListenerService {
         // Get the URI of the event
         String path = messageEvent.getPath();
         String data = new String(messageEvent.getData());
-        Log.v(TAG, "Received a message for path " + path
-                + " : \"" + data
-                + "\", from node " + messageEvent.getSourceNodeId());
 
         switch (path) {
             default:
-                Log.w(TAG, "Received a message for unknown path " + path + " : " + data);
+                Log.e(TAG, "Received a message for unknown path " + path + " : " + data);
         }
     }
 
     @Override
     public void onDataChanged(DataEventBuffer dataEvents) {
-        Log.v(TAG, "onDataChanged: " + dataEvents);
 
         for (DataEvent event : dataEvents) {
             // Get the URI of the event
@@ -111,17 +104,12 @@ public class WearService extends WearableListenerService {
                 // Extract the dataMap from the event
                 DataMapItem dataMapItem = DataMapItem.fromDataItem(event.getDataItem());
 
-                Log.v(TAG, "Received DataItem\n"
-                        + "\tDataItem: " + event.getDataItem().toString() + "\n"
-                        + "\tPath: " + uri
-                        + "\tDatamap: " + dataMapItem.getDataMap());
-
                 Intent intent;
 
                 assert uri.getPath() != null;
                 switch (uri.getPath()) {
                     default:
-                        Log.v(TAG, "Data changed for unhandled path: " + uri);
+                        Log.e(TAG, "Data changed for unhandled path: " + uri);
                         break;
                 }
             } else if (event.getType() == DataEvent.TYPE_DELETED) {
