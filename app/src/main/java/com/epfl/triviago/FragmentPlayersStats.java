@@ -30,7 +30,6 @@ public class FragmentPlayersStats extends Fragment {
     private String gameName;
     private String playerName;
 
-    //Views //TODO make into list ?
     private ArrayList<String> playerSeenNames = new ArrayList<>();
 
     private DatabaseReference usersDb;
