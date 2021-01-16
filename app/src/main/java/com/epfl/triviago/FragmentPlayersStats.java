@@ -7,8 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +20,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 import static android.content.Context.MODE_PRIVATE;
 
 public class FragmentPlayersStats extends Fragment {
@@ -27,14 +29,9 @@ public class FragmentPlayersStats extends Fragment {
     //Data from intent
     private String gameName;
     private String playerName;
-    private long total_players;
 
     //Views //TODO make into list ?
-    private TextView player1;
-    private TextView player2;
-    private TextView player3;
-    private TextView player4;
-    private TextView player5;
+    private ArrayList<String> playerSeenNames = new ArrayList<>();
 
     private DatabaseReference usersDb;
     private ValueEventListener usersListener;
@@ -59,70 +56,58 @@ public class FragmentPlayersStats extends Fragment {
         gameName = prefs.getString(ChooseNextWaypoint.INTENT_GAME_NAME, null);
         playerName = prefs.getString(ChooseNextWaypoint.INTENT_PLAYER_NAME, null);
 
-        //Getting the views and setting appearance
-        player1 = view.findViewById(R.id.player1);
-        player1.setTextAppearance(getActivity(), R.style.fontForEndGame);
-        player2 = view.findViewById(R.id.player2);
-        player2.setTextAppearance(getActivity(), R.style.fontForEndGame);
-        player3 = view.findViewById(R.id.player3);
-        player3.setTextAppearance(getActivity(), R.style.fontForEndGame);
-        player4 = view.findViewById(R.id.player4);
-        player4.setTextAppearance(getActivity(), R.style.fontForEndGame);
-        player5 = view.findViewById(R.id.player5);
-        player5.setTextAppearance(getActivity(), R.style.fontForEndGame);
-
         createLayout(view);
         return  view;
     }
 
     public void createLayout(View view) {
         // load game infos from DB
+        RelativeLayout rLayout =  view.findViewById(R.id.rlayout_player_stats);
+
         usersDb = FirebaseDatabase.getInstance().getReference().child(gameName).child("Users");
         usersListener = usersDb.addValueEventListener(new ValueEventListener() {
-
-            int index =0;
-            String player_name;
-            float score;
-
             @Override
             public void onDataChange(DataSnapshot usersSnapshot) {
-                total_players = usersSnapshot.getChildrenCount();
+                Log.e(getContext().toString(), "userSnapshot listener fired in FragmentPlayerStats"); //TODO remove
+                String current_player_name;
 
-                for(DataSnapshot ds: usersSnapshot.getChildren()) {
-                    player_name = ds.getKey();
-                    if(ds.child("rate").exists()) {
-                        score = ds.child("rate").getValue(Float.class); // TODO fix when new player finishes it also re-adds to list some original players
-                        if (index==0){
-                            player1.setText(player_name+":    "+String.format("%.2f", score*100)+"%   correct!");
-                            if (player_name.equals(playerName)) {
-                                player1.setTextColor(getResources().getColor(R.color.button_end));
+                for(DataSnapshot userSnap: usersSnapshot.getChildren()) {
+                    current_player_name = userSnap.getKey();
+
+                    if(userSnap.child("rate").exists()) {
+                        float score = userSnap.child("rate").getValue(Float.class);
+
+                        // check all that we already added
+                        boolean userAlreadySeen = false;
+                        for(int i = 0; i< playerSeenNames.size(); i++){
+                            if(playerSeenNames.get(i).equals(current_player_name)){
+                                userAlreadySeen = true;
                             }
                         }
-                        if (index==1){
-                            player2.setText(player_name+":    "+String.format("%.2f", score*100)+"%   correct!");
-                            if (player_name.equals(playerName)) {
-                                player1.setTextColor(getResources().getColor(R.color.button_end));
+
+                        if(userAlreadySeen==false){
+                            RelativeLayout.LayoutParams lprams = new RelativeLayout.LayoutParams(
+                                    RelativeLayout.LayoutParams.WRAP_CONTENT,
+                                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+                            lprams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+                            if(playerSeenNames.size()>0){
+                                lprams.addRule(RelativeLayout.BELOW, playerSeenNames.size()); //don't add 1 to size at it references the id below the current one !
+                                lprams.setMargins(0, 10, 0, 0);
+
                             }
-                        }
-                        if (index==2){
-                            player3.setText(player_name+":    "+String.format("%.2f", score*100)+"%   correct!");
-                            if (player_name.equals(playerName)) {
-                                player1.setTextColor(getResources().getColor(R.color.button_end));
+
+                            TextView userView = new TextView(getContext());
+                            userView.setText(current_player_name+":    "+String.format("%.2f", score*100)+"% correct!");
+                            userView.setTextAppearance(getActivity(), R.style.fontForEndGame);
+                            if (current_player_name.equals(playerName)) {
+                                userView.setTextColor(getResources().getColor(R.color.bg_blue));
                             }
+                            userView.setLayoutParams(lprams);
+                            userView.setId(playerSeenNames.size()+1);
+
+                            playerSeenNames.add(current_player_name);
+                            rLayout.addView(userView);
                         }
-                        if (index==3){
-                            player4.setText(player_name+":    "+String.format("%.2f", score*100)+"%   correct!");
-                            if (player_name.equals(playerName)) {
-                                player1.setTextColor(getResources().getColor(R.color.button_end));
-                            }
-                        }
-                        if (index==4){
-                            player5.setText(player_name+":    "+String.format("%.2f", score*100)+"%   correct!!");
-                            if (player_name.equals(playerName)) {
-                                player1.setTextColor(getResources().getColor(R.color.button_end));
-                            }
-                        }
-                        index+=1;
                     }
                 }
             }
@@ -131,42 +116,6 @@ public class FragmentPlayersStats extends Fragment {
                 Log.e("TxGO", "Error writing to database");
             }
         });
-
-        if(total_players == (long) 1) {
-            player1.setVisibility(View.VISIBLE);
-            player2.setVisibility(View.GONE);
-            player3.setVisibility(View.GONE);
-            player4.setVisibility(View.GONE);
-            player5.setVisibility(View.GONE);
-        }
-        if(total_players == 2) {
-            player1.setVisibility(View.VISIBLE);
-            player2.setVisibility(View.VISIBLE);
-            player3.setVisibility(View.GONE);
-            player4.setVisibility(View.GONE);
-            player5.setVisibility(View.GONE);
-        }
-        if(total_players == 3) {
-            player1.setVisibility(View.VISIBLE);
-            player2.setVisibility(View.VISIBLE);
-            player3.setVisibility(View.VISIBLE);
-            player4.setVisibility(View.GONE);
-            player5.setVisibility(View.GONE);
-        }
-        if(total_players == 4) {
-            player1.setVisibility(View.VISIBLE);
-            player2.setVisibility(View.VISIBLE);
-            player3.setVisibility(View.VISIBLE);
-            player4.setVisibility(View.VISIBLE);
-            player5.setVisibility(View.GONE);
-        }
-        if(total_players == 5) {
-            player1.setVisibility(View.VISIBLE);
-            player2.setVisibility(View.VISIBLE);
-            player3.setVisibility(View.VISIBLE);
-            player4.setVisibility(View.VISIBLE);
-            player5.setVisibility(View.VISIBLE);
-        }
     }
 
     @Override
