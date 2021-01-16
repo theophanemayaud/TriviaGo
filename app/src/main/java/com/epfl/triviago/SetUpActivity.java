@@ -21,8 +21,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 public class SetUpActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -34,7 +32,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
     private ArrayList<LatLng> waypointsLatLgnList;
     private ArrayList<Integer> waypointsCategList;
 
-    private ArrayList<Button> playerNumberButtonList = new ArrayList<>();
+    private final ArrayList<Button> playerNumberButtonList = new ArrayList<>();
 
     TextView playersNumberTextview;
 
@@ -77,8 +75,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
                 waypointsLatLgnList = (ArrayList<LatLng>) data.getSerializableExtra(CreateWaypointsActivity.RESULT_WAYPOINTS_LIST_NAME);
                 waypointsCategList = (ArrayList<Integer>) data.getSerializableExtra(CreateWaypointsActivity.RESULT_CATEG_LIST_NAME);
                 findViewById(R.id.button_done).setVisibility(View.VISIBLE);
-            }
-            else {
+            } else {
                 Toast.makeText(this, R.string.no_waypoints_error_msg, Toast.LENGTH_SHORT).show();
             }
         }
@@ -113,12 +110,11 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
         Button plus_button = findViewById(R.id.button_plus_player);
         Button minus_button = findViewById(R.id.button_minus_player);
 
-        if(activate){
+        if (activate) {
             plus_button.setBackgroundResource(R.drawable.buttonshape_difficulty_selected);
             minus_button.setBackgroundResource(R.drawable.buttonshape_difficulty_selected);
 
-        }
-        else{
+        } else {
             plus_button.setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
             minus_button.setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         }
@@ -132,25 +128,23 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
     // -------- ⬇️ Start : XML Callbacks -----------------------------------------------------------
 
     public void clickedPlayerNumberButton(View view) {
-        Button button = (Button)view;
+        Button button = (Button) view;
         int playerNumber = Integer.parseInt(button.getText().toString());
         setSelectedPlayerButtonState(playerNumber);
     }
 
-    public void clickedPlayerPlusMinusButton(View view){
-        Button button = (Button)view;
+    public void clickedPlayerPlusMinusButton(View view) {
+        Button button = (Button) view;
         String buttonSign = button.getText().toString();
         int numPlayer = Integer.parseInt(playersNumberTextview.getText().toString());
 
-        if(buttonSign.equals(getString(R.string.button_plus_player_sign))){
-            setSelectedPlayerButtonState(numPlayer+1);
-        }
-        else if(buttonSign.equals(getString(R.string.button_minus_player_sign))){
+        if (buttonSign.equals(getString(R.string.button_plus_player_sign))) {
+            setSelectedPlayerButtonState(numPlayer + 1);
+        } else if (buttonSign.equals(getString(R.string.button_minus_player_sign))) {
             if (numPlayer == 1) {
                 Toast.makeText(this, "You cannot have less than 1 player !", Toast.LENGTH_SHORT).show();
-            }
-            else{
-                setSelectedPlayerButtonState(numPlayer-1);
+            } else {
+                setSelectedPlayerButtonState(numPlayer - 1);
             }
         }
     }
@@ -205,7 +199,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
     public void clickedDoneButtonXmlCallback(View view) {
         TextView nameGame = findViewById(R.id.nameGame);
         String gameName = nameGame.getText().toString();
-        if(gameName.isEmpty()){
+        if (gameName.isEmpty()) {
             Toast.makeText(SetUpActivity.this, R.string.empty_game_name,
                     Toast.LENGTH_SHORT).show();
             return;
@@ -215,12 +209,11 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
         gameDb.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot gameSnapshot) {
-                if(gameSnapshot.exists()){
+                if (gameSnapshot.exists()) {
                     Toast.makeText(SetUpActivity.this, "Game name already exists, " +
                             "please choose another one", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else {
+                } else {
                     int numPlayer = Integer.parseInt(playersNumberTextview.getText().toString());
 
                     // Set values in DB
@@ -235,7 +228,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
                     gameDb.child("Settings").child("MaxAttempts").setValue(maxAttemps);
 
                     int size = waypointsLatLgnList.size();
-                    for (int i=0; i<size; i++) {
+                    for (int i = 0; i < size; i++) {
                         LatLng waypoint = waypointsLatLgnList.get(i);
                         double waypointLat = waypoint.latitude;
                         double waypointLgn = waypoint.longitude;
@@ -250,12 +243,13 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
                     }
 
                     Intent returnIntent = new Intent();
-                    returnIntent.putExtra("name",gameName);
-                    setResult(Activity.RESULT_OK,returnIntent);
+                    returnIntent.putExtra("name", gameName);
+                    setResult(Activity.RESULT_OK, returnIntent);
                     Toast.makeText(SetUpActivity.this, "Game created!", Toast.LENGTH_SHORT).show();
                     finish();
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.e("TxGO", "Error writing to database");

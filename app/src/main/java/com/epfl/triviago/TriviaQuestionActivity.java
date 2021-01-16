@@ -1,8 +1,5 @@
 package com.epfl.triviago;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -18,6 +15,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.epfl.triviago.trivia.TriviaModel;
 import com.epfl.triviago.trivia.TriviaResult;
@@ -209,8 +209,8 @@ public class TriviaQuestionActivity extends AppCompatActivity {
         TriviaService triviaService = retrofit.create(TriviaService.class);
         Call<TriviaModel> call;
         Random rand = new Random();
-        if (randQ){
-            intent_cat = rand.nextInt(TriviaQuestion.MAX_CATEGORIES)+TriviaQuestion.TRIVIA_API_ARRAY_OFFSET;
+        if (randQ) {
+            intent_cat = rand.nextInt(TriviaQuestion.MAX_CATEGORIES) + TriviaQuestion.TRIVIA_API_ARRAY_OFFSET;
             intent_cat_no_offset = intent_cat - TriviaQuestion.TRIVIA_API_ARRAY_OFFSET;
             intent_diff = TriviaQuestion.DIFFICULTY.get(rand.nextInt(TriviaQuestion.MAX_DIFFICULTY));
         }
@@ -229,7 +229,7 @@ public class TriviaQuestionActivity extends AppCompatActivity {
                 }
                 TriviaModel body = response.body();
                 Integer response_api = body.getResponseCode();
-                if (response_api == 1){
+                if (response_api == 1) {
                     Log.e(TAG, "No question found relaunching a request");
                     hide_all(true);
                     return;
@@ -335,7 +335,7 @@ public class TriviaQuestionActivity extends AppCompatActivity {
         loader.setVisibility(View.INVISIBLE);
         radioGroup.setVisibility(View.INVISIBLE);
 
-        if (randQ){
+        if (randQ) {
             question.setText(R.string.no_question_found);
             reloadQ.setVisibility(View.VISIBLE);
         } else {
@@ -362,11 +362,10 @@ public class TriviaQuestionActivity extends AppCompatActivity {
             checkAnswer.setText(R.string.correct);
             mResult = true;
             mfinished = true;
-        }
-        else {
+        } else {
             checkAnswer.setBackground(getResources().getDrawable(R.drawable.incorrect_answer_shape));
             checkAnswer.setText(getString(R.string.wrong) + " " + Html.fromHtml(mTrivia.mResponses.get(mTrivia.mCorrectIndex)));
-            if (mAttempts_number >= intent_max_attempts){
+            if (mAttempts_number >= intent_max_attempts) {
                 mResult = false;
                 mfinished = true;
             }
@@ -380,7 +379,7 @@ public class TriviaQuestionActivity extends AppCompatActivity {
             answer_4.setEnabled(false);
         }
         backButton.setVisibility(View.VISIBLE);
-        if (mfinished){
+        if (mfinished) {
             if (mResult) {
                 backButton.setText(R.string.next_way_message_trivia);
             } else {

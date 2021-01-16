@@ -1,11 +1,5 @@
 package com.epfl.triviago;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,6 +17,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -36,7 +36,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -71,22 +70,24 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
 
     //Variables for the map
     private GoogleMap mMap;
+
     private enum WaypointStatus {
         NOT_REACHED,
         REACHED,
         BAD_ANSWER
-    };
+    }
+
     private int selectedDestinationIndex;
     private int lastDestinationIndex = 0;
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
     private LatLng currentLocation;
     private Marker mapMarker;
-    private List<LatLng> waypointsLatLgn = new ArrayList<>();
-    private List<Marker> waypointsMarkers = new ArrayList<>();
-    private List<WaypointStatus> waypointsStatus = new ArrayList<>();
-    private List<Integer> waypointsAttemptsList = new ArrayList<>();
-    private List<String> spinnerValuesList = new ArrayList<>();
+    private final List<LatLng> waypointsLatLgn = new ArrayList<>();
+    private final List<Marker> waypointsMarkers = new ArrayList<>();
+    private final List<WaypointStatus> waypointsStatus = new ArrayList<>();
+    private final List<Integer> waypointsAttemptsList = new ArrayList<>();
+    private final List<String> spinnerValuesList = new ArrayList<>();
 
     // Refs to other items
     private Spinner spinner;
@@ -128,7 +129,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         fusedLocationClient = new FusedLocationProviderClient(this);
         locationCallback = getLocationCallback();
 
-         iconGenerator = new IconGenerator(this);
+        iconGenerator = new IconGenerator(this);
     }
 
     @Override
@@ -148,7 +149,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         super.onDestroy();
 
         //remove user from DB
-        if(userSentToEnd==false) {
+        if (userSentToEnd == false) {
             gameDb.child("Users").child(playerName).removeValue();
         }
     }
@@ -166,7 +167,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                     LatLng updatedLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
                     if (mMap != null) {
-                        if(currentLocation != updatedLocation){
+                        if (currentLocation != updatedLocation) {
                             if (mapMarker == null) {
                                 // when null, camera view has never been set, and we want to show the marker title !
                                 mapMarker = mMap.addMarker(
@@ -196,7 +197,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                             builder.include(currentLocation);
                             for (int i = 0; i < waypointsLatLgn.size(); i++) {
                                 LatLng waypointLatLong = waypointsLatLgn.get(i);
-                                String waypointLetter = String.valueOf((char)(i + CreateWaypointsActivity.LIST_POS_TO_LETTER_OFFSET));
+                                String waypointLetter = String.valueOf((char) (i + CreateWaypointsActivity.LIST_POS_TO_LETTER_OFFSET));
                                 Marker waypointMarker = mMap.addMarker(
                                         new MarkerOptions().position(waypointLatLong)
                                                 .title("Waypoint " + waypointLetter));
@@ -220,9 +221,9 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
 
     private void startLocationUpdates() {
         //Check if GPS is enabled on the device
-        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             buildAlertMessageNoGps();
         }
 
@@ -266,8 +267,8 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         return new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                if((int) marker.getTag() != SELF_MARKER_TAG){
-                    int listPosition = (int)(marker.getTag());
+                if ((int) marker.getTag() != SELF_MARKER_TAG) {
+                    int listPosition = (int) (marker.getTag());
 
                     spinner.setSelection(listPosition); // fires callback of adapter
                 }
@@ -280,38 +281,34 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     // -----------------------------------------------------------
     // -------- ⬇️ Start : sub activity related functions --------
     public void goToNextWaypointPressedCallback(View view) {
-        if(waypointsLatLgn.isEmpty()){
+        if (waypointsLatLgn.isEmpty()) {
             Toast.makeText(ChooseNextWaypoint.this, "There must be a waypoint !!!", Toast.LENGTH_SHORT).show();
-        }
-        else if(waypointsStatus.get(selectedDestinationIndex)==WaypointStatus.BAD_ANSWER){
+        } else if (waypointsStatus.get(selectedDestinationIndex) == WaypointStatus.BAD_ANSWER) {
             int waypointsLeftToDo = 0;
-            for(int i=0; i<waypointsStatus.size(); i++){
-                if(waypointsStatus.get(i)==WaypointStatus.NOT_REACHED){
+            for (int i = 0; i < waypointsStatus.size(); i++) {
+                if (waypointsStatus.get(i) == WaypointStatus.NOT_REACHED) {
                     waypointsLeftToDo++;
                 }
             }
-            if(waypointsLeftToDo==0){ // If no "free" waypoints left to do and it must be re-enabled
+            if (waypointsLeftToDo == 0) { // If no "free" waypoints left to do and it must be re-enabled
                 waypointsStatus.set(selectedDestinationIndex, WaypointStatus.NOT_REACHED);
                 Toast.makeText(ChooseNextWaypoint.this,
                         "Wait a little before trying again !",
                         Toast.LENGTH_LONG).show();
-            }
-            else{
+            } else {
                 Toast.makeText(ChooseNextWaypoint.this,
                         "You can't go to the one you just tried, and failed at !",
                         Toast.LENGTH_LONG).show();
             }
-        }
-        else if(waypointsStatus.get(selectedDestinationIndex)==WaypointStatus.REACHED){
+        } else if (waypointsStatus.get(selectedDestinationIndex) == WaypointStatus.REACHED) {
             Toast.makeText(ChooseNextWaypoint.this,
                     "You already got this one right !!!", Toast.LENGTH_SHORT).show();
-        }
-        else{
+        } else {
             Intent TravelToNextWaypointIntent = new Intent(ChooseNextWaypoint.this, TravelToNextWaypointActivity.class);
-            TravelToNextWaypointIntent.putExtra( DEST_LAT_LNG, waypointsLatLgn.get(selectedDestinationIndex));
+            TravelToNextWaypointIntent.putExtra(DEST_LAT_LNG, waypointsLatLgn.get(selectedDestinationIndex));
             TravelToNextWaypointIntent.putExtra(INTENT_GAME_NAME, gameName);
             TravelToNextWaypointIntent.putExtra(INTENT_PLAYER_NAME, playerName);
-            if(currentLocation!=null) {
+            if (currentLocation != null) {
                 TravelToNextWaypointIntent.putExtra(LATEST_USER_LOC, currentLocation);
             }
             startActivityForResult(TravelToNextWaypointIntent, REACH_DEST);
@@ -333,11 +330,11 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                         gameDb.addListenerForSingleValueEvent(getListenerForStartingActivityWithDbValues(intent));
 
                         // reset previous waypoint to not reached if it was failed
-                        if(waypointsStatus.get(lastDestinationIndex) == WaypointStatus.BAD_ANSWER){
+                        if (waypointsStatus.get(lastDestinationIndex) == WaypointStatus.BAD_ANSWER) {
                             waypointsStatus.set(lastDestinationIndex, WaypointStatus.NOT_REACHED);
                             //Set marker color to red
                             iconGenerator.setStyle(IconGenerator.STYLE_ORANGE);
-                            String waypointLetter = String.valueOf((char)(lastDestinationIndex +
+                            String waypointLetter = String.valueOf((char) (lastDestinationIndex +
                                     CreateWaypointsActivity.LIST_POS_TO_LETTER_OFFSET));
                             waypointsMarkers.get(lastDestinationIndex).setIcon(
                                     BitmapDescriptorFactory.fromBitmap(
@@ -359,7 +356,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                         iconGenerator.setStyle(IconGenerator.STYLE_GREEN);
 
                         //Set marker color to green
-                        String waypointLetter = String.valueOf((char)(selectedDestinationIndex +
+                        String waypointLetter = String.valueOf((char) (selectedDestinationIndex +
                                 CreateWaypointsActivity.LIST_POS_TO_LETTER_OFFSET));
                         waypointsMarkers.get(selectedDestinationIndex).setIcon(
                                 BitmapDescriptorFactory.fromBitmap(
@@ -370,24 +367,24 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
 
                         //Set marker color to red
                         iconGenerator.setStyle(IconGenerator.STYLE_RED);
-                        String waypointLetter = String.valueOf((char)(selectedDestinationIndex +
+                        String waypointLetter = String.valueOf((char) (selectedDestinationIndex +
                                 CreateWaypointsActivity.LIST_POS_TO_LETTER_OFFSET));
                         waypointsMarkers.get(selectedDestinationIndex).setIcon(
                                 BitmapDescriptorFactory.fromBitmap(
                                         iconGenerator.makeIcon(waypointLetter))
                         );
                     }
-                    boolean stillSomeWaypointsToDo=false;
-                    for(int i = 0; i<waypointsLatLgn.size(); i++){
-                        if(waypointsStatus.get(i)!=WaypointStatus.REACHED){
-                            stillSomeWaypointsToDo=true; // There are still waypoints to go to
+                    boolean stillSomeWaypointsToDo = false;
+                    for (int i = 0; i < waypointsLatLgn.size(); i++) {
+                        if (waypointsStatus.get(i) != WaypointStatus.REACHED) {
+                            stillSomeWaypointsToDo = true; // There are still waypoints to go to
                         }
                     }
                     // If here, then there are no more waypoints to go to
-                    if(stillSomeWaypointsToDo==false){
+                    if (stillSomeWaypointsToDo == false) {
                         int waypointAttemptsTotal = 0;
                         List<Float> waypointsRatesList = new ArrayList<>();
-                        for(int i=0; i<waypointsAttemptsList.size();i++){
+                        for (int i = 0; i < waypointsAttemptsList.size(); i++) {
                             waypointAttemptsTotal += waypointsAttemptsList.get(i);
                             waypointsRatesList.add(calcRate(
                                     waypointsAttemptsList.get(i), 1
@@ -437,7 +434,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                 type_db = type_db_Str.equals("QCM");
                 cat_db = gameSnapshot.child("Waypoints")
                         .child(Integer.toString(selectedDestinationIndex)).child("category")
-                        .getValue(Integer.class)+TriviaQuestion.TRIVIA_SPINNER_API_OFFSET;
+                        .getValue(Integer.class) + TriviaQuestion.TRIVIA_SPINNER_API_OFFSET;
                 max_attempts_db = gameSnapshot.child("Settings").child("MaxAttempts").getValue(Integer.class);
 
                 intent.putExtra(TriviaQuestionActivity.INTENT_QCM_TYPE, type_db);
@@ -462,7 +459,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
                 // Get the currently selected State object from the spinner
-                String itemLetter = String.valueOf((char)(pos + CreateWaypointsActivity.LIST_POS_TO_LETTER_OFFSET));
+                String itemLetter = String.valueOf((char) (pos + CreateWaypointsActivity.LIST_POS_TO_LETTER_OFFSET));
 
                 // Just show the selection in textfield
                 TextView selectedItemView = findViewById(R.id.selectedItemText);
@@ -489,17 +486,17 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
             double wayptLat;
             double wayptLgn;
 
-            int i=0;
-            for(DataSnapshot oneWayptsSnapshot: wayptsSnapshot.getChildren()){
+            int i = 0;
+            for (DataSnapshot oneWayptsSnapshot : wayptsSnapshot.getChildren()) {
                 String wayptIdx = String.valueOf(i);
                 wayptLat = oneWayptsSnapshot.child("latitude").getValue(double.class);
                 wayptLgn = oneWayptsSnapshot.child("longitude").getValue(double.class);
-                waypointsLatLgn.add(new LatLng(wayptLat,wayptLgn));
+                waypointsLatLgn.add(new LatLng(wayptLat, wayptLgn));
                 waypointsStatus.add(WaypointStatus.NOT_REACHED);
                 waypointsAttemptsList.add(0); //starts at 0 attempts !
                 String wayptLetter =
-                        String.valueOf((char)(i + CreateWaypointsActivity.LIST_POS_TO_LETTER_OFFSET));
-                spinnerValuesList.add("Waypoint "+wayptLetter);
+                        String.valueOf((char) (i + CreateWaypointsActivity.LIST_POS_TO_LETTER_OFFSET));
+                spinnerValuesList.add("Waypoint " + wayptLetter);
                 i++;
             }
 
@@ -521,8 +518,8 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         }
     }
 
-    private float calcRate(int attempts, int minAttempts){
-        float rate = minAttempts/ (float) attempts; //force convert to float before division
+    private float calcRate(int attempts, int minAttempts) {
+        float rate = minAttempts / (float) attempts; //force convert to float before division
         return rate;
     }
 
@@ -548,10 +545,10 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     // -------- End : Small diverse functions functions --------
 
     //TODO remove this from prod
-    public void skipButtonCB(View view){
+    public void skipButtonCB(View view) {
         int waypointAttemptsTotal = 0;
         List<Float> waypointsRatesList = new ArrayList<>();
-        for(int i=0; i<waypointsAttemptsList.size();i++){
+        for (int i = 0; i < waypointsAttemptsList.size(); i++) {
             waypointAttemptsTotal += 2;
             waypointsRatesList.add(calcRate(
                     2, 1

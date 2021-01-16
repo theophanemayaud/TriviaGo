@@ -30,14 +30,14 @@ public class FragmentPlayersStats extends Fragment {
     private String gameName;
     private String playerName;
 
-    private ArrayList<String> playerSeenNames = new ArrayList<>();
+    private final ArrayList<String> playerSeenNames = new ArrayList<>();
 
     private DatabaseReference usersDb;
     private ValueEventListener usersListener;
 
     public static FragmentPlayersStats getInstance() {
         FragmentPlayersStats fragmentPlayersStats = new FragmentPlayersStats();
-        return  fragmentPlayersStats;
+        return fragmentPlayersStats;
     }
 
     @Override
@@ -51,17 +51,17 @@ public class FragmentPlayersStats extends Fragment {
         View view = inflater.inflate(R.layout.fragment_players_stats, container, false);
 
         //Retrieve data from EndActivity
-        SharedPreferences prefs = getActivity().getSharedPreferences(EndActivity.MyPREFERENCES , MODE_PRIVATE);
+        SharedPreferences prefs = getActivity().getSharedPreferences(EndActivity.MyPREFERENCES, MODE_PRIVATE);
         gameName = prefs.getString(ChooseNextWaypoint.INTENT_GAME_NAME, null);
         playerName = prefs.getString(ChooseNextWaypoint.INTENT_PLAYER_NAME, null);
 
         createLayout(view);
-        return  view;
+        return view;
     }
 
     public void createLayout(View view) {
         // load game infos from DB
-        RelativeLayout rLayout =  view.findViewById(R.id.rlayout_player_stats);
+        RelativeLayout rLayout = view.findViewById(R.id.rlayout_player_stats);
 
         usersDb = FirebaseDatabase.getInstance().getReference().child(gameName).child("Users");
         usersListener = usersDb.addValueEventListener(new ValueEventListener() {
@@ -69,39 +69,39 @@ public class FragmentPlayersStats extends Fragment {
             public void onDataChange(DataSnapshot usersSnapshot) {
                 String current_player_name;
 
-                for(DataSnapshot userSnap: usersSnapshot.getChildren()) {
+                for (DataSnapshot userSnap : usersSnapshot.getChildren()) {
                     current_player_name = userSnap.getKey();
 
-                    if(userSnap.child("rate").exists()) {
+                    if (userSnap.child("rate").exists()) {
                         float score = userSnap.child("rate").getValue(Float.class);
 
                         // check all that we already added
                         boolean userAlreadySeen = false;
-                        for(int i = 0; i< playerSeenNames.size(); i++){
-                            if(playerSeenNames.get(i).equals(current_player_name)){
+                        for (int i = 0; i < playerSeenNames.size(); i++) {
+                            if (playerSeenNames.get(i).equals(current_player_name)) {
                                 userAlreadySeen = true;
                             }
                         }
 
-                        if(userAlreadySeen==false){
+                        if (userAlreadySeen == false) {
                             RelativeLayout.LayoutParams lprams = new RelativeLayout.LayoutParams(
                                     RelativeLayout.LayoutParams.WRAP_CONTENT,
                                     RelativeLayout.LayoutParams.WRAP_CONTENT);
                             lprams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-                            if(playerSeenNames.size()>0){
+                            if (playerSeenNames.size() > 0) {
                                 lprams.addRule(RelativeLayout.BELOW, playerSeenNames.size()); //don't add 1 to size at it references the id below the current one !
                                 lprams.setMargins(0, 10, 0, 0);
 
                             }
 
                             TextView userView = new TextView(getContext());
-                            userView.setText(current_player_name+":    "+String.format("%.2f", score*100)+"% correct!");
+                            userView.setText(current_player_name + ":    " + String.format("%.2f", score * 100) + "% correct!");
                             userView.setTextAppearance(getActivity(), R.style.fontForEndGame);
                             if (current_player_name.equals(playerName)) {
                                 userView.setTextColor(getResources().getColor(R.color.bg_blue));
                             }
                             userView.setLayoutParams(lprams);
-                            userView.setId(playerSeenNames.size()+1);
+                            userView.setId(playerSeenNames.size() + 1);
 
                             playerSeenNames.add(current_player_name);
                             rLayout.addView(userView);
@@ -109,6 +109,7 @@ public class FragmentPlayersStats extends Fragment {
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.e("TxGO", "Error with database");
@@ -119,7 +120,7 @@ public class FragmentPlayersStats extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(usersListener!=null){
+        if (usersListener != null) {
             usersDb.removeEventListener(usersListener);
         }
     }

@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,11 +25,11 @@ public class FragmentIndividualStats extends Fragment {
     private String gameName;
     private String playerName;
     private int total_waypoints;
-    private List<Float> waypointsRatesList = new ArrayList<>();
+    private final List<Float> waypointsRatesList = new ArrayList<>();
 
     public static FragmentIndividualStats getInstance() {
         FragmentIndividualStats fragmentIndividualStats = new FragmentIndividualStats();
-        return  fragmentIndividualStats;
+        return fragmentIndividualStats;
     }
 
     @Override
@@ -45,29 +44,29 @@ public class FragmentIndividualStats extends Fragment {
         View view = inflater.inflate(R.layout.fragment_individual_stats, container, false);
 
         //Retrieve data from EndActivity
-        SharedPreferences prefs = getActivity().getSharedPreferences(EndActivity.MyPREFERENCES , MODE_PRIVATE);
+        SharedPreferences prefs = getActivity().getSharedPreferences(EndActivity.MyPREFERENCES, MODE_PRIVATE);
         gameName = prefs.getString(ChooseNextWaypoint.INTENT_GAME_NAME, null);
         playerName = prefs.getString(ChooseNextWaypoint.INTENT_PLAYER_NAME, null);
         total_waypoints = prefs.getInt(EndActivity.TOT_WAYPS_COUNT, 0);
-        for (int i = 0; i< total_waypoints; i++) {
-            waypointsRatesList.add(i, prefs.getFloat(EndActivity.WAYPS_LIST_ID+i, 0));
+        for (int i = 0; i < total_waypoints; i++) {
+            waypointsRatesList.add(i, prefs.getFloat(EndActivity.WAYPS_LIST_ID + i, 0));
         }
 
         //Creates a dynamic layout based on the number waypoints of the game
         createDynamicLayout(view);
 
-        return  view;
+        return view;
     }
 
     @SuppressLint("ResourceType")
     public void createDynamicLayout(View view) {
         // First TextView
-        RelativeLayout rLayout = (RelativeLayout) view.findViewById(R.id.rlayout);
+        RelativeLayout rLayout = view.findViewById(R.id.rlayout);
         RelativeLayout.LayoutParams lprams = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
         TextView txtView = new TextView(getContext());
-        txtView.setText("Waypoint "+0+":    "+String.format("%.2f", waypointsRatesList.get(0)*100)+"%   correct!");
+        txtView.setText("Waypoint " + 0 + ":    " + String.format("%.2f", waypointsRatesList.get(0) * 100) + "%   correct!");
         txtView.setTextAppearance(getActivity(), R.style.fontForEndGame);
         lprams.addRule(RelativeLayout.CENTER_HORIZONTAL);
         txtView.setLayoutParams(lprams);
@@ -75,18 +74,18 @@ public class FragmentIndividualStats extends Fragment {
         rLayout.addView(txtView);
 
         //Dynamically add the TextViews for each remaining waypoint
-        for (int i = 1; i< total_waypoints; i++) {
+        for (int i = 1; i < total_waypoints; i++) {
             RelativeLayout.LayoutParams newParams = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
             TextView textView = new TextView(getContext());
-            textView.setText("Waypoint "+i+":    "+String.format("%.2f", waypointsRatesList.get(i)*100)+"%   correct!");
+            textView.setText("Waypoint " + i + ":    " + String.format("%.2f", waypointsRatesList.get(i) * 100) + "%   correct!");
             textView.setTextAppearance(getActivity(), R.style.fontForEndGame);
             newParams.addRule(RelativeLayout.BELOW, i);
             newParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
             newParams.setMargins(0, 10, 0, 0);
             textView.setLayoutParams(newParams);
-            textView.setId(i+1);
+            textView.setId(i + 1);
             rLayout.addView(textView);
         }
     }

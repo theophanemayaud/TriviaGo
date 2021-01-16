@@ -1,8 +1,5 @@
 package com.epfl.triviago;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,7 +10,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -65,13 +64,13 @@ public class JoinActivity extends AppCompatActivity {
         LinearLayout enter_code = findViewById(R.id.enterGame);
         EditText name_text = findViewById(R.id.writeCode);
         gameName = name_text.getText().toString();
-        if(gameName.isEmpty()){
+        if (gameName.isEmpty()) {
             Toast.makeText(JoinActivity.this, R.string.empty_game_name, Toast.LENGTH_SHORT).show();
             return;
         }
         EditText username_text = findViewById(R.id.username);
         username = username_text.getText().toString();
-        if(username.isEmpty()){
+        if (username.isEmpty()) {
             Toast.makeText(JoinActivity.this,
                     R.string.empty_user_name, Toast.LENGTH_SHORT).show();
             return;
@@ -82,8 +81,8 @@ public class JoinActivity extends AppCompatActivity {
         gameDb.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot gameSnapshot) {
-                if(!gameSnapshot.exists()){
-                    Toast.makeText(JoinActivity.this, "Game "+gameName+ " doesn't exist: " +
+                if (!gameSnapshot.exists()) {
+                    Toast.makeText(JoinActivity.this, "Game " + gameName + " doesn't exist: " +
                             "create a new one or enter another name! ", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -93,12 +92,12 @@ public class JoinActivity extends AppCompatActivity {
                 // Update the number of players that are waiting
                 current_players = (int) gameSnapshot.child("Users").getChildrenCount();
 
-                if (current_players >= max_players){
+                if (current_players >= max_players) {
                     Toast.makeText(JoinActivity.this, "This game is full!", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 //Add the player to the game if doesn't exist
-                if(gameSnapshot.child("Users").hasChild(username)){
+                if (gameSnapshot.child("Users").hasChild(username)) {
                     Toast.makeText(JoinActivity.this, "This username is taken !", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -114,27 +113,27 @@ public class JoinActivity extends AppCompatActivity {
                 seekbar.setVisibility(View.VISIBLE);
                 waiting_message.setVisibility(View.VISIBLE);
                 progress_message.setVisibility(View.VISIBLE);
-                progress_message.setText(" "+current_players+"/"+max_players+" players");
+                progress_message.setText(" " + current_players + "/" + max_players + " players");
                 seekbar.setMax(max_players);
-                seekbar.setProgress(current_players+1);
+                seekbar.setProgress(current_players + 1);
 
                 userListener = gameDb.child("Users").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot usersSnapshot) {
-                        if(userInGame==true){
+                        if (userInGame == true) {
                             return; //We are already in the game, or waiting to enter if multiple button press
                         }
 
                         current_players = (int) usersSnapshot.getChildrenCount();
-                        progress_message.setText(" "+current_players+"/"+max_players+" players");
+                        progress_message.setText(" " + current_players + "/" + max_players + " players");
                         seekbar.setProgress(current_players);
-                        if(skippedFirstNewUser==true){ //skip first fire of the callback as it is the user itself !
+                        if (skippedFirstNewUser == true) { //skip first fire of the callback as it is the user itself !
                             Toast.makeText(JoinActivity.this, "A new player just joined !", Toast.LENGTH_SHORT).show();
                         }
                         skippedFirstNewUser = true;
 
-                        if(current_players>=max_players){
-                            userInGame=true;
+                        if (current_players >= max_players) {
+                            userInGame = true;
                             long tStart = System.currentTimeMillis();
                             Intent intentChooseNextWaypoint = new Intent(JoinActivity.this, ChooseNextWaypoint.class);
                             intentChooseNextWaypoint.putExtra(ChooseNextWaypoint.INTENT_GAME_NAME, gameName);
@@ -145,16 +144,17 @@ public class JoinActivity extends AppCompatActivity {
                             finish();
                         }
                     }
+
                     @Override
                     public void onCancelled(@NonNull DatabaseError e) {
-                        Log.e(""+e.getClass(), "Error with database" + e.getDetails());
+                        Log.e("" + e.getClass(), "Error with database" + e.getDetails());
                     }
                 });
             }
 
             @Override
             public void onCancelled(DatabaseError e) {
-                Log.e(""+e.getClass(), "Error with database" + e.getDetails());
+                Log.e("" + e.getClass(), "Error with database" + e.getDetails());
             }
         });
     }
@@ -163,10 +163,10 @@ public class JoinActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         // only remove user when pressing back button within this activity
-        if(userInGame == false && userAddedToDb == true){
+        if (userInGame == false && userAddedToDb == true) {
             gameDb.child("Users").child(username).removeValue();
         }
-        if(userListener!=null){
+        if (userListener != null) {
             gameDb.child("Users").removeEventListener(userListener);
         }
     }

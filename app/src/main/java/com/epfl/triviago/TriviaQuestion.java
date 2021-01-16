@@ -8,6 +8,7 @@ import java.util.Random;
 public class TriviaQuestion implements Serializable {
 
     static final ArrayList<String> Categories = new ArrayList<>();
+
     static {
         Categories.add(" ");
         Categories.add("General Knowledge");
@@ -37,6 +38,7 @@ public class TriviaQuestion implements Serializable {
     }
 
     static final ArrayList<String> Bg_colors = new ArrayList<>();
+
     static {
         Bg_colors.add("#128314"); // General knowledge
         Bg_colors.add("#C51A56"); // Entertainment: Books
@@ -65,6 +67,7 @@ public class TriviaQuestion implements Serializable {
     }
 
     static final ArrayList<Integer> Cat_icons = new ArrayList<>();
+
     static {
         Cat_icons.add(R.mipmap.general_knoledge); // General knowledge
         Cat_icons.add(R.mipmap.entertainment); // Entertainment: Books
@@ -93,6 +96,7 @@ public class TriviaQuestion implements Serializable {
     }
 
     static final ArrayList<String> DIFFICULTY = new ArrayList<>();
+
     static {
         DIFFICULTY.add("easy");
         DIFFICULTY.add("medium");
