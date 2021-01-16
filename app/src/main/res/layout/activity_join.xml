@@ -1,128 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/app_background">
+    android:fillViewport="true"
+    tools:context=".JoinActivity">
 
-
-    <LinearLayout
-        android:id="@+id/enterGame"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:padding="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:background="@drawable/app_background">
+
+        <LinearLayout
+            android:id="@+id/enterGame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/usernameMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/shadow_white_box"
+                android:padding="10dp"
+                android:text="Enter your Name:"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Name name"
+                android:imeOptions="actionDone"
+                android:inputType="textShortMessage" />
+
+            <TextView
+                android:id="@+id/nameMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/shadow_white_box"
+                android:padding="10dp"
+                android:text="Enter the name of the game you wish to join:"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/writeCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Game name"
+                android:imeOptions="actionDone"
+                android:inputType="textShortMessage" />
+
+            <Button
+                android:id="@+id/button_done"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/button_shape_final"
+                android:onClick="clickedJoinButtonXmlCallback"
+                android:text="Done"
+                app:layout_constraintRight_toRightOf="@id/setup_parameters"
+                app:layout_constraintTop_toBottomOf="@id/setup_parameters" />
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/usernameMessage"
+            android:id="@+id/waitingMessage"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="200dp"
             android:background="@drawable/shadow_white_box"
             android:padding="10dp"
-            android:layout_gravity="center_horizontal"
-            android:text="Enter your Name:"
+            android:text="Waiting for all players to join..."
             android:textColor="@color/black"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/username"
-            android:layout_width="wrap_content"
+        <SeekBar
+            android:id="@+id/seekBar2"
+            style="@style/Widget.AppCompat.SeekBar.Discrete"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="Name name"
-            android:imeOptions="actionDone"
-            android:inputType="textShortMessage" />
-
-        <TextView
-            android:id="@+id/nameMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@drawable/shadow_white_box"
-            android:padding="10dp"
-            android:layout_gravity="center_horizontal"
-            android:text="Enter the name of the game you wish to join:"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/writeCode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="Game name"
-            android:imeOptions="actionDone"
-            android:inputType="textShortMessage" />
-
-        <Button
-            android:id="@+id/button_done"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Done"
-            android:onClick="clickedJoinButtonXmlCallback"
-            android:background="@drawable/button_shape_final"
             android:layout_marginTop="20dp"
-            android:layout_gravity="right"
-            app:layout_constraintTop_toBottomOf="@id/setup_parameters"
-            app:layout_constraintRight_toRightOf="@id/setup_parameters"/>
-    </LinearLayout>
+            android:backgroundTint="@color/app_logo_background"
+            android:indeterminate="false"
+            android:max="3"
+            android:progress="1"
+            android:progressDrawable="@drawable/seek_bar"
+            android:progressTint="#FFB547"
+            android:thumb="@drawable/seek"
+            app:layout_constraintLeft_toLeftOf="@id/waitingMessage"
+            app:layout_constraintRight_toRightOf="@id/waitingMessage"
+            app:layout_constraintTop_toBottomOf="@id/waitingMessage" />
 
-    <TextView
-        android:id="@+id/waitingMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/shadow_white_box"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="200dp"
-        android:text="Waiting for all players to join..."
-        android:padding="10dp"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/progressMessage"
+            android:layout_width="136dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/buttonshape_difficulty_unselected"
+            android:padding="10dp"
+            android:text=" 0/3 players"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/seekBar2" />
 
-    <SeekBar
-        android:id="@+id/seekBar2"
-        style="@style/Widget.AppCompat.SeekBar.Discrete"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:backgroundTint="@color/app_logo_background"
-        android:indeterminate="false"
-        android:max="3"
-        android:progress="1"
-        android:progressDrawable="@drawable/seek_bar"
-        android:progressTint="#FFB547"
-        android:thumb="@drawable/seek"
-        app:layout_constraintLeft_toLeftOf="@id/waitingMessage"
-        app:layout_constraintRight_toRightOf="@id/waitingMessage"
-        app:layout_constraintTop_toBottomOf="@id/waitingMessage" />
-
-    <TextView
-        android:id="@+id/progressMessage"
-        android:layout_width="136dp"
-        android:layout_height="45dp"
-        android:background="@drawable/buttonshape_difficulty_unselected"
-        android:padding="10dp"
-        android:layout_marginTop="20dp"
-        android:text=" 0/3 players"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/seekBar2" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

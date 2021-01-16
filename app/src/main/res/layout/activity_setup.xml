@@ -1,285 +1,292 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/setupConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/app_background">
+    android:fillViewport="true"
+    tools:context=".SetUpActivity">
 
-    <LinearLayout
-        android:id="@+id/setup_message"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/setupConstraintLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/shadow_white_box"
-        android:orientation="vertical"
-        android:paddingBottom="5dp"
-        app:layout_constraintBottom_toTopOf="@+id/setup_parameters"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.85">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:background="@drawable/white_bg_box"
-            android:padding="10dp"
-            android:text="Game Settings"
-            android:textColor="@color/black"
-            android:textSize="25sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/setup_parameters"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/shadow_white_box"
-        android:orientation="vertical"
-        android:paddingBottom="5dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5">
+        android:background="@drawable/app_background">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/white_bg_box"
+            android:id="@+id/setup_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shadow_white_box"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:paddingBottom="5dp"
+            app:layout_constraintBottom_toTopOf="@+id/setup_parameters"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.85">
 
             <TextView
-                android:id="@+id/textView3"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Name of the Game"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@drawable/white_bg_box"
+                android:padding="10dp"
+                android:text="Game Settings"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="25sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
-            <EditText
-                android:id="@+id/nameGame"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:hint="Game name"
-                android:imeOptions="actionDone"
-                android:inputType="textShortMessage" />
+        <LinearLayout
+            android:id="@+id/setup_parameters"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shadow_white_box"
+            android:orientation="vertical"
+            android:paddingBottom="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:background="@drawable/white_bg_box"
+                android:orientation="vertical"
+                android:padding="10dp">
 
                 <TextView
-                    android:id="@+id/phraseNumPlayers"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/textView3"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/number_of_players_phrase"
+                    android:layout_weight="1"
+                    android:text="Name of the Game"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
 
-                <TextView
-                    android:id="@+id/playersNumberTextview"
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/nameGame"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="none"
-                    android:textColor="#FF000000"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="Game name"
+                    android:imeOptions="actionDone"
+                    android:inputType="textShortMessage" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/phraseNumPlayers"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/number_of_players_phrase"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/playersNumberTextview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="none"
+                        android:textColor="#FF000000"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/button_1_pnumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/buttonshape_difficulty_unselected"
+                        android:onClick="clickedPlayerNumberButton"
+                        android:text="1" />
+
+                    <Button
+                        android:id="@+id/button_2_pnumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/buttonshape_difficulty_unselected"
+                        android:onClick="clickedPlayerNumberButton"
+                        android:text="2" />
+
+                    <Button
+                        android:id="@+id/button_3_pnumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/buttonshape_difficulty_unselected"
+                        android:onClick="clickedPlayerNumberButton"
+                        android:text="3" />
+
+                    <Button
+                        android:id="@+id/button_minus_player"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/buttonshape_difficulty_unselected"
+                        android:onClick="clickedPlayerPlusMinusButton"
+                        android:text="@string/button_minus_player_sign" />
+
+                    <Button
+                        android:id="@+id/button_plus_player"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/buttonshape_difficulty_unselected"
+                        android:onClick="clickedPlayerPlusMinusButton"
+                        android:text="@string/button_plus_player_sign" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:text="Type of questions"
+                    android:textColor="@color/black"
                     android:textSize="20sp" />
+
+                <ToggleButton
+                    android:id="@+id/button_questionType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="false"
+                    android:text="ToggleButton"
+                    android:textOff="MULTIPLE CHOICE"
+                    android:textOn="TRUE / FALSE" />
+
+                <TextView
+                    android:id="@+id/textDifficulty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:text="Difficulty"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/button_easy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/buttonshape_difficulty_selected"
+                        android:onClick="clickedEasyButtonXmlCallback"
+                        android:text="Easy" />
+
+                    <Button
+                        android:id="@+id/button_medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/buttonshape_difficulty_unselected"
+                        android:onClick="clickedMediumButtonXmlCallback"
+                        android:text="Medium" />
+
+                    <Button
+                        android:id="@+id/button_hard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/buttonshape_difficulty_unselected"
+                        android:onClick="clickedHardButtonXmlCallback"
+                        android:text="Hard" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textMaxAttemps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:text="Max attempts per question"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/button_1atp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/buttonshape_difficulty_unselected"
+                        android:onClick="clicked1AtpButtonXmlCallback"
+                        android:text="1" />
+
+                    <Button
+                        android:id="@+id/button_3atp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/buttonshape_difficulty_selected"
+                        android:onClick="clicked3AtpButtonXmlCallback"
+                        android:text="3" />
+
+                    <Button
+                        android:id="@+id/button_5atp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/buttonshape_difficulty_unselected"
+                        android:onClick="clicked5AtpButtonXmlCallback"
+                        android:text="5" />
+                </LinearLayout>
+
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/button_1_pnumber"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/buttonshape_difficulty_unselected"
-                    android:onClick="clickedPlayerNumberButton"
-                    android:text="1" />
-
-                <Button
-                    android:id="@+id/button_2_pnumber"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/buttonshape_difficulty_unselected"
-                    android:onClick="clickedPlayerNumberButton"
-                    android:text="2" />
-
-                <Button
-                    android:id="@+id/button_3_pnumber"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/buttonshape_difficulty_unselected"
-                    android:onClick="clickedPlayerNumberButton"
-                    android:text="3" />
-
-                <Button
-                    android:id="@+id/button_minus_player"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/buttonshape_difficulty_unselected"
-                    android:onClick="clickedPlayerPlusMinusButton"
-                    android:text="@string/button_minus_player_sign" />
-
-                <Button
-                    android:id="@+id/button_plus_player"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/buttonshape_difficulty_unselected"
-                    android:onClick="clickedPlayerPlusMinusButton"
-                    android:text="@string/button_plus_player_sign" />
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:text="Type of questions"
-                android:textColor="@color/black"
-                android:textSize="20sp" />
-
-            <ToggleButton
-                android:id="@+id/button_questionType"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:checked="false"
-                android:text="ToggleButton"
-                android:textOff="MULTIPLE CHOICE"
-                android:textOn="TRUE / FALSE" />
-
-            <TextView
-                android:id="@+id/textDifficulty"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:text="Difficulty"
-                android:textColor="@color/black"
-                android:textSize="20sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/button_easy"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/buttonshape_difficulty_selected"
-                    android:onClick="clickedEasyButtonXmlCallback"
-                    android:text="Easy" />
-
-                <Button
-                    android:id="@+id/button_medium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/buttonshape_difficulty_unselected"
-                    android:onClick="clickedMediumButtonXmlCallback"
-                    android:text="Medium" />
-
-                <Button
-                    android:id="@+id/button_hard"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/buttonshape_difficulty_unselected"
-                    android:onClick="clickedHardButtonXmlCallback"
-                    android:text="Hard" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/textMaxAttemps"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:text="Max attempts per question"
-                android:textColor="@color/black"
-                android:textSize="20sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/button_1atp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/buttonshape_difficulty_unselected"
-                    android:onClick="clicked1AtpButtonXmlCallback"
-                    android:text="1" />
-
-                <Button
-                    android:id="@+id/button_3atp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/buttonshape_difficulty_selected"
-                    android:onClick="clicked3AtpButtonXmlCallback"
-                    android:text="3" />
-
-                <Button
-                    android:id="@+id/button_5atp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/buttonshape_difficulty_unselected"
-                    android:onClick="clicked5AtpButtonXmlCallback"
-                    android:text="5" />
-            </LinearLayout>
-
         </LinearLayout>
-    </LinearLayout>
 
-    <Button
-        android:id="@+id/button_done"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/button_shape_final"
-        android:onClick="clickedDoneButtonXmlCallback"
-        android:text="Done"
-        app:layout_constraintRight_toRightOf="@id/setup_parameters"
-        app:layout_constraintTop_toBottomOf="@id/setup_parameters" />
+        <Button
+            android:id="@+id/button_done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/button_shape_final"
+            android:onClick="clickedDoneButtonXmlCallback"
+            android:text="Done"
+            app:layout_constraintRight_toRightOf="@id/setup_parameters"
+            app:layout_constraintTop_toBottomOf="@id/setup_parameters" />
 
-    <Button
-        android:id="@+id/button_chooseWaypoints"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/button_shape_final"
-        android:onClick="clickedWaypointButtonXmlCallback"
-        android:text="Choose Waypoints"
-        app:layout_constraintLeft_toLeftOf="@id/setup_parameters"
-        app:layout_constraintTop_toBottomOf="@id/setup_parameters" />
+        <Button
+            android:id="@+id/button_chooseWaypoints"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/button_shape_final"
+            android:onClick="clickedWaypointButtonXmlCallback"
+            android:text="Choose Waypoints"
+            app:layout_constraintLeft_toLeftOf="@id/setup_parameters"
+            app:layout_constraintTop_toBottomOf="@id/setup_parameters" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
