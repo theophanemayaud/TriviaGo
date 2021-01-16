@@ -87,7 +87,7 @@ public class WearService extends WearableListenerService {
 
         switch (path) {
             default:
-                Log.e(TAG, "Received a message for unknown path " + path + " : " + data);
+                break;
         }
     }
 
@@ -109,7 +109,6 @@ public class WearService extends WearableListenerService {
                 assert uri.getPath() != null;
                 switch (uri.getPath()) {
                     default:
-                        Log.e(TAG, "Data changed for unhandled path: " + uri);
                         break;
                 }
             } else if (event.getType() == DataEvent.TYPE_DELETED) {
@@ -117,23 +116,6 @@ public class WearService extends WearableListenerService {
             }
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
