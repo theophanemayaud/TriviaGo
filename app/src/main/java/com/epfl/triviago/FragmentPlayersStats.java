@@ -68,7 +68,6 @@ public class FragmentPlayersStats extends Fragment {
         usersListener = usersDb.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot usersSnapshot) {
-                Log.e(getContext().toString(), "userSnapshot listener fired in FragmentPlayerStats"); //TODO remove
                 String current_player_name;
 
                 for(DataSnapshot userSnap: usersSnapshot.getChildren()) {
@@ -113,7 +112,7 @@ public class FragmentPlayersStats extends Fragment {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("TxGO", "Error writing to database");
+                Log.e("TxGO", "Error with database");
             }
         });
     }
