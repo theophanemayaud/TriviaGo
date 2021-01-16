@@ -27,8 +27,8 @@
     <string name="please_select_item">Please select an item</string>
     <string name="difficulty">(%1$s)</string>
     <string name="compass_arrow_image">Compass Arrow image</string>
-    <string name="empty_game_name">Game name can\'t be empty...</string>
-    <string name="empty_user_name">User name can\'t be empty...</string>
+    <string name="empty_game_name">Game name can\'t be empty…</string>
+    <string name="empty_user_name">User name can\'t be empty…</string>
     <string name="no_waypoints_error_msg">Create at least 1 waypoint !</string>
     <string name="rules_text">
         <u><b>Goal:</b></u>\n
@@ -51,6 +51,18 @@
     <string name="number_of_players_phrase">"Number of Players : "</string>
     <string name="button_plus_player_sign">+</string>
     <string name="button_minus_player_sign">-</string>
+    <string name="difficulty_text">difficulty_text</string>
+    <string name="category_text">category_text</string>
+    <string name="_1_of_5">1 of 5</string>
+    <string name="trivia_question">Trivia Question</string>
+    <string name="answer_1">Answer_1</string>
+    <string name="answer_2">Answer_2</string>
+    <string name="answer_3">Answer_3</string>
+    <string name="r_ponse_d">Réponse D</string>
+    <string name="select_a_response">Select a response</string>
+    <string name="load_random_question">Load random question</string>
+    <string name="choose_your_next_waypoint">Choose Your Next waypoint !</string>
+    <string name="trivia_category_image">Trivia Category Image</string>
 
     <!--String arrays for spinners used in game setup-->
     <string-array name="spinner_players">

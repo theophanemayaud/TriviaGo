@@ -22,8 +22,8 @@
             android:id="@+id/textCategory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:text="category_text"
+            android:layout_marginStart="20dp"
+            android:text="@string/category_text"
             app:layout_constraintLeft_toRightOf="@id/category_image"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -32,7 +32,7 @@
             android:id="@+id/textDifficulty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="difficulty_text"
+            android:text="@string/difficulty_text"
             app:layout_constraintLeft_toRightOf="@id/category_image"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textCategory" />
@@ -45,7 +45,8 @@
             android:src="@mipmap/vehicule"
             app:layout_constraintBottom_toBottomOf="@id/textDifficulty"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="@id/textCategory" />
+            app:layout_constraintTop_toTopOf="@id/textCategory"
+            android:contentDescription="@string/trivia_category_image"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -53,7 +54,7 @@
         android:id="@+id/container_attempt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/shadow_white_box"
         android:padding="10dp"
@@ -73,7 +74,7 @@
             android:id="@+id/attemps_counter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1 of 5"
+            android:text="@string/_1_of_5"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textAttemptsTrivia" />
@@ -85,12 +86,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/shadow_white_box"
+        android:fontFamily="@font/acme"
         android:padding="10dp"
-        android:text="Trivia Question"
+        android:text="@string/trivia_question"
         android:textAlignment="center"
         android:textColor="#000000"
         android:textSize="24sp"
-        android:fontFamily="@font/acme"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -118,7 +119,7 @@
             android:layout_height="wrap_content"
             android:buttonTint="#F44336"
             android:onClick="answerRadioButtonClicked"
-            android:text="Answer_1" />
+            android:text="@string/answer_1" />
 
         <RadioButton
             android:id="@+id/answer_2"
@@ -126,7 +127,7 @@
             android:layout_height="wrap_content"
             android:buttonTint="#8BC34A"
             android:onClick="answerRadioButtonClicked"
-            android:text="Answer_2" />
+            android:text="@string/answer_2" />
 
         <RadioButton
             android:id="@+id/answer_3"
@@ -134,7 +135,7 @@
             android:layout_height="wrap_content"
             android:buttonTint="#2196F3"
             android:onClick="answerRadioButtonClicked"
-            android:text="Answer_3" />
+            android:text="@string/answer_3" />
 
         <RadioButton
             android:id="@+id/answer_4"
@@ -142,7 +143,7 @@
             android:layout_height="wrap_content"
             android:buttonTint="#9C27B0"
             android:onClick="answerRadioButtonClicked"
-            android:text="Réponse D" />
+            android:text="@string/r_ponse_d" />
     </RadioGroup>
 
     <Button
@@ -184,11 +185,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:background="@drawable/answer_shape"
-        android:text="Select a response"
+        android:fontFamily="@font/acme"
+        android:text="@string/select_a_response"
         android:textAlignment="center"
         android:textColor="#000"
-        android:textSize="16dp"
-        android:fontFamily="@font/acme"
+        android:textSize="16sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/answer_group"
@@ -210,7 +211,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="reloadRandomQuestion"
-        android:text="Load random question"
+        android:text="@string/load_random_question"
         android:visibility="invisible"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

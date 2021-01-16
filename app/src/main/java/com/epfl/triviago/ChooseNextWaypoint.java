@@ -1,8 +1,8 @@
 package com.epfl.triviago;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -79,6 +79,8 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
 
     private int selectedDestinationIndex;
     private int lastDestinationIndex = 0;
+
+    // Get location updates and all
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
     private LatLng currentLocation;
@@ -125,9 +127,9 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                         .findFragmentById(R.id.GoogleMap);
         mapFragment.getMapAsync(this);
 
-        // Get location updates and all
-        fusedLocationClient = new FusedLocationProviderClient(this);
         locationCallback = getLocationCallback();
+
+        fusedLocationClient = new FusedLocationProviderClient(this);
 
         iconGenerator = new IconGenerator(this);
     }
@@ -149,7 +151,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         super.onDestroy();
 
         //remove user from DB
-        if (userSentToEnd == false) {
+        if (!userSentToEnd) {
             gameDb.child("Users").child(playerName).removeValue();
         }
     }
@@ -252,6 +254,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         fusedLocationClient.removeLocationUpdates(locationCallback);
     }
 
+    @SuppressLint("PotentialBehaviorOverride")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         // We have a map !
@@ -264,16 +267,13 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     }
 
     private GoogleMap.OnMarkerClickListener getOnMarkerClickListener() {
-        return new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                if ((int) marker.getTag() != SELF_MARKER_TAG) {
-                    int listPosition = (int) (marker.getTag());
+        return marker -> {
+            if ((int) marker.getTag() != SELF_MARKER_TAG) {
+                int listPosition = (int) (marker.getTag());
 
-                    spinner.setSelection(listPosition); // fires callback of adapter
-                }
-                return false; //true to disable standard show title and center behavior
+                spinner.setSelection(listPosition); // fires callback of adapter
             }
+            return false; //true to disable standard show title and center behavior
         };
     }
     // -------- End : Location and map related functions --------
@@ -381,7 +381,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                         }
                     }
                     // If here, then there are no more waypoints to go to
-                    if (stillSomeWaypointsToDo == false) {
+                    if (!stillSomeWaypointsToDo) {
                         int waypointAttemptsTotal = 0;
                         List<Float> waypointsRatesList = new ArrayList<>();
                         for (int i = 0; i < waypointsAttemptsList.size(); i++) {
@@ -466,7 +466,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                 selectedItemView.setText("Waypoint " + itemLetter + " is currently selected");
 
                 // Show waypoint title on map and center map on it
-                if (waypointsMarkers.isEmpty() == false) {
+                if (!waypointsMarkers.isEmpty()) {
                     selectedDestinationIndex = pos;
                     mMap.animateCamera(CameraUpdateFactory.newLatLng(waypointsLatLgn.get(pos)));
                     waypointsMarkers.get(pos).showInfoWindow();
@@ -504,7 +504,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
             selectedDestinationIndex = 0;
 
             // Link the spinner and it's adapter with listener for modifications
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(
                     ChooseNextWaypoint.this, android.R.layout.simple_spinner_item,
                     spinnerValuesList);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -519,24 +519,18 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     }
 
     private float calcRate(int attempts, int minAttempts) {
-        float rate = minAttempts / (float) attempts; //force convert to float before division
-        return rate;
+        return minAttempts / (float) attempts;
     }
 
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Your GPS seems to be disabled, you must enable it for the game to work.")
                 .setCancelable(false)
-                .setPositiveButton("Enable", new DialogInterface.OnClickListener() {
-                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                    }
-                })
-                .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        finish();
-                        dialog.cancel();
-                    }
+                .setPositiveButton("Enable", (dialog, id) -> startActivity(
+                        new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)))
+                .setNegativeButton("Exit", (dialog, id) -> {
+                    finish();
+                    dialog.cancel();
                 });
         final AlertDialog alert = builder.create();
         alert.show();

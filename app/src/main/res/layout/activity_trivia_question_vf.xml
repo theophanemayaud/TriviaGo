@@ -5,49 +5,48 @@
     android:id="@+id/triviaParentLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TriviaQuestionActivity"
-    >
+    tools:context=".TriviaQuestionActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container_cat_diff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/shadow_white_box"
-        android:padding="10dp">
+        android:padding="10dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/textCategory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/category_text"
             app:layout_constraintLeft_toRightOf="@id/category_image"
-            android:text="category_text" />
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/textDifficulty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="difficulty_text"
-            app:layout_constraintTop_toBottomOf="@+id/textCategory"
+            android:text="@string/difficulty_text"
             app:layout_constraintLeft_toRightOf="@id/category_image"
             app:layout_constraintRight_toRightOf="parent"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/textCategory" />
 
         <ImageView
             android:id="@+id/category_image"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            app:layout_constraintTop_toTopOf="@id/textCategory"
+            android:scaleType="fitCenter"
+            android:src="@mipmap/general_knoledge"
             app:layout_constraintBottom_toBottomOf="@id/textDifficulty"
             app:layout_constraintLeft_toLeftOf="parent"
-            android:scaleType="fitCenter"
-            android:src="@mipmap/general_knoledge" />
+            app:layout_constraintTop_toTopOf="@id/textCategory"
+            android:contentDescription="@string/trivia_category_image"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -55,31 +54,30 @@
         android:id="@+id/container_attempt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
         android:background="@drawable/shadow_white_box"
-        android:padding="10dp">
+        android:padding="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/textAttemptsTrivia"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            android:text="@string/attempt"
             app:layout_constraintLeft_toLeftOf="parent"
-            android:text="@string/attempt" />
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/attemps_counter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1 of 5"
-            app:layout_constraintTop_toBottomOf="@+id/textAttemptsTrivia"
+            android:text="@string/_1_of_5"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/textAttemptsTrivia" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -87,42 +85,42 @@
         android:id="@+id/textQuestion"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Trivia Question"
         android:background="@drawable/shadow_white_box"
+        android:fontFamily="@font/acme"
         android:padding="10dp"
+        android:text="@string/trivia_question"
+        android:textAlignment="center"
         android:textColor="#000000"
         android:textSize="24sp"
-        android:fontFamily="@font/acme"
-        app:layout_constraintWidth_max="wrap"
-        app:layout_constraintWidth_percent="0.8"
-        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.2" />
+        app:layout_constraintVertical_bias="0.2"
+        app:layout_constraintWidth_max="wrap"
+        app:layout_constraintWidth_percent="0.8" />
 
     <RadioGroup
         android:id="@+id/answer_group"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        android:padding="15dp"
-        app:layout_constraintWidth_max="wrap"
-        app:layout_constraintWidth_percent="0.8"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:background="@drawable/shadow_white_box"
         android:orientation="horizontal"
+        android:padding="15dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textQuestion"
-        android:background="@drawable/shadow_white_box">
+        app:layout_constraintWidth_max="wrap"
+        app:layout_constraintWidth_percent="0.8">
 
         <RadioButton
             android:id="@+id/answer_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Answer_1"
             android:buttonTint="#FF9800"
-            android:onClick="answerRadioButtonClicked"/>
+            android:onClick="answerRadioButtonClicked"
+            android:text="@string/answer_1" />
 
         <Space
             android:layout_width="50dp"
@@ -133,74 +131,74 @@
             android:id="@+id/answer_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Answer_2"
             android:buttonTint="#2196F3"
-            android:onClick="answerRadioButtonClicked"/>
+            android:onClick="answerRadioButtonClicked"
+            android:text="@string/answer_2" />
     </RadioGroup>
 
     <Button
         android:id="@+id/validate_answer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/ok"
         android:layout_marginTop="25dp"
-        app:layout_constraintTop_toBottomOf="@id/checkResponse"
+        android:layout_marginBottom="50dp"
+        android:background="@drawable/button_shape_final"
+        android:onClick="answerValidateOnClick"
+        android:text="@string/ok"
+        android:textColor="#000"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.7"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="50dp"
-        android:background="@drawable/button_shape_final"
-        android:textColor="#000"
-        android:onClick="answerValidateOnClick"/>
+        app:layout_constraintTop_toBottomOf="@id/checkResponse" />
 
     <Button
         android:id="@+id/quitButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/back"
         android:layout_marginTop="25dp"
-        app:layout_constraintTop_toBottomOf="@id/checkResponse"
+        android:layout_marginBottom="50dp"
+        android:background="@drawable/button_shape_final"
+        android:onClick="backButtonOnClick"
+        android:padding="10dp"
+        android:text="@string/back"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="50dp"
-        android:padding="10dp"
-        android:background="@drawable/button_shape_final"
-        android:onClick="backButtonOnClick"/>
+        app:layout_constraintTop_toBottomOf="@id/checkResponse" />
 
     <TextView
         android:id="@+id/checkResponse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/answer_group"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="20dp"
         android:background="@drawable/answer_shape"
-        android:text="Select a response"
-        android:textSize="16dp"
-        android:fontFamily="@font/acme"/>
+        android:fontFamily="@font/acme"
+        android:text="@string/select_a_response"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/answer_group" />
 
     <ProgressBar
         android:id="@+id/loading_progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginTop="60dp"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/reload_random"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Load random question"
+        android:onClick="reloadRandomQuestion"
+        android:text="@string/load_random_question"
+        android:visibility="invisible"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/loading_progressBar"
-        android:visibility="invisible"
-        android:onClick="reloadRandomQuestion"/>
+        app:layout_constraintTop_toBottomOf="@id/loading_progressBar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

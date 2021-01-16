@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,14 +31,15 @@ public class FragmentPlayersStats extends Fragment {
     private String gameName;
     private String playerName;
 
+    private boolean userJustFinished = true;
+
     private final ArrayList<String> playerSeenNames = new ArrayList<>();
 
     private DatabaseReference usersDb;
     private ValueEventListener usersListener;
 
     public static FragmentPlayersStats getInstance() {
-        FragmentPlayersStats fragmentPlayersStats = new FragmentPlayersStats();
-        return fragmentPlayersStats;
+        return new FragmentPlayersStats();
     }
 
     @Override
@@ -105,9 +107,15 @@ public class FragmentPlayersStats extends Fragment {
 
                             playerSeenNames.add(current_player_name);
                             rLayout.addView(userView);
+
+                            if(!userJustFinished){
+                                Toast.makeText(getActivity(), "Another player finished !", Toast.LENGTH_SHORT).show();
+                            }
+
                         }
                     }
                 }
+                userJustFinished=false;
             }
 
             @Override
