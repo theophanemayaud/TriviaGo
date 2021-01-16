@@ -1,90 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/app_background"
+    android:fillViewport="true"
     tools:context=".EndActivity">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="400dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
-        android:background="@drawable/shadow_white_box"
-        android:orientation="vertical"
-        android:padding="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:background="@drawable/app_background">
 
-        <ImageView
-            android:id="@+id/num_stars"
-            android:layout_width="match_parent"
-            android:layout_height="135dp"
-            android:layout_gravity="center"
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="400dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="60dp"
+            android:background="@drawable/shadow_white_box"
+            android:orientation="vertical"
             android:padding="10dp"
-            app:srcCompat="@drawable/_0stars" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/score_message"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/coiny"
-            android:text=""
-            android:textAlignment="center"
-            android:textColor="@color/end_text"
-            android:textSize="30sp" />
-
-        <TextView
-            android:id="@+id/time_message"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/acme"
-            android:text=""
-            android:textAlignment="center"
-            android:textColor="@color/end_text"
-            android:textSize="20sp" />
-
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="270dp">
-
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tabLayout"
+            <ImageView
+                android:id="@+id/num_stars"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="135dp"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                app:srcCompat="@drawable/_0stars" />
 
-                <com.google.android.material.tabs.TabItem
-                    android:id="@+id/stats_individual"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Individual Stats" />
+            <TextView
+                android:id="@+id/score_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/coiny"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@color/end_text"
+                android:textSize="30sp" />
 
-                <com.google.android.material.tabs.TabItem
-                    android:id="@+id/stats_players"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="All Players" />
+            <TextView
+                android:id="@+id/time_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/acme"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@color/end_text"
+                android:textSize="20sp" />
 
-            </com.google.android.material.tabs.TabLayout>
-        </androidx.viewpager.widget.ViewPager>
-    </LinearLayout>
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="270dp">
 
-    <Button
-        android:id="@+id/button_done"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/button_shape_final"
-        android:onClick="clickedExitButtonXmlCallback"
-        android:padding="10dp"
-        android:text="Exit Game"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/linearLayout" />
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                    <com.google.android.material.tabs.TabItem
+                        android:id="@+id/stats_individual"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Individual Stats" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:id="@+id/stats_players"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="All Players" />
+
+                </com.google.android.material.tabs.TabLayout>
+            </androidx.viewpager.widget.ViewPager>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button_done"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/button_shape_final"
+            android:onClick="clickedExitButtonXmlCallback"
+            android:padding="10dp"
+            android:text="Exit Game"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/linearLayout" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
