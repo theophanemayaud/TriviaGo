@@ -1,1 +1,0 @@
-# EPFL-LOA-TriviaGo
