@@ -1,0 +1,3 @@
+# TriviaGo submission folder details
+
+
