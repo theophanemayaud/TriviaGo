@@ -538,7 +538,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
 
     // -------- End : Small diverse functions functions --------
 
-    //TODO remove this from prod
+    // DEBUG TODO : remove this from prod
     public void skipButtonCB(View view) {
         int waypointAttemptsTotal = 0;
         List<Float> waypointsRatesList = new ArrayList<>();
