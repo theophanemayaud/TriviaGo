@@ -1,6 +1,6 @@
-# TriviaGo
+# Trivia Go
 
-TriviaGo is a real world multiplayer game combining trivia and capture the flag.
+Trivia Go is a real world multiplayer game combining trivia and capture the flag.
 
 You will create your own map, placing waypoints and choosing trivia question categories for each. Then the people to which you give the name of the game, will be able to join and play. May the best one win !!
 
@@ -22,7 +22,7 @@ This project uses Firebase Authentication and Realtime database, and the Google 
 
 ## Contact
 
-Want to report a bug 🐞, suggest new ideas 💡, give general feedback 🧐 or have some specific question 🙋 ? That's what our DISCUSSIONS PAGE is for 🚀 Issues can also be used for bugs 🪳 and feature suggestions, but it's often good to first chat about them in the discussions 💬.
+Want to report a bug 🐞, suggest new ideas 💡, give general feedback 🧐 or have some specific question 🙋 ? That's what our [DISCUSSIONS PAGE](https://github.com/theophanemayaud/TriviaGo/discussions) is for 🚀 [Issues](https://github.com/theophanemayaud/TriviaGo/issues) can also be used for bugs 🪳 and feature  suggestions, but it's often good to first chat about them in the discussions 💬.
 
 ## Features
 

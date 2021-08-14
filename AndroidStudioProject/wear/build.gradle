@@ -7,7 +7,7 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "com.epfl.triviago"
+        applicationId "com.laubasthe.triviago"
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 1
