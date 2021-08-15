@@ -132,6 +132,9 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
         fusedLocationClient = new FusedLocationProviderClient(this);
 
         iconGenerator = new IconGenerator(this);
+        if(BuildConfig.DEBUG){
+            this.findViewById(R.id.skipDebug).setVisibility(1);
+        }
     }
 
     @Override
@@ -538,36 +541,38 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
 
     // -------- End : Small diverse functions functions --------
 
-//    // DEBUG TODO : remove this from prod
-//    public void skipButtonCB(View view) {
-//        int waypointAttemptsTotal = 0;
-//        List<Float> waypointsRatesList = new ArrayList<>();
-//        for (int i = 0; i < waypointsAttemptsList.size(); i++) {
-//            waypointAttemptsTotal += 2;
-//            waypointsRatesList.add(calcRate(
-//                    2, 1
-//            ));
-//        }
-//
-//        float playerSuccessRate = calcRate(
-//                waypointAttemptsTotal,
-//                waypointsLatLgn.size());
-//        gameDb.child("Users").child(playerName)
-//                .child("rate").setValue(playerSuccessRate);
-//
-//        Intent endIntent = new Intent(ChooseNextWaypoint.this,
-//                EndActivity.class);
-//        endIntent.putExtra(ChooseNextWaypoint.INTENT_GAME_NAME, gameName);
-//        endIntent.putExtra(ChooseNextWaypoint.INTENT_PLAYER_NAME, playerName);
-//        endIntent.putExtra(ChooseNextWaypoint.INTENT_PLAYER_STATS_LIST,
-//                (Serializable) waypointsRatesList);
-//        endIntent.putExtra(JoinActivity.START_TIME_MS, start_time);
-//
-//        Toast.makeText(ChooseNextWaypoint.this, "All done !!!",
-//                Toast.LENGTH_SHORT).show();
-//
-//        startActivity(endIntent);
-//        userSentToEnd = true;
-//        finish();
-//    }
+    // DEBUG TODO : remove this from prod
+    public void skipButtonCB(View view) {
+        if(BuildConfig.DEBUG){
+            int waypointAttemptsTotal = 0;
+            List<Float> waypointsRatesList = new ArrayList<>();
+            for (int i = 0; i < waypointsAttemptsList.size(); i++) {
+                waypointAttemptsTotal += 2;
+                waypointsRatesList.add(calcRate(
+                        2, 1
+                ));
+            }
+
+            float playerSuccessRate = calcRate(
+                    waypointAttemptsTotal,
+                    waypointsLatLgn.size());
+            gameDb.child("Users").child(playerName)
+                    .child("rate").setValue(playerSuccessRate);
+
+            Intent endIntent = new Intent(ChooseNextWaypoint.this,
+                    EndActivity.class);
+            endIntent.putExtra(ChooseNextWaypoint.INTENT_GAME_NAME, gameName);
+            endIntent.putExtra(ChooseNextWaypoint.INTENT_PLAYER_NAME, playerName);
+            endIntent.putExtra(ChooseNextWaypoint.INTENT_PLAYER_STATS_LIST,
+                    (Serializable) waypointsRatesList);
+            endIntent.putExtra(JoinActivity.START_TIME_MS, start_time);
+
+            Toast.makeText(ChooseNextWaypoint.this, "All done !!!",
+                    Toast.LENGTH_SHORT).show();
+
+            startActivity(endIntent);
+            userSentToEnd = true;
+            finish();
+        }
+    }
 }

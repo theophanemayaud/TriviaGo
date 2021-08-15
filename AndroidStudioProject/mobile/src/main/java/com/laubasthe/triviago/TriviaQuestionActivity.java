@@ -286,8 +286,10 @@ public class TriviaQuestionActivity extends AppCompatActivity {
         okButton.setVisibility(View.VISIBLE);
         checkAnswer.setVisibility(View.VISIBLE);
         checkAnswer.setText(R.string.select_answer);
-//        // DEBUG TODO : remove this for production
-//        Toast.makeText(this, "ANSWER : " + mTrivia.mResponses.get(mTrivia.mCorrectIndex), Toast.LENGTH_LONG).show();
+        // DEBUG TODO : remove this for production
+        if(BuildConfig.DEBUG){
+            Toast.makeText(this, "ANSWER : " + mTrivia.mResponses.get(mTrivia.mCorrectIndex), Toast.LENGTH_LONG).show();
+        }
     }
 
     public void answerRadioButtonClicked(View view) {
