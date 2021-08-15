@@ -33,7 +33,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="5dp"
-                    android:text="By: Basile Spaenlehauer, Théophane Mayaud and Laurence Bongrain"
+                    android:text="@string/credits"
                     android:textColor="#653434"
                     android:textSize="16sp" />
 

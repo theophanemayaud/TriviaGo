@@ -30,6 +30,7 @@
     <string name="empty_game_name">Game name can\'t be empty…</string>
     <string name="empty_user_name">User name can\'t be empty…</string>
     <string name="no_waypoints_error_msg">Create at least 1 waypoint !</string>
+    <string name="credits">By: Basile Spaenlehauer, Théophane Mayaud and Laurence Bongrain\n Trivia questions from https://opentdb.com/</string>
     <string name="rules_text">
         <u><b>Goal:</b></u>\n
         The goal of the game is go to all the waypoints/checkpoints on the map, and answer
