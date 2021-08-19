@@ -5,6 +5,7 @@
       <map>
         <entry key="mobile/src/main/res/layout-land/activity_welcome.xml" value="0.11419753086419752" />
         <entry key="mobile/src/main/res/layout/activity_choose_next_waypoint.xml" value="0.15572916666666667" />
+        <entry key="mobile/src/main/res/layout/activity_travel_to_next_waypoint.xml" value="0.12681159420289856" />
         <entry key="mobile/src/main/res/layout/activity_welcome.xml" value="0.25" />
         <entry key="mobile/src/main/res/layout/fragment_maps.xml" value="0.15572916666666667" />
       </map>

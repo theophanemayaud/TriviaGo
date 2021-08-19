@@ -100,9 +100,9 @@
         android:layout_marginTop="16dp"
         android:onClick="skipButtonCB"
         android:text="SKIP !!!"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="gone" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
