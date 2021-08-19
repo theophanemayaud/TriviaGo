@@ -9,16 +9,36 @@ android {
         applicationId "com.laubasthe.triviago"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 2
+        versionCode 4
         versionName "1.0.0"
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
 
+    signingConfigs { // block must be above buildTypes block
+        def Properties signConfigProps = new Properties()
+        signConfigProps.load(new FileInputStream(file('../signconfig.properties')))
+        debug {
+            storeFile file(signConfigProps["debug-store"])
+            storePassword signConfigProps["debug-storePass"]
+            keyAlias signConfigProps["debug-keyAlias"]
+            keyPassword signConfigProps["debug-keyPass"]
+        }
+        release {
+            storeFile file(signConfigProps["deploy-store"])
+            storePassword signConfigProps["deploy-storePass"]
+            keyAlias signConfigProps["deploy-keyAlias"]
+            keyPassword signConfigProps["deploy-keyPass"]
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            signingConfig signingConfigs.debug
         }
         buildTypes.each {
             project.ext.constants.each {
@@ -41,29 +61,26 @@ android {
 }
 
 dependencies {
-    implementation platform('com.google.firebase:firebase-bom:26.1.0')
-//    implementation 'com.google.firebase:firebase-analytics'
+    // Import the BoM for the Firebase platform
+    implementation platform('com.google.firebase:firebase-bom:28.3.1')
+    // Declare the dependency for the Firebase Authentication and Database library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation 'com.google.firebase:firebase-database'
+    implementation 'com.google.firebase:firebase-auth'
 
     implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    implementation 'com.google.android.material:material:1.4.0'
+
     implementation 'com.google.android.gms:play-services-maps:17.0.1'
     implementation 'com.google.android.gms:play-services-location:18.0.0'
-    implementation 'com.google.firebase:firebase-database:20.0.1'
-    implementation 'com.google.android.material:material:1.4.0'
-    implementation 'com.google.firebase:firebase-auth:21.0.1'
+    implementation 'com.google.maps.android:android-maps-utils:2.2.0'
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    implementation 'com.google.maps.android:android-maps-utils:2.2.0'
 
-    // Import the BoM for the Firebase platform
-    implementation platform('com.google.firebase:firebase-bom:26.2.0')
-
-    // Declare the dependency for the Firebase Authentication library
-    // When using the BoM, you don't specify versions in Firebase library dependencies
-    implementation 'com.google.firebase:firebase-auth'
-
-//    This is for RetrofitAPI
+    // This is for RetrofitAPI
     implementation 'com.squareup.retrofit2:retrofit:2.1.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
 

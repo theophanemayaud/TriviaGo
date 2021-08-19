@@ -1,3 +1,5 @@
+signconfig.properties
+
 *.iml
 .gradle
 /local.properties

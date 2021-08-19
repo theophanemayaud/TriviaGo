@@ -2,14 +2,19 @@ package com.laubasthe.triviago;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class WelcomeActivity extends AppCompatActivity {
@@ -31,7 +36,22 @@ public class WelcomeActivity extends AppCompatActivity {
         credits_layout.setVisibility(View.GONE);
 
         mAuth = FirebaseAuth.getInstance();
-        mAuth.signInAnonymously();
+        mAuth.signInAnonymously()
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("firebase sign in", "signInAnonymously:success");
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.e("firebase sign in", "signInAnonymously:failure", task.getException());
+                            Log.e("exception", String.valueOf(task.getException()));
+                            Log.e("string", task.toString());
+                            Toast.makeText(WelcomeActivity.this, "Error with database. Make sure you have internet, then contact us.", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
     }
 
     public void clickedCreateGameButtonXmlCallback(View view) {

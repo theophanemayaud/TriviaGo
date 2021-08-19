@@ -4,18 +4,33 @@ plugins {
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "29.0.3"
 
     defaultConfig {
         applicationId "com.laubasthe.triviago"
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs { // block must be above buildTypes block
+        def Properties signConfigProps = new Properties()
+        signConfigProps.load(new FileInputStream(file('../signconfig.properties')))
+        debug {
+            storeFile file(signConfigProps["debug-store"])
+            storePassword signConfigProps["debug-storePass"]
+            keyAlias signConfigProps["debug-keyAlias"]
+            keyPassword signConfigProps["debug-keyPass"]
+        }
+        release {
+            storeFile file(signConfigProps["deploy-store"])
+            storePassword signConfigProps["deploy-storePass"]
+            keyAlias signConfigProps["deploy-keyAlias"]
+            keyPassword signConfigProps["deploy-keyPass"]
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
