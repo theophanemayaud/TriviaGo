@@ -148,6 +148,7 @@ public class JoinActivity extends AppCompatActivity {
                     @Override
                     public void onCancelled(@NonNull DatabaseError e) {
                         Log.e("" + e.getClass(), "Error with database" + e.getDetails());
+                        Toast.makeText(JoinActivity.this, getString(R.string.databaseErrorEnternetEontact), Toast.LENGTH_LONG).show();
                     }
                 });
             }
@@ -155,6 +156,7 @@ public class JoinActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError e) {
                 Log.e("" + e.getClass(), "Error with database" + e.getDetails());
+                Toast.makeText(JoinActivity.this, getString(R.string.databaseErrorEnternetEontact), Toast.LENGTH_LONG).show();
             }
         });
     }

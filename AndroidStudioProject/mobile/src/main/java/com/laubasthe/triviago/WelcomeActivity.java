@@ -63,7 +63,7 @@ public class WelcomeActivity extends AppCompatActivity {
                             Log.e("firebase sign in", "signInAnonymously:failure", task.getException());
                             Log.e("exception", String.valueOf(task.getException()));
                             Log.e("string", task.toString());
-                            Toast.makeText(WelcomeActivity.this, "Error with database. Make sure you have internet, then contact us.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(WelcomeActivity.this, getString(R.string.databaseErrorEnternetEontact), Toast.LENGTH_LONG).show();
                         }
                     }
                 });

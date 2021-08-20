@@ -64,6 +64,7 @@
     <string name="load_random_question">Load random question</string>
     <string name="choose_your_next_waypoint">Choose Your Next waypoint !</string>
     <string name="trivia_category_image">Trivia Category Image</string>
+    <string name="databaseErrorEnternetEontact">Error with database. Make sure you have internet, then contact us.</string>
 
     <!--String arrays for spinners used in game setup-->
     <string-array name="spinner_players">
