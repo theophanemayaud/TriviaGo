@@ -28,7 +28,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
     private static final int NUM_PLAYER_BUTTONS = 3;
 
     private String difficulty = "easy";
-    private Integer maxAttemps = 3;
+    private Integer maxAttempts = 3;
     private ArrayList<LatLng> waypointsLatLgnList;
     private ArrayList<Integer> waypointsCategList;
 
@@ -171,21 +171,21 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     public void clicked1AtpButtonXmlCallback(View view) {
-        maxAttemps = 1;
+        maxAttempts = 1;
         findViewById(R.id.button_1atp).setBackgroundResource(R.drawable.buttonshape_difficulty_selected);
         findViewById(R.id.button_3atp).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         findViewById(R.id.button_5atp).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
     }
 
     public void clicked3AtpButtonXmlCallback(View view) {
-        maxAttemps = 3;
+        maxAttempts = 3;
         findViewById(R.id.button_1atp).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         findViewById(R.id.button_3atp).setBackgroundResource(R.drawable.buttonshape_difficulty_selected);
         findViewById(R.id.button_5atp).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
     }
 
     public void clicked5AtpButtonXmlCallback(View view) {
-        maxAttemps = 5;
+        maxAttempts = 5;
         findViewById(R.id.button_1atp).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         findViewById(R.id.button_3atp).setBackgroundResource(R.drawable.buttonshape_difficulty_unselected);
         findViewById(R.id.button_5atp).setBackgroundResource(R.drawable.buttonshape_difficulty_selected);
@@ -225,7 +225,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
                         gameDb.child("Settings").child("QuestionType").setValue("QCM");
                     }
                     gameDb.child("Settings").child("Difficulty").setValue(difficulty);
-                    gameDb.child("Settings").child("MaxAttempts").setValue(maxAttemps);
+                    gameDb.child("Settings").child("MaxAttempts").setValue(maxAttempts);
 
                     int size = waypointsLatLgnList.size();
                     for (int i = 0; i < size; i++) {
@@ -253,7 +253,7 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.e("TxGO", "Error writing to database");
-                Toast.makeText(SetUpActivity.this, "Problem with database, please try again...", Toast.LENGTH_LONG).show();
+                Toast.makeText(SetUpActivity.this, R.string.databaseErrorEnternetEontact, Toast.LENGTH_LONG).show();
             }
         });
     }
