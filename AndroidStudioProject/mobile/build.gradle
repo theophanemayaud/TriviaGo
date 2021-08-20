@@ -10,7 +10,7 @@ android {
         targetSdkVersion 30
         // mobile versions end with .00 and watch with .01
         // [major] [minor] [fix] [internal version][77 for mobile/99 for watch]
-        versionCode 100000077 // example 2 04 03 15 77
+        versionCode 100000177 // example 2 04 03 15 77
         versionName "1.0.0" //[major][minor][fix]
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
@@ -90,6 +90,8 @@ dependencies {
     // This is for RetrofitAPI
     implementation 'com.squareup.retrofit2:retrofit:2.1.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
+
+    implementation "com.android.billingclient:billing:4.0.0"
 
     // wearservice
     implementation 'com.google.android.gms:play-services-wearable:17.1.0'

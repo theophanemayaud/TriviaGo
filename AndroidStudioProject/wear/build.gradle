@@ -11,7 +11,7 @@ android {
         targetSdkVersion 30
         // mobile versions end with .00 and watch with .01
         // [major] [minor] [fix] [internal version][77 for mobile/99 for watch]
-        versionCode 100000099 // example 2 04 03 15 77
+        versionCode 100000199 // example 2 04 03 15 77
         versionName "1.0.0" //[major][minor][fix]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
