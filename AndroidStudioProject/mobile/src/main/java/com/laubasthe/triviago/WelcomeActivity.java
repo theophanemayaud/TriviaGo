@@ -14,6 +14,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.appcheck.FirebaseAppCheck;
+import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory;
+import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -34,6 +38,17 @@ public class WelcomeActivity extends AppCompatActivity {
         credits_layout = findViewById(R.id.credits_layout);
         rules_layout.setVisibility(View.GONE);
         credits_layout.setVisibility(View.GONE);
+
+        // initialize firebase app check to ensure access to db only from app
+        FirebaseApp.initializeApp(/*context=*/ this);
+        FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
+        // APPCHECK : when needing a debug token for firebase app check in emulator,
+        // uncomment next two lines and comment two after them. Then copy token from run
+        // logs into firebase project app check settings
+//        firebaseAppCheck.installAppCheckProviderFactory(
+//                DebugAppCheckProviderFactory.getInstance());
+        firebaseAppCheck.installAppCheckProviderFactory(
+                SafetyNetAppCheckProviderFactory.getInstance());
 
         mAuth = FirebaseAuth.getInstance();
         mAuth.signInAnonymously()
