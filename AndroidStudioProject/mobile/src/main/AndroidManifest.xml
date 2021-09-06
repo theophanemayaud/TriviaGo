@@ -28,7 +28,10 @@
 
         <activity android:name="com.laubasthe.triviago.JoinActivity" />
 
-        <activity android:name="com.laubasthe.triviago.TriviaQuestionActivity" />
+        <activity
+            android:name="com.laubasthe.triviago.TriviaQuestionActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="user" />
 
         <activity
             android:name="com.laubasthe.triviago.WelcomeActivity"
