@@ -1,11 +1,25 @@
 {
   "name": "triviago",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Game that combines trivia and capture the flag",
   "main": "AndroidStudioProject/settings.gradle",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "release": "standard-version"
+    "release": "standard-version --sign -a",
+    "release:minor": "standard-version --release-as minor --sign -a && npm run notif-push",
+    "release:patch": "standard-version --release-as patch --sign -a && npm run notif-push",
+    "release:major": "standard-version --release-as major --sign -a && npm run notif-push",
+    "notif-push": "echo '\n\n Remember to push commits and tags with \n git push && git push --tags' "
+  },
+  "standard-version": {
+    "scripts": {
+      "postbump": "git add -A"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
   },
   "repository": {
     "type": "git",
