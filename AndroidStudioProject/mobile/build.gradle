@@ -2,12 +2,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     defaultConfig {
         applicationId "com.laubasthe.triviago"
         minSdkVersion 23
-        targetSdkVersion 30
+        targetSdkVersion 31
         // mobile versions end with .00 and watch with .01
         // [major] [minor] [fix] [internal version][77 for mobile/99 for watch]
         versionCode 101000077 // example 2 04 03 15 77
@@ -71,15 +71,15 @@ dependencies {
     // Comme App Check est actuellement en version bêta, ce n'est pas inclus dans le
     // Firebase BoM . Vous devez spécifier le numéro de version complet lorsque
     // vous déclarez la dépendance App Check.
-    implementation 'com.google.firebase:firebase-appcheck-safetynet:16.0.0-beta02'
+    implementation 'com.google.firebase:firebase-appcheck-safetynet:16.0.0-beta03'
     // for local app checks within emulator :
-    implementation 'com.google.firebase:firebase-appcheck-debug:16.0.0-beta02'
+    implementation 'com.google.firebase:firebase-appcheck-debug:16.0.0-beta03'
 
-    implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    implementation 'androidx.appcompat:appcompat:1.4.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
     implementation 'com.google.android.material:material:1.4.0'
 
-    implementation 'com.google.android.gms:play-services-maps:17.0.1'
+    implementation 'com.google.android.gms:play-services-maps:18.0.0'
     implementation 'com.google.android.gms:play-services-location:18.0.0'
     implementation 'com.google.maps.android:android-maps-utils:2.2.0'
 

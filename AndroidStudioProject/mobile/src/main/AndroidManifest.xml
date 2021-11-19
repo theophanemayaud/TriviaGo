@@ -36,7 +36,8 @@
         <activity
             android:name="com.laubasthe.triviago.WelcomeActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="user">
+            android:screenOrientation="user"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -83,7 +84,8 @@
             android:screenOrientation="user" />
 
         <!-- mobile -> AndroidManifest.xml -> <application ...> -->
-        <service android:name="com.laubasthe.triviago.WearService">
+        <service android:name="com.laubasthe.triviago.WearService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
                 <data
