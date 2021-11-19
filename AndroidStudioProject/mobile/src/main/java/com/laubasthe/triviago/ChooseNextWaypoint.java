@@ -9,6 +9,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -54,6 +55,8 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     private static final int REACH_DEST = 2;
     private static final int ASK_QUESTION = 3;
     private static final int SELF_MARKER_TAG = -1;
+
+    private static final int NB_ATTEMPTS_SKIPPED_WAYPOINT = 1000000; // skipping a waypoint~= infinite attempts
 
     //Database
     private DatabaseReference gameDb;
@@ -377,45 +380,7 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
                                         iconGenerator.makeIcon(waypointLetter))
                         );
                     }
-                    boolean stillSomeWaypointsToDo = false;
-                    for (int i = 0; i < waypointsLatLgn.size(); i++) {
-                        if (waypointsStatus.get(i) != WaypointStatus.REACHED) {
-                            stillSomeWaypointsToDo = true; // There are still waypoints to go to
-                        }
-                    }
-                    // If here, then there are no more waypoints to go to
-                    if (!stillSomeWaypointsToDo) {
-                        int waypointAttemptsTotal = 0;
-                        List<Float> waypointsRatesList = new ArrayList<>();
-                        for (int i = 0; i < waypointsAttemptsList.size(); i++) {
-                            waypointAttemptsTotal += waypointsAttemptsList.get(i);
-                            waypointsRatesList.add(calcRate(
-                                    waypointsAttemptsList.get(i), 1
-                            ));
-                        }
-
-                        float playerSuccessRate = calcRate(
-                                waypointAttemptsTotal,
-                                waypointsLatLgn.size());
-                        gameDb.child("Users").child(playerName)
-                                .child("rate").setValue(playerSuccessRate);
-
-                        Intent endIntent = new Intent(ChooseNextWaypoint.this,
-                                EndActivity.class);
-                        endIntent.putExtra(ChooseNextWaypoint.INTENT_GAME_NAME, gameName);
-                        endIntent.putExtra(ChooseNextWaypoint.INTENT_PLAYER_NAME, playerName);
-                        endIntent.putExtra(ChooseNextWaypoint.INTENT_PLAYER_STATS_LIST,
-                                (Serializable) waypointsRatesList);
-                        endIntent.putExtra(JoinActivity.START_TIME_MS, start_time);
-
-                        Toast.makeText(ChooseNextWaypoint.this, "All done !!!",
-                                Toast.LENGTH_SHORT).show();
-
-                        startActivity(endIntent);
-                        userSentToEnd = true;
-                        finish();
-                    }
-                    lastDestinationIndex = selectedDestinationIndex; //remember for next attempt
+                    checkRemainingWaypointsOrEnd();
                 }
                 break;
         }
@@ -457,6 +422,80 @@ public class ChooseNextWaypoint extends AppCompatActivity implements OnMapReadyC
     // ---------------------------------------------------------
 
     // -------- Start : Small diverse functions functions --------
+    public void skipWaypointButtonCB(View view){
+        if(waypointsStatus.get(selectedDestinationIndex)==WaypointStatus.REACHED){
+            Toast.makeText(ChooseNextWaypoint.this,
+                    "This waypoint is already done !", Toast.LENGTH_LONG).show();
+        }
+        else{
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(getString(R.string.skipWaypointAlertMessage)).setCancelable(false)
+                    .setPositiveButton("Yes", (dialog, id) -> {
+                                waypointsAttemptsList.set(selectedDestinationIndex, NB_ATTEMPTS_SKIPPED_WAYPOINT);
+
+                                waypointsStatus.set(selectedDestinationIndex, WaypointStatus.REACHED);
+                                iconGenerator.setStyle(IconGenerator.STYLE_BLUE);
+
+                                //Set marker color to black
+                                String waypointLetter = String.valueOf((char) (selectedDestinationIndex +
+                                        CreateWaypointsActivity.LIST_POS_TO_LETTER_OFFSET));
+                                waypointsMarkers.get(selectedDestinationIndex).setIcon(
+                                        BitmapDescriptorFactory.fromBitmap(
+                                                iconGenerator.makeIcon(waypointLetter))
+                                );
+                                checkRemainingWaypointsOrEnd();
+                            }
+                    )
+                    .setNegativeButton("No", (dialog, id) -> {
+                        dialog.cancel();
+                    });
+            final AlertDialog alert = builder.create();
+            alert.show();
+        }
+    }
+
+    private void checkRemainingWaypointsOrEnd(){
+        boolean stillSomeWaypointsToDo = false;
+        for (int i = 0; i < waypointsLatLgn.size(); i++) {
+            if (waypointsStatus.get(i) != WaypointStatus.REACHED) {
+                stillSomeWaypointsToDo = true; // There are still waypoints to go to
+            }
+        }
+        // If here, then there are no more waypoints to go to
+        if (!stillSomeWaypointsToDo) {
+            int waypointAttemptsTotal = 0;
+            List<Float> waypointsRatesList = new ArrayList<>();
+            for (int i = 0; i < waypointsAttemptsList.size(); i++) {
+                waypointAttemptsTotal += waypointsAttemptsList.get(i);
+                waypointsRatesList.add(calcRate(
+                        waypointsAttemptsList.get(i), 1
+                ));
+            }
+
+            float playerSuccessRate = calcRate(
+                    waypointAttemptsTotal,
+                    waypointsLatLgn.size());
+            gameDb.child("Users").child(playerName)
+                    .child("rate").setValue(playerSuccessRate);
+
+            Intent endIntent = new Intent(ChooseNextWaypoint.this,
+                    EndActivity.class);
+            endIntent.putExtra(ChooseNextWaypoint.INTENT_GAME_NAME, gameName);
+            endIntent.putExtra(ChooseNextWaypoint.INTENT_PLAYER_NAME, playerName);
+            endIntent.putExtra(ChooseNextWaypoint.INTENT_PLAYER_STATS_LIST,
+                    (Serializable) waypointsRatesList);
+            endIntent.putExtra(JoinActivity.START_TIME_MS, start_time);
+
+            Toast.makeText(ChooseNextWaypoint.this, "All done !!!",
+                    Toast.LENGTH_SHORT).show();
+
+            startActivity(endIntent);
+            userSentToEnd = true;
+            finish();
+        }
+        lastDestinationIndex = selectedDestinationIndex; //remember for next attempt
+    }
+
     private AdapterView.OnItemSelectedListener getListener() {
         return new AdapterView.OnItemSelectedListener() {
             @Override

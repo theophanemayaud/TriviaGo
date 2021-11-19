@@ -65,6 +65,7 @@
     <string name="choose_your_next_waypoint">Choose Your Next waypoint !</string>
     <string name="trivia_category_image">Trivia Category Image</string>
     <string name="databaseErrorEnternetEontact">Error with database. Make sure you have internet, then contact us.</string>
+    <string name="skipWaypointAlertMessage">Are you sure you want to skip this waypoint ? You will have a score of 0% on it, and can\'t un-skip it.</string>
 
     <!--String arrays for spinners used in game setup-->
     <string-array name="spinner_players">
