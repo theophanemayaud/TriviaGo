@@ -21,7 +21,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class SetUpActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private static final int DEFAULT_NUM_PLAYERS = 2;
@@ -241,6 +244,12 @@ public class SetUpActivity extends AppCompatActivity implements AdapterView.OnIt
                         gameDb.child("Waypoints").child(Integer.toString(i))
                                 .child("category").setValue(category);
                     }
+
+                    // Store creation date to later auto delete game if left unused
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Date date = new Date();
+                    String strDate = dateFormat.format(date).toString();
+                    gameDb.child("Settings").child("CreateDate").setValue(strDate);
 
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("name", gameName);
