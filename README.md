@@ -1,10 +1,8 @@
 # Trivia Go
 
-Trivia Go is a real world multiplayer game combining trivia and capture the flag.
+Trivia Go was a real world multiplayer game combining trivia and capture the flag.
 
-You will create your own map, placing waypoints and choosing trivia question categories for each. Then the people to which you give the name of the game, will be able to join and play. May the best one win !!
-
-<a href='https://play.google.com/store/apps/details?id=com.laubasthe.triviago&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
+You create your own map, placing waypoints and choosing trivia question categories for each. Then the people to which you give the name of the game, will be able to join and play. May the best one win !!
 
 ## Project files and instructions
 
